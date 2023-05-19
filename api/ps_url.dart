@@ -138,6 +138,9 @@ class PsUrl {
   static const String ps_delivery_boy_ratingPost_url = 
       'rest/deliboy_rates/add_rating_deliboy/api_key/${PsConfig.ps_api_key}';
 
+  static const String ps_postalAddressList_url =
+      'rest/PostCodeChecker/get_postcode/api_key/${PsConfig.ps_api_key}';
+
   static const String ps_ratingList_url = 'rest/rates/get';
 
   static const String ps_favouritePost_url =

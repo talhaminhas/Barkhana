@@ -318,7 +318,7 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
                                         }else{
                                           final String loginUserId =
                                           Utils.checkUserLoginId(
-                                              widget.valueHolder!);
+                                              widget.valueHolder);
                                           final TouchCountParameterHolder
                                           touchCountParameterHolder =
                                           TouchCountParameterHolder(

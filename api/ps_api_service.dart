@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutterrestaurant/viewobject/postal_address.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/api/ps_url.dart';
@@ -478,8 +479,15 @@ class PsApiService extends PsApi {
 
     return await getServerCall<Rating, List<Rating>>(Rating(), url);
   }
-  
-
+  ///
+  /// get postal addresses
+  ///
+  Future<PsResource<PostalAddress>> postalAddressList(
+      Map<String, dynamic> jsonMap) async {
+    const String url = '${PsUrl.ps_postalAddressList_url}';
+    return await postData<PostalAddress, PostalAddress>(
+        PostalAddress(), url, jsonMap);
+  }
   ///
   /// Delivery Boy Rating
   ///

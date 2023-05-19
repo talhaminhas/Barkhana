@@ -31,6 +31,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 import '../../api/ps_api_service.dart';
+import '../../viewobject/address.dart';
 
 
 class Checkout1View extends StatefulWidget {
@@ -50,6 +51,8 @@ class Checkout1View extends StatefulWidget {
 class _Checkout1ViewState extends State<Checkout1View> {
   TextEditingController userEmailController = TextEditingController();
   TextEditingController userPostcodeController = TextEditingController();
+  TextEditingController userTownController = TextEditingController();
+  TextEditingController userCountryController = TextEditingController();
   TextEditingController userPhoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController distanceController = TextEditingController();
@@ -285,16 +288,18 @@ class _Checkout1ViewState extends State<Checkout1View> {
                           textEditingController: addressController,
                           isMandatory: true,
                           onTap: () async {
-                            final RegExp exp = RegExp(PsConst.regexValidPostcode);
                             final isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
                             isAValidPostcode.whenComplete(() async {
                               if(await isAValidPostcode) {
                                 final Object? result = await Navigator.pushNamed(
-                                    context, RoutePaths.postalAddressList);
+                                    context, RoutePaths.postalAddressList,
+                                arguments: userPostcodeController.text);
                                 if (result != null) {
+                                  final Address selectedAddress = result as Address;
                                   setState(() {
-                                    addressController.text = result.toString();
-                                    //userProvider.selectedArea = result;
+                                    addressController.text = selectedAddress.line_1!;
+                                    userTownController.text = selectedAddress.townOrCity!;
+                                    userCountryController.text = selectedAddress.country!;
                                   });
                                 }
                               }
@@ -311,6 +316,18 @@ class _Checkout1ViewState extends State<Checkout1View> {
                             });
 
                           }),
+                      PsTextFieldWidget(
+                          titleText: Utils.getString(context, 'edit_profile__town'),
+                          textAboutMe: false,
+                          hintText: Utils.getString(context, 'edit_profile__town'),
+                          textEditingController: userTownController,
+                          isMandatory: true),
+                      PsTextFieldWidget(
+                          titleText: Utils.getString(context, 'edit_profile__country'),
+                          textAboutMe: false,
+                          hintText: Utils.getString(context, 'edit_profile__country'),
+                          textEditingController: userCountryController,
+                          isMandatory: true),
         /*CurrentLocationWidget(
                           provider: provider!,
                           shopInfoProvider: shopInfoProvider!,

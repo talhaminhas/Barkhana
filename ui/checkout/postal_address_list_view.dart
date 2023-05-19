@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutterrestaurant/api/common/ps_status.dart';
-import 'package:flutterrestaurant/config/ps_colors.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
-import 'package:flutterrestaurant/provider/shipping_area/shipping_area_provider.dart';
-import 'package:flutterrestaurant/repository/shipping_area_repository.dart';
+import 'package:flutterrestaurant/provider/address/postal_address_provider.dart';
+import 'package:flutterrestaurant/repository/postal_address_repository.dart';
 import 'package:flutterrestaurant/ui/checkout/postal_address_list_item.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar.dart';
-import 'package:flutterrestaurant/ui/common/ps_frame_loading_widget.dart';
-import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
-import 'package:flutterrestaurant/ui/user/edit_profile/area_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../api/common/ps_status.dart';
+import '../../api/ps_api_service.dart';
+import '../../config/ps_colors.dart';
+import '../../viewobject/postal_address.dart';
+import '../common/ps_frame_loading_widget.dart';
 
 class PostalAddressListView extends StatefulWidget {
+  const PostalAddressListView({required this.postcode});
   @override
   State<StatefulWidget> createState() {
     return _PostalAddressListViewState();
   }
+  final String postcode;
 }
 
 class _PostalAddressListViewState extends State<PostalAddressListView>
     with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
-
-  ShippingAreaProvider? shippingAreaProvider;
+  final PsApiService _psApiService = PsApiService();
+  PostalAddressProvider? postalAddressProvider;
   AnimationController? animationController;
   Animation<double>? animation;
 
@@ -41,7 +44,7 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        shippingAreaProvider!.nextShippingAreaList();
+        //postalAddressProvider!.nextShippingAreaList();
       }
     });
 
@@ -54,12 +57,13 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
     super.initState();
   }
 
-  ShippingAreaRepository ?repo1;
+  PostalAddressRepository ?repo1;
   PsValueHolder? psValueHolder;
 
   @override
   Widget build(BuildContext context) {
-    Future<bool> _requestPop() {
+    Future<bool> _requestPop() async {
+
       animationController!.reverse().then<dynamic>(
         (void data) {
           if (!mounted) {
@@ -72,37 +76,45 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
       return Future<bool>.value(false);
     }
 
-    repo1 = Provider.of<ShippingAreaRepository>(context);
+    repo1 = Provider.of<PostalAddressRepository>(context);
     psValueHolder = Provider.of<PsValueHolder>(context);
-
+    PostalAddress postalAddress = PostalAddress(postcode: '',latitude: '',longitude: '',shopId: '',addresses: []);
     print(
         '............................Build UI Again ............................');
 
     return WillPopScope(
         onWillPop: _requestPop,
-        child: PsWidgetWithAppBar<ShippingAreaProvider>(
+        child: PsWidgetWithAppBar<PostalAddressProvider>(
             appBarTitle:
                 Utils.getString(context, 'postal_address_list__app_bar_name') ,
             initProvider: () {
-              return ShippingAreaProvider(
+              return PostalAddressProvider(
                   repo: repo1!, psValueHolder: psValueHolder);
             },
-            onProviderReady: (ShippingAreaProvider provider) {
-              provider.loadShippingAreaList();
-              shippingAreaProvider = provider;
-              return shippingAreaProvider;
+            onProviderReady: (PostalAddressProvider provider) async {
+              final Map<String, dynamic> jsonMap = <String, dynamic>{};
+
+              jsonMap['postcode'] = widget.postcode;
+              /*setState(() async {
+                postalAddress = await provider.loadPostalAddressesList(jsonMap);
+                print(postalAddress.addresses![0].line_1);
+              });*/
+              provider.loadPostalAddressesList(jsonMap);
+              postalAddressProvider = provider;
+              return postalAddressProvider;
             },
-            builder: (BuildContext context, ShippingAreaProvider provider,
+            builder: (BuildContext context, PostalAddressProvider provider,
                 Widget? child) {
               return Stack(children: <Widget>[
                 Container(
-                    child: RefreshIndicator(
+                    /*child: RefreshIndicator(*/
                   child: ListView.builder(
                       controller: _scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: 6,//provider.shippingAreaList.data!.length,
+                      itemCount: provider.addressList.data!.length,
                       itemBuilder: (BuildContext context, int index) {
-                        if (provider.shippingAreaList.status ==
+
+                        if (provider.addressList.status ==
                             PsStatus.BLOCK_LOADING) {
                           return Shimmer.fromColors(
                               baseColor: PsColors.grey,
@@ -119,11 +131,10 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
                                 PsFrameUIForLoading(),
                                 PsFrameUIForLoading(),
                               ]));
-                        } else {
-                          final List<String>  addresses = ['47, George Avenue','48, George Avenue',
-                            '49, George Avenue','50, George Avenue','51, George Avenue',
-                            '52, George Avenue',];
-                          final int count = 6;//provider.shippingAreaList.data!.length;
+                        }
+                        else {
+                          final int count = provider.addressList.data!.length;
+
                           return FadeTransition(
                               opacity: animation!,
                               child: PostalAddressListItem(
@@ -136,19 +147,20 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
                                         curve: Curves.fastOutSlowIn),
                                   ),
                                 ),
-                                address: addresses[index],//provider.shippingAreaList.data![index],
+                                address: provider.addressList.data![index].line_1!,
                                 onTap: () {
                                   Navigator.pop(context,
-                                      addresses[index]/*provider.shippingAreaList.data![index]*/);
+                                      provider.addressList.data![index]);
                                 },
                               ));
-                        }
-                      }),
-                  onRefresh: () {
+                          }
+                      }
+                      /*}*/),
+                  /*onRefresh: () {
                     return provider.resetShippingAreaList();
                   },
-                )),
-                PSProgressIndicator(provider.shippingAreaList.status)
+                */),
+                /*PSProgressIndicator(provider.shippingAreaList.status)*/
               ]);
             }));
   }

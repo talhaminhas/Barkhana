@@ -529,9 +529,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               AreaListView());
 
     case '${RoutePaths.postalAddressList}':
+      final Object? args = settings.arguments;
+      final String postcode = args as String;
       return PageRouteBuilder<dynamic>(
           pageBuilder: (_, Animation<double> a1, Animation<double> a2) =>
-              PostalAddressListView());
+              PostalAddressListView(postcode: postcode,));
 
     case '${RoutePaths.galleryGrid}':
       final Object? args = settings.arguments;

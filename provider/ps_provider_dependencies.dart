@@ -13,6 +13,7 @@ import 'package:flutterrestaurant/db/favourite_product_dao.dart';
 import 'package:flutterrestaurant/db/gallery_dao.dart';
 import 'package:flutterrestaurant/db/history_dao.dart';
 import 'package:flutterrestaurant/db/noti_dao.dart';
+import 'package:flutterrestaurant/db/postal_address_dao.dart';
 import 'package:flutterrestaurant/db/product_collection_header_dao.dart';
 import 'package:flutterrestaurant/db/product_dao.dart';
 import 'package:flutterrestaurant/db/product_map_dao.dart';
@@ -46,6 +47,7 @@ import 'package:flutterrestaurant/repository/gallery_repository.dart';
 import 'package:flutterrestaurant/repository/history_repsitory.dart';
 import 'package:flutterrestaurant/repository/language_repository.dart';
 import 'package:flutterrestaurant/repository/noti_repository.dart';
+import 'package:flutterrestaurant/repository/postal_address_repository.dart';
 import 'package:flutterrestaurant/repository/product_collection_repository.dart';
 import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/repository/ps_theme_repository.dart';
@@ -102,6 +104,7 @@ List<SingleChildWidget> independentProviders = <SingleChildWidget>[
   Provider<SearchHistoryDao>.value(value: SearchHistoryDao.instance),
   Provider<GalleryDao>.value(value: GalleryDao.instance),
   Provider<ShippingAreaDao>.value(value: ShippingAreaDao.instance),
+  Provider<PostalAddressDao>.value(value: PostalAddressDao.instance),
   Provider<BasketDao>.value(value: BasketDao.instance),
   Provider<AboutAppDao>.value(value: AboutAppDao.instance),
   Provider<ReservationDao>.value(value: ReservationDao.instance),
@@ -300,6 +303,12 @@ List<SingleChildWidget> _dependentProviders = <SingleChildWidget>[
             ShippingAreaRepository? shippingAreaRepository) =>
         ShippingAreaRepository(
             psApiService: psApiService, shippingAreaDao: shippingAreaDao),
+  ),
+  ProxyProvider2<PsApiService, PostalAddressDao, PostalAddressRepository>(
+    update: (_, PsApiService psApiService, PostalAddressDao postalAddressDao,
+        PostalAddressRepository? postalAddressRepository) =>
+        PostalAddressRepository(
+            psApiService: psApiService, postalAddressDao: postalAddressDao),
   ),
   ProxyProvider<PsApiService, CouponDiscountRepository>(
     update: (_, PsApiService psApiService,
