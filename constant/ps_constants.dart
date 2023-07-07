@@ -78,6 +78,9 @@ class PsConst {
   static const String VALUE_HOLDER__END_DATE = 'END_DATE';
   static const String VALUE_HOLDER__LAT = 'VALUE_HOLDER__LAT';
   static const String VALUE_HOLDER__LNG = 'VALUE_HOLDER__LNG';
+  static const String VALUE_HOLDER__POSTCODE = 'VALUE_HOLDER__POSTCODE';
+  static const String VALUE_HOLDER__CITY = 'VALUE_HOLDER__CITY';
+  static const String VALUE_HOLDER__COUNTRY = 'VALUE_HOLDER__COUNTRY';
   static const String VALUE_HOLDER__GOOGLE_PLAY_STORE_URL = 'GOOGLE_PLAY_STORE_URL';
   static const String VALUE_HOLDER__APPLE_APP_STORE_URL = 'APPLE_APP_STORE_URL';
   static const String VALUE_HOLDER__DEFAULT_LANGUAGE_CODE = 'DEFAULT_LANGUAGE_CODE';

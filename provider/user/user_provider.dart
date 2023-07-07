@@ -49,6 +49,10 @@ class UserProvider extends PsProvider {
         holderUser = resource.data!;
         originalUserLat = _user.data!.userLat!;
         originalUserLng = _user.data!.userLng!;
+        originalUserPostcode = _user.data!.userPostcode!;
+        originalUserCountry = _user.data!.userCountry!;
+        originalUserCity = _user.data!.userCity!;
+
       }
 
       if (resource.status != PsStatus.BLOCK_LOADING &&
@@ -69,6 +73,9 @@ class UserProvider extends PsProvider {
   bool isCheckBoxSelect = true;
   String? originalUserLat;
   String? originalUserLng;
+  String? originalUserPostcode;
+  String? originalUserCity;
+  String? originalUserCountry;
   String? selectedRadioBtnName = PsConst.ORDER_TIME_ASAP;
   bool isClickDeliveryButton = true;
   bool isClickPickUpButton = false;
@@ -114,6 +121,39 @@ late  StreamController<PsResource<User>> userListStream;
     user.data!.userLat = latlng.latitude.toString();
     user.data!.userLng = latlng.longitude.toString();
   }
+  String getUserPostcode(PsValueHolder psValueHolder) {
+    if (
+    user.data == null ||
+        user.data!.userPostcode == '') {
+      return psValueHolder.postcode!.toString();
+    }
+      return user.data!.userPostcode.toString();
+  }
+  void setUserPostcode(String postcode) {
+    user.data!.userPostcode = postcode;
+  }
+  String getUserCity(PsValueHolder psValueHolder) {
+    if (
+    user.data == null ||
+        user.data!.userCity == '') {
+      return psValueHolder.city!.toString();
+    }
+    return user.data!.userCity.toString();
+  }
+  void setUserCity(String city) {
+    user.data!.userCity = city;
+  }
+  String getUserCountry(PsValueHolder psValueHolder) {
+    if (
+    user.data == null ||
+        user.data!.userCountry == '') {
+      return psValueHolder.country!.toString();
+    }
+    return user.data!.userCountry.toString();
+  }
+  void setUserCountry(String country) {
+    user.data!.userCountry = country;
+  }
 
   bool hasLatLng(PsValueHolder psValueHolder) {
     final LatLng? _latlng = getUserLatLng(psValueHolder);
@@ -124,6 +164,42 @@ late  StreamController<PsResource<User>> userListStream;
     } else {
       if (_latlng.latitude.toString() == psValueHolder.lat &&
           _latlng.longitude.toString() == psValueHolder.lng) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+  bool hasPostcode(PsValueHolder psValueHolder) {
+    final String? _postcode = getUserPostcode(psValueHolder);
+    if (_postcode == null || _postcode == '' ) {
+      return false;
+    } else {
+      if (_postcode.toString() == psValueHolder.postcode ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+  bool hasCity(PsValueHolder psValueHolder) {
+    final String? _city = getUserCity(psValueHolder);
+    if (_city == null || _city == '' ) {
+      return false;
+    } else {
+      if (_city.toString() == psValueHolder.city ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+  bool hasCountry(PsValueHolder psValueHolder) {
+    final String? _country = getUserPostcode(psValueHolder);
+    if (_country == null || _country == '' ) {
+      return false;
+    } else {
+      if (_country.toString() == psValueHolder.postcode ) {
         return false;
       } else {
         return true;

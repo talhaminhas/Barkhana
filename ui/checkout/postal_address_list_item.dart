@@ -7,13 +7,14 @@ import 'package:flutterrestaurant/viewobject/shipping_area.dart';
 class PostalAddressListItem extends StatelessWidget {
   const PostalAddressListItem(
       {Key? key,
-      required this.address,
+      required this.address, required this.city,
       this.onTap,
       this.animationController,
       this.animation})
       : super(key: key);
 
   final String address;
+  final String city;
   final Function? onTap;
   final AnimationController? animationController;
   final Animation<double>? animation;
@@ -29,14 +30,15 @@ class PostalAddressListItem extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width,
           color: PsColors.backgroundColor,
-          height: PsDimens.space52,
+          height: PsDimens.space72,
           margin: const EdgeInsets.only(top: PsDimens.space4),
           child: Padding(
               padding: const EdgeInsets.all(PsDimens.space16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
                         address,
@@ -46,7 +48,14 @@ class PostalAddressListItem extends StatelessWidget {
                             .titleMedium!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
-
+                      Text(
+                        city,
+                        textAlign: TextAlign.start,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                 ],

@@ -160,6 +160,9 @@ class __DeliveryLocationViewState extends State<DeliveryLocationView>
         userAreaId: userProvider.selectedArea!.id!,
         userLat: userProvider.user.data!.userLat!,
         userLng: userProvider.user.data!.userLng!,
+            userPostcode: userProvider.user.data!.userPostcode!,
+            userCountry: userProvider.user.data!.userCountry!,
+            userCity: userProvider.user.data!.userCity!
       );
       await PsProgressDialog.showDialog(context);
       final PsResource<User> _apiStatus = await userProvider

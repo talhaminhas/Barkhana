@@ -37,6 +37,10 @@ class DetailInfoTileView extends StatelessWidget {
             bottom: PsDimens.space12),
         decoration: BoxDecoration(
           color: PsColors.backgroundColor,
+          border: Border.all(
+            color: PsColors.mainColor,  // Set the desired border color here
+            width: 2,  // Set the border width
+          ),
           borderRadius:
               const BorderRadius.all(Radius.circular(PsDimens.space8)),
         ),

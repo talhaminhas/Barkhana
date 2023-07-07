@@ -107,7 +107,6 @@ class UserRepository extends PsRepository {
       StreamController<dynamic> userStream, PsStatus status) async {
     final Finder finder =
         Finder(filter: Filter.equals(_userPrimaryKey, loginUserId));
-
     userStream.sink.add(await _userDao.getOne(finder: finder, status: status));
   }
 

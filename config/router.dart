@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
+import 'package:flutterrestaurant/provider/product/product_provider.dart';
 import 'package:flutterrestaurant/ui/app_info/app_info_view.dart';
 import 'package:flutterrestaurant/ui/app_loading/app_loading_view.dart';
 import 'package:flutterrestaurant/ui/basket/list/basket_list_container.dart';
@@ -537,10 +538,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case '${RoutePaths.galleryGrid}':
       final Object? args = settings.arguments;
-      final Product product = args as Product;
+      final ProductDetailProvider product = args as ProductDetailProvider;
       return PageRouteBuilder<dynamic>(
           pageBuilder: (_, Animation<double> a1, Animation<double> a2) =>
-              GalleryGridView(product: product));
+              GalleryGridView(provider: product));
 
     case '${RoutePaths.shopGalleryGrid}':
       final Object? args = settings.arguments;

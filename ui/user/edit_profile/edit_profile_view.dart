@@ -234,7 +234,11 @@ class _TwoButtonWidget extends StatelessWidget {
                           userAboutMe: aboutMeController.text,
                           userAreaId: userProvider.selectedArea!.id!,
                           userLat: '',
-                          userLng: '');
+                          userLng: '',
+                          userCountry: '',
+                        userCity: '',
+                        userPostcode: '',
+                      );
                   await PsProgressDialog.showDialog(context);
                   final PsResource<User> _apiStatus = await userProvider
                       .postProfileUpdate(profileUpdateParameterHolder.toMap());

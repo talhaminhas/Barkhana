@@ -122,6 +122,7 @@ class PsApiService extends PsApi {
   Future<PsResource<User>> postProfileUpdate(
       Map<dynamic, dynamic> jsonMap) async {
     const String url = '${PsUrl.ps_post_ps_user_update_profile_url}';
+    print(PsUrl.ps_post_ps_user_update_profile_url);
     return await postData<User, User>(User(), url, jsonMap);
   }
 
@@ -167,7 +168,7 @@ class PsApiService extends PsApi {
   Future<PsResource<List<User>>> getUser(String userId) async {
     final String url =
         '${PsUrl.ps_user_url}/api_key/${PsConfig.ps_api_key}/user_id/$userId';
-
+  print('${PsUrl.ps_user_url}/api_key/${PsConfig.ps_api_key}/user_id/$userId');
     return await getServerCall<User, List<User>>(User(), url);
   }
 
@@ -362,6 +363,7 @@ class PsApiService extends PsApi {
   Future<PsResource<TransactionHeader>> postTransactionSubmit(
       Map<dynamic, dynamic> jsonMap) async {
     const String url = '${PsUrl.ps_transaction_submit_url}';
+    print('${PsUrl.ps_transaction_submit_url}');
     return await postData<TransactionHeader, TransactionHeader>(
         TransactionHeader(), url, jsonMap);
   }

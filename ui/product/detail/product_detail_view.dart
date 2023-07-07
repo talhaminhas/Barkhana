@@ -483,7 +483,7 @@ class _ProductDetailState extends State<ProductDetailView>
                                 onTap: () {
                                   Navigator.pushNamed(
                                       context, RoutePaths.galleryGrid,
-                                      arguments: provider.productDetail.data);
+                                      arguments: provider);
                                 },
                               ),
                             ),
@@ -509,7 +509,7 @@ class _ProductDetailState extends State<ProductDetailView>
                                   bottomSheetPrice: bottomSheetPrice,
                                   psValueHolder:psValueHolder!
                                 ),
-                                CustomizeTileView(
+                                /*CustomizeTileView(
                                     productDetail: provider.productDetail.data!,
                                     psValueHolder: psValueHolder,
                                     addAttributeFromRadioView:
@@ -520,7 +520,7 @@ class _ProductDetailState extends State<ProductDetailView>
                                     selectedcustomizedDetail:
                                         selectedcustomizedDetail,
                                     addIntentAttributePrice:
-                                        addIntentAttributePrice),
+                                        addIntentAttributePrice),*/
                                 AddOnTileView(
                                   productDetail: provider.productDetail.data!,
                                   selectedAddOnList: selectedAddOnList,
@@ -532,13 +532,13 @@ class _ProductDetailState extends State<ProductDetailView>
                                           <BasketSelectedAddOn>[],
                                   addIntentAddOnPrice: addIntentAddOnPrice,
                                 ),
-                                DetailInfoTileView(
+                                /*DetailInfoTileView(
+                                  productDetail: provider,
+                                ),*/
+                                /*UserCommentTileView(
                                   productDetail: provider,
                                 ),
-                                UserCommentTileView(
-                                  productDetail: provider,
-                                ),
-                                TermsAndPolicyTileView(),
+                                TermsAndPolicyTileView(),*/
                                 // RelatedProductsTileView(
                                 //   productDetail: provider,
                                 // ),
@@ -849,11 +849,15 @@ class _AddOnTileViewState extends State<AddOnTileView> {
             bottom: PsDimens.space12),
         decoration: BoxDecoration(
           color: PsColors.backgroundColor,
+          border: Border.all(
+            color: PsColors.mainColor,  // Set the desired border color here
+            width: 2,  // Set the border width
+          ),
           borderRadius:
               const BorderRadius.all(Radius.circular(PsDimens.space8)),
         ),
         child: PsExpansionTile(
-            initiallyExpanded: true,
+            initiallyExpanded: false,
             title: _expansionTileTitleWidget,
             children: <Widget>[
               MediaQuery.removePadding(
@@ -1374,7 +1378,7 @@ class __HeaderBoxWidgetState extends State<_HeaderBoxWidget> {
       //   widget.productDetail.productDetail != null &&
         widget.productDetail.productDetail.data != null) {
       return Container(
-        margin: const EdgeInsets.all(PsDimens.space12),
+        margin: const EdgeInsets.all(PsDimens.space8),
         decoration: BoxDecoration(
           color: PsColors.backgroundColor,
           borderRadius:
@@ -1383,71 +1387,90 @@ class __HeaderBoxWidgetState extends State<_HeaderBoxWidget> {
         child: Column(
           children: <Widget>[
             Padding(
-                padding: const EdgeInsets.all(PsDimens.space16),
+                padding: const EdgeInsets.all(PsDimens.space8),
                 child: Column(
                   children: <Widget>[
+
+
                     _FavouriteWidget(
                         productDetail: widget.productDetail,
                         product: widget.product,
                         heroTagTitle: widget.heroTagTitle),
-                    const SizedBox(
+
+                    /*const SizedBox(
                       height: PsDimens.space12,
-                    ),
-                    _HeaderPriceWidget(
-                      product: widget.productDetail.productDetail.data!,
-                      originalPriceFormatString:
+                    ),*/
+                    Row(
+                      children: [
+                        Expanded(
+                            child: Text(
+                              widget.productDetail.productDetail.data!
+                                  .highlightInformation ??
+                                  '',
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  letterSpacing: 0.8, fontSize: 16, height: 1.3),
+                            ),
+                        ),
+                        const SizedBox(
+                            width: PsDimens.space12,
+                          ),
+                        _HeaderPriceWidget(
+                          product: widget.productDetail.productDetail.data!,
+                          originalPriceFormatString:
                           widget.originalPriceFormatString,
-                      unitPriceFormatString: widget.unitPriceFormatString,
-                      heroTagOriginalPrice: widget.heroTagOriginalPrice,
-                      heroTagUnitPrice: widget.heroTagUnitPrice,
-                      price: widget.bottomSheetPrice ,
-                      valueHolder: widget.psValueHolder,
-                      // ??
-                      //     double.parse(widget.product.unitPrice),
+                          unitPriceFormatString: widget.unitPriceFormatString,
+                          heroTagOriginalPrice: widget.heroTagOriginalPrice,
+                          heroTagUnitPrice: widget.heroTagUnitPrice,
+                          price: widget.bottomSheetPrice ,
+                          valueHolder: widget.psValueHolder,
+                          // ??
+                          //     double.parse(widget.product.unitPrice),
+                        ),
+                      ],
                     ),
-                    const SizedBox(
-                      height: PsDimens.space12,
-                    ),
-                    Divider(
-                      height: PsDimens.space1,
-                      color: PsColors.mainColor,
-                    ),
+
+
+                    /*Container(
+                      margin: const EdgeInsets.only(bottom: PsDimens.space8),
+                      child: Card(
+                        elevation: 0.0,
+                        shape: const BeveledRectangleBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(PsDimens.space8)),
+                        ),
+                        color: PsColors.baseLightColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            widget.productDetail.productDetail.data!
+                                .highlightInformation ??
+                                '',
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                letterSpacing: 0.8, fontSize: 16, height: 1.3),
+                          ),
+                        ),
+                      ),
+                    ),*/
+                    /*,
                     Padding(
                       padding: const EdgeInsets.only(
                           top: PsDimens.space16, bottom: PsDimens.space4),
                       child: _HeaderRatingWidget(
                         productDetail: widget.productDetail,
                       ),
-                    ),
+                    ),*/
                   ],
                 )),
-            Container(
-              margin: const EdgeInsets.only(
-                  left: PsDimens.space20,
-                  right: PsDimens.space20,
-                  bottom: PsDimens.space8),
-              child: Card(
-                elevation: 0.0,
-                shape: const BeveledRectangleBorder(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(PsDimens.space8)),
-                ),
-                color: PsColors.baseLightColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(
-                    widget.productDetail.productDetail.data!
-                            .highlightInformation ??
-                        '',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        letterSpacing: 0.8, fontSize: 16, height: 1.3),
-                  ),
-                ),
-              ),
-            ),
-            DescriptionTileView(
+            /*const SizedBox(
+              height: PsDimens.space4,
+            ),*/
+            Divider(
+                      height: PsDimens.space2,
+                      color: PsColors.mainColor,
+                    )
+            /*DescriptionTileView(
               productDetail: widget.productDetail.productDetail.data!,
-            ),
+            ),*/
             // const Divider(
             //   height: PsDimens.space1,
             // ),
@@ -1514,7 +1537,7 @@ class __FavouriteWidgetState extends State<_FavouriteWidget> {
                         tag: widget.heroTagTitle,
                         child: Text(
                           widget.productDetail.productDetail.data!.name ?? '',
-                          style: Theme.of(context).textTheme.headlineSmall,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         )),
                   ),
                   GestureDetector(
@@ -1569,10 +1592,10 @@ class __FavouriteWidgetState extends State<_FavouriteWidget> {
                                         bottom: PsDimens.space6),
                                     decoration: BoxDecoration(
                                         border: Border.all(
-                                            color: PsColors.mainColor),
+                                            color: PsColors.discountColor),
                                         shape: BoxShape.circle),
                                     child: Icon(Icons.favorite,
-                                        color: PsColors.mainColor),
+                                        color: PsColors.discountColor),
                                   );
                                 } else {
                                   icon = Container(
@@ -1583,10 +1606,10 @@ class __FavouriteWidgetState extends State<_FavouriteWidget> {
                                         bottom: PsDimens.space6),
                                     decoration: BoxDecoration(
                                         border: Border.all(
-                                            color: PsColors.mainColor),
+                                            color: PsColors.grey),
                                         shape: BoxShape.circle),
                                     child: Icon(Icons.favorite_border,
-                                        color: PsColors.mainColor),
+                                        color: PsColors.grey),
                                   );
                                 }
                               }
@@ -1620,10 +1643,10 @@ class __FavouriteWidgetState extends State<_FavouriteWidget> {
                                       bottom: PsDimens.space6),
                                   decoration: BoxDecoration(
                                       border:
-                                          Border.all(color: PsColors.mainColor),
+                                          Border.all(color: PsColors.discountColor),
                                       shape: BoxShape.circle),
                                   child: Icon(Icons.favorite_border,
-                                      color: PsColors.mainColor),
+                                      color: PsColors.discountColor),
                                 )
                               : icon = Container(
                                   padding: const EdgeInsets.only(
@@ -1633,10 +1656,10 @@ class __FavouriteWidgetState extends State<_FavouriteWidget> {
                                       bottom: PsDimens.space6),
                                   decoration: BoxDecoration(
                                       border:
-                                          Border.all(color: PsColors.mainColor),
+                                          Border.all(color: PsColors.discountColor),
                                       shape: BoxShape.circle),
                                   child: Icon(Icons.favorite,
-                                      color: PsColors.mainColor),
+                                      color: PsColors.discountColor),
                                 )
                           : null)
                 ]);
@@ -1670,11 +1693,11 @@ class __HeaderRatingWidgetState extends State<_HeaderRatingWidget> {
         widget.productDetail.productDetail.data!.ratingDetail != null) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           InkWell(
             onTap: () async {
-              /*result = await Navigator.pushNamed(context, RoutePaths.ratingList,
+              result = await Navigator.pushNamed(context, RoutePaths.ratingList,
                   arguments: widget.productDetail.productDetail.data!.id);
 
               if (result != null && result) {
@@ -1683,12 +1706,12 @@ class __HeaderRatingWidgetState extends State<_HeaderRatingWidget> {
                       widget.productDetail.productDetail.data!.id!,
                       widget.productDetail.psValueHolder!.loginUserId!);
                 });
-              }*/
+              }
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                /*SmoothStarRating(
+                SmoothStarRating(
                     key: Key(widget.productDetail.productDetail.data!
                         .ratingDetail!.totalRatingValue!),
                     rating: double.parse(widget.productDetail.productDetail.data!
@@ -1750,11 +1773,10 @@ class __HeaderRatingWidgetState extends State<_HeaderRatingWidget> {
                             ],
                           )
                         : Text(Utils.getString(
-                            context, 'product_detail__no_rating'))),*/
+                            context, 'product_detail__no_rating'))),
                 const SizedBox(
                   height: PsDimens.space10,
-                ),
-                if (widget.productDetail.productDetail.data!.isAvailable == '1')
+                ),if (widget.productDetail.productDetail.data!.isAvailable == '1')
                   Text(
                     Utils.getString(context, 'product_detail__in_stock'),
                     style: Theme.of(context)
@@ -1821,7 +1843,7 @@ class __HeaderRatingWidgetState extends State<_HeaderRatingWidget> {
 }
 
 class _HeaderPriceWidget extends StatefulWidget {
-  const _HeaderPriceWidget(
+  const  _HeaderPriceWidget(
       {Key? key,
       required this.product,
       required this.originalPriceFormatString,
@@ -1879,6 +1901,31 @@ class __HeaderPriceWidgetState extends State<_HeaderPriceWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
+                const SizedBox(
+                height: PsDimens.space4,
+              ),
+
+
+                PsHero(
+                  tag: widget.heroTagUnitPrice,
+                  flightShuttleBuilder: Utils.flightShuttleBuilder,
+                  child: Material(
+                      color: PsColors.transparent,
+                      child: Text(
+                        widget.price != null
+                            ? '${widget.product.currencySymbol}${Utils.getPriceFormat(widget.price.toString(),widget.valueHolder)}'
+                            : '${widget.product.currencySymbol}${Utils.getPriceFormat(widget.product.unitPrice!,widget.valueHolder)}',
+                        // '${widget.product.currencySymbol}${widget.unitPriceFormatString}',
+                        //overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            //.copyWith(color: PsColors.mainColor),
+                      )),
+                ),
+                const SizedBox(
+                  height: PsDimens.space4,
+                ),
                 if (widget.product.isDiscount == PsConst.ONE)
                   PsHero(
                       tag: widget.heroTagOriginalPrice,
@@ -1889,36 +1936,17 @@ class __HeaderPriceWidgetState extends State<_HeaderPriceWidget> {
                             '${widget.product.currencySymbol}${widget.originalPriceFormatString}',
                             style: Theme.of(context)
                                 .textTheme
-                                .bodyMedium!
+                                .headlineSmall!
+                                .copyWith(color: PsColors.discountColor)
                                 .copyWith(
-                                    decoration: TextDecoration.lineThrough),
+                                decoration: TextDecoration.lineThrough),
                           )))
                 else
                   Container(),
-                const SizedBox(
-                  height: PsDimens.space4,
-                ),
-                PsHero(
-                  tag: widget.heroTagUnitPrice,
-                  flightShuttleBuilder: Utils.flightShuttleBuilder,
-                  child: Material(
-                      color: PsColors.transparent,
-                      child: Text(
-                        widget.price != null
-                            ? '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.price.toString(),widget.valueHolder)}'
-                            : '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.unitPrice!,widget.valueHolder)}',
-                        // '${widget.product.currencySymbol}${widget.unitPriceFormatString}',
-                        //overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(color: PsColors.mainColor),
-                      )),
-                ),
               ],
             ),
           ),
-          const SizedBox(
+          /*const SizedBox(
             width: PsDimens.space16,
           ),
           if (widget.product.isDiscount == PsConst.ONE)
@@ -1951,7 +1979,7 @@ class __HeaderPriceWidgetState extends State<_HeaderPriceWidget> {
             Container(),
           const SizedBox(
             width: PsDimens.space10,
-          ),
+          ),*/
         ],
       );
     } else {
@@ -2357,7 +2385,7 @@ class __AddToBasketAndBuyButtonWidgetState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(
+            /*Container(
               margin: const EdgeInsets.symmetric(horizontal: PsDimens.space8),
               child: _FloatingActionButton(
                 icons: icons,
@@ -2365,7 +2393,7 @@ class __AddToBasketAndBuyButtonWidgetState
                 controller: widget.controller,
                 psValueHolder: widget.psValueHolder,
               ),
-            ),
+            ),*/
             const SizedBox(height: PsDimens.space12),
             SizedBox(
               width: double.infinity,

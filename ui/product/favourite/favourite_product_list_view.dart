@@ -194,7 +194,7 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                             await provider
                                                 .resetFavouriteProductList();
                                           },
-                                          onButtonTap: () async {
+                                          onBasketTap: () async {
                                             if (product.isAvailable == '1') {
                                               if (product.addOnList!.isNotEmpty &&
                                                   product.addOnList![0].id != '' ||

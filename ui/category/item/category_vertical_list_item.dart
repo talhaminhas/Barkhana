@@ -29,36 +29,49 @@ class CategoryVerticalListItem extends StatelessWidget {
             child: Card(
                 elevation: 0.3,
                 child: Container(
-                    child: Stack(
-                  alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: PsColors.black.withAlpha(210),
+                      border: Border.all(
+                        color: PsColors.mainColor, // Set the desired border color here
+                        width: 2, // Set the border width
+                      ),
+                      borderRadius: BorderRadius.circular(10), // Set the desired border radius
+                    ),
+                    child: Column(
                   children: <Widget>[
                     ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
+
+                        borderRadius: BorderRadius.circular(10),
                         child: Stack(
                           children: <Widget>[
                             Container(
+
                               child: PsNetworkImage(
+
                                 photoKey: '',
                                 defaultPhoto: category.defaultPhoto!,
                                 width: PsDimens.space200,
-                                height: PsDimens.space220,
+                                height: PsDimens.space200,
                                 boxfit: BoxFit.cover,
                               ),
                             ),
-                            Container(
+                            /*Container(
                               width: 200,
                               height: double.infinity,
                               color: PsColors.black.withAlpha(110),
-                            )
+                            )*/
                           ],
                         )),
+                    const SizedBox(
+                      height: PsDimens.space4,
+                    ),
                     Text(
                       category.name!,
                       textAlign: TextAlign.start,
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                           color: PsColors.white, fontWeight: FontWeight.bold),
                     ),
-                    Container(
+                    /*Container(
                         child: Positioned(
                       bottom: 10,
                       left: 10,
@@ -72,7 +85,7 @@ class CategoryVerticalListItem extends StatelessWidget {
                           onTap: onTap!,
                         ),
                       ),
-                    )),
+                    )),*/
                   ],
                 )))),
         builder: (BuildContext context, Widget? child) {

@@ -601,7 +601,38 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                   message: Utils.getString(context, 'warning_dialog__address'),
                 );
               });
-        } else if (checkout1ViewState.userPhoneController.text.isEmpty) {
+
+        } else if (checkout1ViewState.userPostcodeController.text.isEmpty &&
+            checkout1ViewState.userProvider.isClickDeliveryButton) {
+          showDialog<dynamic>(
+              context: context,
+              builder: (BuildContext context) {
+                return ErrorDialog(
+                  message: Utils.getString(context, 'warning_dialog__postcode'),
+                );
+              });
+
+        }else if (checkout1ViewState.userCityController.text.isEmpty &&
+            checkout1ViewState.userProvider.isClickDeliveryButton) {
+          showDialog<dynamic>(
+              context: context,
+              builder: (BuildContext context) {
+                return ErrorDialog(
+                  message: Utils.getString(context, 'warning_dialog__city'),
+                );
+              });
+
+        }else if (checkout1ViewState.userCountryController.text.isEmpty &&
+            checkout1ViewState.userProvider.isClickDeliveryButton) {
+          showDialog<dynamic>(
+              context: context,
+              builder: (BuildContext context) {
+                return ErrorDialog(
+                  message: Utils.getString(context, 'warning_dialog__country'),
+                );
+              });
+
+        }else if (checkout1ViewState.userPhoneController.text.isEmpty) {
           showDialog<dynamic>(
               context: context,
               builder: (BuildContext context) {

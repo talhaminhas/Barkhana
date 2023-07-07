@@ -158,7 +158,7 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                     gridDelegate:
                                         const SliverGridDelegateWithMaxCrossAxisExtent(
                                             maxCrossAxisExtent: 220,
-                                            childAspectRatio: 0.6),
+                                            childAspectRatio: 0.84),
                                     delegate: SliverChildBuilderDelegate(
                                       (BuildContext context, int index) {
                                         if (provider.productList.data != null ||
@@ -169,6 +169,7 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                           final Product product = provider
                                               .productList.data![index];
                                           return ProductVeticalListItem(
+                                            qty: qty ?? product.minimumOrder,
                                             coreTagKey:
                                                 provider.hashCode.toString() +
                                                     provider.productList
@@ -220,9 +221,39 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                   RoutePaths.productDetail,
                                                   arguments: holder);
                                             },
-                                            onButtonTap: () async {
+                                            onAddTap: () async{
+                                              qty= (int.tryParse(basket!.qty!)!+1).toString();
+                                              print(qty!);
+                                              id =
+                                              '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
+                                              basket = Basket(
+                                                  id: id,
+                                                  productId: product!.id,
+                                                  qty: basket!.qty,
+                                                  shopId: valueHolder!.shopId,
+                                                  selectedColorId: colorId,
+                                                  selectedColorValue: colorValue,
+                                                  basketPrice: bottomSheetPrice == null
+                                                      ? product.unitPrice
+                                                      : bottomSheetPrice.toString(),
+                                                  basketOriginalPrice: totalOriginalPrice == 0.0
+                                                      ? product.originalPrice
+                                                      : totalOriginalPrice.toString(),
+                                                  selectedAttributeTotalPrice:
+                                                  basketSelectedAttribute
+                                                      .getTotalSelectedAttributePrice()
+                                                      .toString(),
+                                                  product: product,
+                                                  basketSelectedAttributeList:
+                                                  basketSelectedAttribute.getSelectedAttributeList(),
+                                                  basketSelectedAddOnList:
+                                                  basketSelectedAddOn.getSelectedAddOnList());
+
+                                              await basketProvider!.updateBasket(basket!);
+                                            },
+                                            onBasketTap: () async {
                                               if (product.isAvailable == '1') {
-                                                if (product.addOnList!.isNotEmpty &&
+                                                /*if (product.addOnList!.isNotEmpty &&
                                                     product.addOnList![0].id != '' ||
                                                     product.customizedHeaderList!.isNotEmpty &&
                                                     product.customizedHeaderList![0].id != '' &&
@@ -234,7 +265,7 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                           product: provider
                                                               .productList.data![index]);
                                                     });
-                                                } else {
+                                                } else {*/
                                                   id =
                                                       '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                                                   if (product.minimumOrder == '0') {
@@ -273,11 +304,11 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                       backgroundColor: PsColors.mainColor,
                                                       textColor: PsColors.white);
 
-                                                      await Navigator.pushNamed(
+                                                      /*await Navigator.pushNamed(
                                                         context,
                                                         RoutePaths.basketList,
-                                                    );
-                                                  }
+                                                    );*/
+                                                  //}
                                               } else {
                                               showDialog<dynamic>(
                                                   context: context,

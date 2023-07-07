@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
+import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/provider/basket/basket_provider.dart';
 import 'package:flutterrestaurant/repository/basket_repository.dart';
@@ -86,8 +87,10 @@ class _ImageAndTextWidget extends StatelessWidget {
           child: Consumer<BasketProvider>(builder: (BuildContext context,
               BasketProvider basketProvider, Widget? child) {
             return Container(
-              color: PsColors.backgroundColor,
-              margin: const EdgeInsets.only(top: PsDimens.space8),
+                //color: PsColors.backgroundColor,
+                margin: const EdgeInsets.all(PsDimens.space8),
+                decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
+            borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -100,12 +103,13 @@ class _ImageAndTextWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(
-                                top: PsDimens.space8, left: PsDimens.space16),
-                            child: Container(
-                              width: PsDimens.space60,
-                              height: PsDimens.space60,
+                            padding: const EdgeInsets.all(PsDimens.space8),
+                            child: ClipRRect(
+
+                              borderRadius: BorderRadius.circular(PsDimens.space8),
                               child: PsNetworkImage(
+                                width: PsDimens.space160,
+                                height: PsDimens.space120,
                                 photoKey: '',
                                 defaultPhoto: basket.product!.defaultPhoto!,
                                 boxfit: BoxFit.cover,
@@ -345,13 +349,16 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
 
     final Widget _removeIconWidget = IconButton(
         iconSize: PsDimens.space32,
-        icon: Icon(Icons.remove_circle, color: PsColors.grey),
+        icon: Icon(Icons.remove_circle, color: PsColors.discountColor),
         onPressed: () {
           onUpdateItemCount(2);
         });
     return Container(
-      margin: const EdgeInsets.only(
-          top: PsDimens.space8, bottom: PsDimens.space8, left: PsDimens.space8),
+      /*margin: const EdgeInsets.only(
+          top: PsDimens.space8, bottom: PsDimens.space8, left: PsDimens.space8),*/
+          decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
+        borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
+    ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.min,
@@ -359,16 +366,12 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
           _removeIconWidget,
           Center(
             child: Container(
-              height: PsDimens.space24,
+              //height: PsDimens.space24,
               alignment: Alignment.center,
-              decoration:
-                  BoxDecoration(border: Border.all(color: PsColors.grey)),
-              padding: const EdgeInsets.only(
-                  left: PsDimens.space24, right: PsDimens.space24),
               child: Text(
                 widget.basket.qty!,
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
           ),

@@ -275,8 +275,11 @@ class _CategoryListViewState extends State<CategoryListView>
                                 SliverGrid(
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
-                                          maxCrossAxisExtent: 200.0,
+                                          maxCrossAxisExtent: 100.0,
                                           childAspectRatio: 0.8),
+                                  /*const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                  ),*/
                                   delegate: SliverChildBuilderDelegate(
                                     (BuildContext context, int index) {
                                       if (provider.categoryList.data != null ||

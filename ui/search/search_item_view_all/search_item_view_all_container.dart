@@ -321,7 +321,7 @@ class _SearchItemViewAllContainerState extends State<SearchItemViewAllContainer>
                                                       RoutePaths.productDetail,
                                                       arguments: holder);
                                                 },
-                                                onButtonTap: () async {
+                                                onBasketTap: () async {
                                                   id =
                                                       '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                                                   if (product.minimumOrder ==

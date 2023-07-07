@@ -449,7 +449,7 @@ class __HomeLatestProductHorizontalListWidgetState
                                                     RoutePaths.productDetail,
                                                     arguments: holder);
                                               },
-                                              onButtonTap: () async {
+                                              onBasketTap: () async {
                                                 if (product.isAvailable ==
                                                     '1') {
                                                   if (product.addOnList!

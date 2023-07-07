@@ -51,7 +51,7 @@ class Checkout1View extends StatefulWidget {
 class _Checkout1ViewState extends State<Checkout1View> {
   TextEditingController userEmailController = TextEditingController();
   TextEditingController userPostcodeController = TextEditingController();
-  TextEditingController userTownController = TextEditingController();
+  TextEditingController userCityController = TextEditingController();
   TextEditingController userCountryController = TextEditingController();
   TextEditingController userPhoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -209,6 +209,9 @@ class _Checkout1ViewState extends State<Checkout1View> {
           userEmailController.text = userProvider.user.data!.userEmail!;
           userPhoneController.text = userProvider.user.data!.userPhone!;
           addressController.text = userProvider.user.data!.address!;
+          userPostcodeController.text = userProvider.user.data!.userPostcode!;
+          userCityController.text = userProvider.user.data!.userCity!;
+          userCountryController.text = userProvider.user.data!.userCountry!;
           shippingAreaController.text =
               userProvider.user.data!.area!.areaName! +
                   ' (' +
@@ -298,7 +301,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                   final Address selectedAddress = result as Address;
                                   setState(() {
                                     addressController.text = selectedAddress.line_1!;
-                                    userTownController.text = selectedAddress.townOrCity!;
+                                    userCityController.text = selectedAddress.townOrCity!;
                                     userCountryController.text = selectedAddress.country!;
                                   });
                                 }
@@ -317,10 +320,10 @@ class _Checkout1ViewState extends State<Checkout1View> {
 
                           }),
                       PsTextFieldWidget(
-                          titleText: Utils.getString(context, 'edit_profile__town'),
+                          titleText: Utils.getString(context, 'edit_profile__city'),
                           textAboutMe: false,
-                          hintText: Utils.getString(context, 'edit_profile__town'),
-                          textEditingController: userTownController,
+                          hintText: Utils.getString(context, 'edit_profile__city'),
+                          textEditingController: userCityController,
                           isMandatory: true),
                       PsTextFieldWidget(
                           titleText: Utils.getString(context, 'edit_profile__country'),
@@ -424,6 +427,9 @@ class _Checkout1ViewState extends State<Checkout1View> {
         userProvider.user.data!.address == addressController.text &&
         userProvider.user.data!.area!.areaName == shippingAreaController.text &&
         userProvider.user.data!.userLat == userProvider.originalUserLat &&
+        userProvider.user.data!.userPostcode == userPostcodeController.text &&
+        userProvider.user.data!.userCity == userCityController.text &&
+        userProvider.user.data!.userCountry == userCountryController.text &&
         userProvider.user.data!.userLng == userProvider.originalUserLng) {
       return true;
     } else {
@@ -486,6 +492,9 @@ class _Checkout1ViewState extends State<Checkout1View> {
         userEmail: userEmailController.text.trim(),
         userPhone: userPhoneController.text,
         userAddress: addressController.text,
+        userPostcode: userPostcodeController.text,
+            userCity: userCityController.text,
+            userCountry: userCountryController.text,
         userAboutMe: userProvider.user.data!.userAboutMe!,
         userAreaId: userProvider.selectedArea!.id!,
         userLat: userProvider.user.data!.userLat!,

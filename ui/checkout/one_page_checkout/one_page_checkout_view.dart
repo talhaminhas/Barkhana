@@ -1691,6 +1691,11 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
         userAreaId: userProvider.selectedArea!.id!,
         userLat: userProvider.user.data!.userLat!,
         userLng: userProvider.user.data!.userLng!,
+            userPostcode: userProvider.user.data!.userPostcode!,
+            userCity: userProvider.user.data!.userCity!,
+            userCountry: userProvider.user.data!.userCountry!,
+
+
       );
       await PsProgressDialog.showDialog(context);
       final PsResource<User> _apiStatus = await userProvider

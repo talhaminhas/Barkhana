@@ -147,7 +147,10 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
                                         curve: Curves.fastOutSlowIn),
                                   ),
                                 ),
-                                address: provider.addressList.data![index].line_1!,
+                                address: provider.addressList.data![index].line_1! + ', ' +
+                                    provider.addressList.data![index].line_2!,
+                                city: provider.addressList.data![index].townOrCity! + ', ' +
+                                    provider.addressList.data![index].country! + '.',
                                 onTap: () {
                                   Navigator.pop(context,
                                       provider.addressList.data![index]);

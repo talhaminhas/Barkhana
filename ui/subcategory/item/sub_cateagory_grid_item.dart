@@ -27,33 +27,45 @@ class SubCategoryGridItem extends StatelessWidget {
             child: Card(
                 elevation: 0.3,
                 child: Container(
+                    decoration: BoxDecoration(
+                      color: PsColors.black.withAlpha(210),
+                      border: Border.all(
+                        color: PsColors.mainColor, // Set the desired border color here
+                        width: 2, // Set the border width
+                      ),
+                      borderRadius: BorderRadius.circular(10), // Set the desired border radius
+                    ),
                     child: Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
                     ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Stack(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Column(
                           children: <Widget>[
                             PsNetworkImage(
                               photoKey: '',
                               defaultPhoto: subCategory.defaultPhoto!,
                               width: PsDimens.space200,
-                              height: PsDimens.space200,
+                              height: PsDimens.space100,
                               boxfit: BoxFit.cover,
                             ),
-                            Container(
+                            const SizedBox(
+                              height: PsDimens.space4,
+                            ),
+                            Text(
+                              subCategory.name!,
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                                  color: PsColors.white, fontWeight: FontWeight.bold),
+                            ),
+                            /*Container(
                               width: 200,
                               height: double.infinity,
                               color: PsColors.black.withAlpha(110),
-                            )
+                            )*/
                           ],
                         )),
-                    Text(
-                      subCategory.name!,
-                      textAlign: TextAlign.start,
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                          color: PsColors.white, fontWeight: FontWeight.bold),
-                    ),
+
                   ],
                 )))),
         builder: (BuildContext context, Widget? child) {

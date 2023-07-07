@@ -61,6 +61,7 @@ class Checkout3View extends StatefulWidget {
 class _Checkout3ViewState extends State<Checkout3View> {
   bool isCheckBoxSelect = false;
   bool isCashClicked = false;
+  bool isGlobalPayment = false;
   bool isPickUpClicked = false;
   bool isPaypalClicked = false;
   bool isStripeClicked = false;

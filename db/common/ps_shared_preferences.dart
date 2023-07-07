@@ -78,6 +78,9 @@ class PsSharedPreferences {
     final String? _endDate = shared.getString(PsConst.VALUE_HOLDER__END_DATE);
     final String? _lat = shared.getString(PsConst.VALUE_HOLDER__LAT);
     final String? _lng = shared.getString(PsConst.VALUE_HOLDER__LNG);
+    final String? _postcode = shared.getString(PsConst.VALUE_HOLDER__LNG);
+    final String? _city = shared.getString(PsConst.VALUE_HOLDER__LNG);
+    final String? _country = shared.getString(PsConst.VALUE_HOLDER__LNG);
     final String? _googlePlayStoreUrl =
         shared.getString(PsConst.VALUE_HOLDER__GOOGLE_PLAY_STORE_URL);
     final String? _appleAppStoreUrl =
@@ -219,6 +222,9 @@ class PsSharedPreferences {
       lat: _lat,
       latestProductLoadingLimit: _latestProductLoadingLimit,
       lng: _lng,
+      postcode: _postcode,
+      city: _city,
+      country: _country,
       priceFormat: _priceFormat,
       showFacebookLogin: _showFacebookLogin,
       showFeaturedItems: _showFeaturedItems,
