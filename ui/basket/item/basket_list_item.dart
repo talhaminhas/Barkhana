@@ -121,7 +121,7 @@ class _ImageAndTextWidget extends StatelessWidget {
                           ),
                           Flexible(
                             child: Column(
-                              mainAxisSize: MainAxisSize.max,
+                              //mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -133,16 +133,17 @@ class _ImageAndTextWidget extends StatelessWidget {
                                     basket.product!.name!,
                                     overflow: TextOverflow.ellipsis,
                                     style:
-                                        Theme.of(context).textTheme.titleSmall,
+                                        Theme.of(context).textTheme.titleLarge,
                                   ),
                                 ),
                                 Text(
                                   '${Utils.getString(context, 'basket_list__price')}  ${basket.product!.currencySymbol} ${Utils.getPriceFormat(basket.basketPrice!,psValueHolder)}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  style: Theme.of(context).textTheme.titleMedium,
+
                                 ),
-                                const SizedBox(
+                                /*const SizedBox(
                                   height: PsDimens.space8,
-                                ),
+                                ),*/
                                 Text(
                                   '${Utils.getString(context, 'basket_list__sub_total')} ${basket.product!.currencySymbol} ${Utils.getPriceFormat(subTotalPrice.toString(),psValueHolder)}',
                                   style: Theme.of(context).textTheme.bodyMedium,
