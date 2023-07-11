@@ -69,7 +69,6 @@ class _ItemSearchViewState extends State<HomeItemSearchView> {
         width: double.infinity,
         titleText: Utils.getString(context, 'home_search__search'),
         onPressed: () async {
-          print('s');
           if (userInputItemNameTextEditingController.text != null &&
               userInputItemNameTextEditingController.text != '') {
             _searchProductProvider!.productParameterHolder.searchTerm =

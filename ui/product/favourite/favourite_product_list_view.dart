@@ -130,7 +130,7 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
                                           maxCrossAxisExtent: 220,
-                                          childAspectRatio: 0.6),
+                                          childAspectRatio: 0.84),
                                   delegate: SliverChildBuilderDelegate(
                                     (BuildContext context, int index) {
                                       if (provider.favouriteProductList.data !=
@@ -194,9 +194,65 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                             await provider
                                                 .resetFavouriteProductList();
                                           },
+                                          onUpdateQuantityTap: (String? productQuantity) async{
+                                            //print(productQuantity!);
+
+                                            id =
+                                            '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
+                                            basket = Basket(
+                                                id: id,
+                                                productId: product!.id,
+                                                qty: productQuantity,
+                                                shopId: psValueHolder!.shopId,
+                                                selectedColorId: colorId,
+                                                selectedColorValue: colorValue,
+                                                basketPrice: bottomSheetPrice == null
+                                                    ? product.unitPrice
+                                                    : bottomSheetPrice.toString(),
+                                                basketOriginalPrice: totalOriginalPrice == 0.0
+                                                    ? product.originalPrice
+                                                    : totalOriginalPrice.toString(),
+                                                selectedAttributeTotalPrice:
+                                                basketSelectedAttribute
+                                                    .getTotalSelectedAttributePrice()
+                                                    .toString(),
+                                                product: product,
+                                                basketSelectedAttributeList:
+                                                basketSelectedAttribute.getSelectedAttributeList(),
+                                                basketSelectedAddOnList:
+                                                basketSelectedAddOn.getSelectedAddOnList());
+
+                                            if(productQuantity == '0')
+                                            {
+                                              basketProvider!.deleteBasketByProduct(
+                                                  basket!);
+                                              /*showDialog<dynamic>(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return ConfirmDialogView(
+                                                            description: Utils.getString(context,
+                                                                'basket_list__confirm_dialog_description'),
+                                                            leftButtonText: Utils.getString(
+                                                                context,
+                                                                'basket_list__comfirm_dialog_cancel_button'),
+                                                            rightButtonText: Utils.getString(
+                                                                context,
+                                                                'basket_list__comfirm_dialog_ok_button'),
+                                                            onAgreeTap: () async {
+                                                              Navigator.of(context).pop();
+                                                              basketProvider!.deleteBasketByProduct(
+                                                                  basketProvider!
+                                                                      .basketList.data![index]);
+                                                            });
+                                                      });*/
+                                            }
+                                            else
+                                              await basketProvider!.updateBasket(basket!);
+                                            //reloadGrid();
+                                          },
                                           onBasketTap: () async {
                                             if (product.isAvailable == '1') {
-                                              if (product.addOnList!.isNotEmpty &&
+                                              /*if (product.addOnList!.isNotEmpty &&
                                                   product.addOnList![0].id != '' ||
                                                   product.customizedHeaderList!.isNotEmpty &&
                                                   product.customizedHeaderList![0].id != '' &&
@@ -208,7 +264,7 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                                         product: provider
                                                               .favouriteProductList.data![index]);
                                                     });
-                                              } else { 
+                                              } else { */
                                                 id =
                                                     '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                                                 if (product.minimumOrder == '0') {
@@ -247,11 +303,11 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                                   backgroundColor: PsColors.mainColor,
                                                   textColor: PsColors.white);
 
-                                                  await Navigator.pushNamed(
+                                                  /*await Navigator.pushNamed(
                                                     context,
                                                     RoutePaths.basketList,
-                                                );
-                                              }
+                                                );*/
+                                              //}
                                             } else {
                                               showDialog<dynamic>(
                                                   context: context,

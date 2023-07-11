@@ -27,6 +27,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../../common/dialog/confirm_dialog_view.dart';
+
 class ProductListWithFilterView extends StatefulWidget {
   const ProductListWithFilterView(
       {Key? key,
@@ -97,6 +99,10 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
   BasketSelectedAttribute basketSelectedAttribute = BasketSelectedAttribute();
   BasketSelectedAddOn basketSelectedAddOn = BasketSelectedAddOn();
 
+  void reloadGrid() {
+    setState(() {
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,8 +174,11 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                               provider.productList.data!.length;
                                           final Product product = provider
                                               .productList.data![index];
+                                          Basket? basket = basketProvider!.basketList.data!.firstWhere((item) => item.id == product.id, orElse: () => Basket());
+                                          //print(basket.qty);
                                           return ProductVeticalListItem(
                                             qty: qty ?? product.minimumOrder,
+                                            basket: basket,
                                             coreTagKey:
                                                 provider.hashCode.toString() +
                                                     provider.productList
@@ -221,15 +230,15 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                   RoutePaths.productDetail,
                                                   arguments: holder);
                                             },
-                                            onAddTap: () async{
-                                              qty= (int.tryParse(basket!.qty!)!+1).toString();
-                                              print(qty!);
+                                            onUpdateQuantityTap: (String? productQuantity) async{
+                                              //print(productQuantity!);
+
                                               id =
                                               '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                                               basket = Basket(
                                                   id: id,
                                                   productId: product!.id,
-                                                  qty: basket!.qty,
+                                                  qty: productQuantity,
                                                   shopId: valueHolder!.shopId,
                                                   selectedColorId: colorId,
                                                   selectedColorValue: colorValue,
@@ -249,7 +258,33 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                   basketSelectedAddOnList:
                                                   basketSelectedAddOn.getSelectedAddOnList());
 
-                                              await basketProvider!.updateBasket(basket!);
+                                              if(productQuantity == '0')
+                                                {
+                                                  basketProvider!.deleteBasketByProduct(
+                                                      basket!);
+                                                  /*showDialog<dynamic>(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return ConfirmDialogView(
+                                                            description: Utils.getString(context,
+                                                                'basket_list__confirm_dialog_description'),
+                                                            leftButtonText: Utils.getString(
+                                                                context,
+                                                                'basket_list__comfirm_dialog_cancel_button'),
+                                                            rightButtonText: Utils.getString(
+                                                                context,
+                                                                'basket_list__comfirm_dialog_ok_button'),
+                                                            onAgreeTap: () async {
+                                                              Navigator.of(context).pop();
+                                                              basketProvider!.deleteBasketByProduct(
+                                                                  basketProvider!
+                                                                      .basketList.data![index]);
+                                                            });
+                                                      });*/
+                                                }
+                                              else
+                                                await basketProvider!.updateBasket(basket!);
+                                              //reloadGrid();
                                             },
                                             onBasketTap: () async {
                                               if (product.isAvailable == '1') {

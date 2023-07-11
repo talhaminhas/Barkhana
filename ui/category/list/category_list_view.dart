@@ -258,7 +258,7 @@ class _CategoryListViewState extends State<CategoryListView>
                             context, RoutePaths.searchHistory);
                     }),
                 ),),*/
-                  Expanded(
+                  /*Expanded(
                     child: Container(
                         margin: const EdgeInsets.only(
                             left: PsDimens.space8,
@@ -277,9 +277,9 @@ class _CategoryListViewState extends State<CategoryListView>
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
                                           maxCrossAxisExtent: 100.0,
                                           childAspectRatio: 0.8),
-                                  /*const SliverGridDelegateWithFixedCrossAxisCount(
+                                  *//*const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3,
-                                  ),*/
+                                  ),*//*
                                   delegate: SliverChildBuilderDelegate(
                                     (BuildContext context, int index) {
                                       if (provider.categoryList.data != null ||
@@ -365,7 +365,7 @@ class _CategoryListViewState extends State<CategoryListView>
                                 .resetCategoryList(categoryIconList.toMap());
                           },
                         )),
-                  ),
+                  ),*/
                 ]),
                 PSProgressIndicator(provider.categoryList.status)
               ]);

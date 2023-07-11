@@ -865,7 +865,7 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                 removeTop: true,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                      bottom: PsDimens.space16, right: PsDimens.space16),
+                      bottom: PsDimens.space2, right: PsDimens.space16, left: PsDimens.space16),
                   child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
@@ -889,12 +889,23 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                 widget.productDetail.addOnList![index],
                                 widget.selectedAddOnList);
                           },
+                          child:Container (
+                            decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
+                                borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
+                            ),
+                          margin: const EdgeInsets.only(
+                            top: PsDimens.space8
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.only(
-                                top: PsDimens.space8, left: PsDimens.space32),
+                                top: 0,
+                                left: 0,
+                              right: 0,
+                              bottom: 0
+                            ),
                             child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Expanded(
@@ -904,8 +915,15 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                           alignment: Alignment.center,
                                           children: <Widget>[
                                             Container(
-                                              width: PsDimens.space60,
-                                              height: PsDimens.space60,
+                                              width: PsDimens.space120,
+                                              height: PsDimens.space80,
+                                              child: ClipPath(
+                                                clipper: const ShapeBorderClipper(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.only(
+                                                             topLeft: Radius.circular(PsDimens.space8),
+                                                            bottomLeft: Radius.circular(PsDimens.space8)
+                                                        ))),
                                               child: PsNetworkImage(
                                                 photoKey: '',
                                                 defaultPhoto: widget
@@ -937,32 +955,14 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                                       widget.selectedAddOnList);
                                                 },
                                               ),
+                                    ),
                                             ),
-                                            if (widget.selectedAddOnList
-                                                    .containsKey(widget
-                                                        .productDetail
-                                                        .addOnList![index]) ==
-                                                widget.selectedAddOnList[widget
-                                                    .productDetail
-                                                    .addOnList![index]])
-                                              Container(
-                                                width: PsDimens.space60,
-                                                height: PsDimens.space60,
-                                                child: CircleAvatar(
-                                                  child: Icon(
-                                                      Icons.check_circle,
-                                                      size: PsDimens.space44,
-                                                      color:
-                                                          PsColors.mainColor),
-                                                  backgroundColor:
-                                                      PsColors.transparent,
-                                                ),
-                                              )
-                                            else
-                                              Container()
+
+
                                           ],
                                         ),
                                         Expanded(
+
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Column(
@@ -974,7 +974,7 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                                       .addOnList![index].name!,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .bodyMedium!
+                                                      .titleLarge!
                                                       .copyWith(
                                                           color: PsColors
                                                               .textPrimaryDarkColor),
@@ -982,7 +982,30 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
-                                                Padding(
+                                                if (widget.productDetail.addOnList![index]
+                                                    .price ==
+                                                    null ||
+                                                    widget.productDetail.addOnList![index]
+                                                        .price ==
+                                                        '')
+                                                  Container()
+                                                else
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(top: PsDimens.space8),
+                                                    child: Text(
+                                                        '+ ${widget.productDetail.currencySymbol}' +
+                                                            Utils.getPriceFormat(
+                                                                '${widget.productDetail.addOnList![index].price}',
+                                                                widget.psValueHolder),
+                                                        style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleLarge!
+                                                        .copyWith(
+                                                        color: PsColors
+                                                            .textPrimaryDarkColor),
+                                                    ),
+                                                  ),
+                                                /*Padding(
                                                   padding:
                                                       const EdgeInsets.only(
                                                           top: 4.0),
@@ -1001,7 +1024,7 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
-                                                )
+                                                )*/
                                               ],
                                             ),
                                           ),
@@ -1009,23 +1032,42 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                       ],
                                     ),
                                   ),
-                                  if (widget.productDetail.addOnList![index]
-                                              .price ==
-                                          null ||
-                                      widget.productDetail.addOnList![index]
-                                              .price ==
-                                          '')
-                                    Container()
+                                  if (widget.selectedAddOnList
+                                      .containsKey(widget
+                                      .productDetail
+                                      .addOnList![index]) ==
+                                      widget.selectedAddOnList[widget
+                                          .productDetail
+                                          .addOnList![index]])
+                                    Container(
+                                      width: PsDimens.space44,
+                                      height: PsDimens.space44,
+                                      decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
+                                          borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space40))
+                                      ),
+                                      margin: const EdgeInsets.all(PsDimens.space18),
+                                      child: CircleAvatar(
+                                        child: Icon(
+                                            Icons.check_circle,
+                                            size: PsDimens.space40,
+                                            color:PsColors.greenColor),
+                                        backgroundColor:
+                                        PsColors.transparent,
+                                      ),
+                                    )
                                   else
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 12.0),
-                                      child: Text(
-                                          '+ ${widget.productDetail.currencySymbol} ' +
-                                              Utils.getPriceFormat(
-                                                  '${widget.productDetail.addOnList![index].price}',widget.psValueHolder)),
-                                    ),
+                                    Container(
+                                      width: PsDimens.space44,
+                                      height: PsDimens.space44,
+                                      decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
+                                          borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space40))
+                                      ),
+                                      margin: const EdgeInsets.all(PsDimens.space18),
+                                    )
                                 ]),
                           ),
+
+                        ),
                         );
                       }),
                 ),
@@ -1464,10 +1506,6 @@ class __HeaderBoxWidgetState extends State<_HeaderBoxWidget> {
             /*const SizedBox(
               height: PsDimens.space4,
             ),*/
-            Divider(
-                      height: PsDimens.space2,
-                      color: PsColors.mainColor,
-                    )
             /*DescriptionTileView(
               productDetail: widget.productDetail.productDetail.data!,
             ),*/
@@ -2307,8 +2345,10 @@ class __AddToBasketAndBuyButtonWidgetState
                   product: widget.product,
                   price: widget.bottomSheetPrice ??
                       double.parse(widget.product.unitPrice!),
-                ),
-                Divider(height: PsDimens.space20, color: PsColors.mainColor),
+                  updateQty: updateQty,
+                  qty: qty,
+                ),/*
+                Divider(height: PsDimens.space20, color: PsColors.mainColor),*/
                 Flexible(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -2324,24 +2364,6 @@ class __AddToBasketAndBuyButtonWidgetState
                             product: widget.product,
                             updateColorIdAndValue: updateColorIdAndValue,
                             selectedColorId: colorId!,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(
-                                top: PsDimens.space8,
-                                left: PsDimens.space12,
-                                right: PsDimens.space12),
-                            child: Text(
-                              Utils.getString(
-                                  context, 'product_detail__how_many'),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              softWrap: false,
-                            ),
-                          ),
-                          _IconAndTextWidget(
-                            product: widget.product,
-                            updateQty: updateQty,
-                            qty: qty,
                           ),
                           // _AttributesWidget(
                           //     product: widget.product,
@@ -2536,11 +2558,15 @@ class _ImageAndTextForBottomSheetWidget extends StatefulWidget {
     required this.product,
     required this.price,
     required this.valueHolder,
+    required this.updateQty,
+    required this.qty
   }) : super(key: key);
 
   final Product product;
   final double? price;
   final PsValueHolder valueHolder;
+  final Function updateQty;
+  final String? qty;
   @override
   __ImageAndTextForBottomSheetWidgetState createState() =>
       __ImageAndTextForBottomSheetWidgetState();
@@ -2551,6 +2577,7 @@ class __ImageAndTextForBottomSheetWidgetState
   @override
   Widget build(BuildContext context) {
     return Container(
+
       padding: const EdgeInsets.only(
           left: PsDimens.space16,
           right: PsDimens.space16,
@@ -2560,77 +2587,86 @@ class __ImageAndTextForBottomSheetWidgetState
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            width: PsDimens.space60,
-            height: PsDimens.space60,
-            child: PsNetworkImage(
-              photoKey: '',
-              defaultPhoto: widget.product.defaultPhoto!,
+            width: PsDimens.space160,
+            height: PsDimens.space160,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0), // Adjust the border radius as desired
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: PsColors.mainColor, // Adjust the border color as desired
+                    width: 1.0, // Adjust the border width as desired
+                  ),
+                ),
+                child: PsNetworkImage(
+                  photoKey: '',
+                  defaultPhoto: widget.product.defaultPhoto!,
+                ),
+              ),
             ),
           ),
-          const SizedBox(
-            width: PsDimens.space8,
-          ),
+          /*const SizedBox(
+            width: PsDimens.space20,
+          ),*/
           Flexible(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center, // Align content in the center
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: PsDimens.space8),
-                  child: (widget.product.isDiscount == PsConst.ONE)
-                      ? Row(
-                          children: <Widget>[
-                            Text(
-                              widget.price != null
-                                  ? '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.price.toString(),widget.valueHolder)}'
-                                  : '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.unitPrice!,widget.valueHolder)}',
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(color: PsColors.mainColor),
-                            ),
-                            const SizedBox(
-                              width: PsDimens.space8,
-                            ),
-                            Text(
-                              '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.originalPrice!,widget.valueHolder)}',
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      decoration: TextDecoration.lineThrough),
-                            )
-                          ],
-                        )
-                      : Text(
-                          widget.price != null
-                              ? '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.price.toString(),widget.valueHolder)}'
-                              : '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.unitPrice!,widget.valueHolder)}',
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(color: PsColors.mainColor),
-                        ),
-                ),
-                const SizedBox(
-                  height: PsDimens.space2,
-                ),
                 Text(
                   widget.product.name!,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(color: PsColors.grey),
+                  style: Theme.of(context).textTheme.headlineSmall!,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: PsDimens.space4),
+                  child: (widget.product.isDiscount == PsConst.ONE)
+                      ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center, // Align row content in the center
+                    children: <Widget>[
+                      Text(
+                        widget.price != null
+                            ? '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.price.toString(), widget.valueHolder)}'
+                            : '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.unitPrice!, widget.valueHolder)}',
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleLarge!,
+                      ),
+                      const SizedBox(
+                        width: PsDimens.space10,
+                      ),
+                      Text(
+                        '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.originalPrice!, widget.valueHolder)}',
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          decoration: TextDecoration.lineThrough,
+                          color: PsColors.discountColor,
+                        ),
+                      )
+                    ],
+                  )
+                      : Text(
+                    widget.price != null
+                        ? '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.price.toString(), widget.valueHolder)}'
+                        : '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.unitPrice!, widget.valueHolder)}',
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium!
+                        .copyWith(color: PsColors.mainColor),
+                  ),
+                ),
+                _IconAndTextWidget(
+                  product: widget.product,
+                  updateQty: widget.updateQty,
+                  qty: widget.qty,
                 ),
               ],
             ),
-          )
+
+          ),
+
         ],
       ),
     );
@@ -2731,7 +2767,7 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
 
     final Widget _removeIconWidget = IconButton(
         iconSize: PsDimens.space32,
-        icon: Icon(Icons.remove_circle, color: PsColors.grey),
+        icon: Icon(Icons.remove_circle, color: PsColors.discountColor),
         onPressed: () {
           onUpdateItemCount(2);
         });
@@ -2739,6 +2775,9 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
     return Container(
       margin:
           const EdgeInsets.only(top: PsDimens.space8, bottom: PsDimens.space8),
+      decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
+          borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.min,
@@ -2748,16 +2787,14 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
             child: Container(
               height: PsDimens.space24,
               alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  border: Border.all(color: PsColors.mainDividerColor)),
               padding: const EdgeInsets.only(
-                  left: PsDimens.space24, right: PsDimens.space24),
+                  left: PsDimens.space28, right: PsDimens.space28),
               child: Text(
                 '$orderQty', //?? widget.product.minimumOrder,
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
-                    .bodyMedium!
+                    .headlineSmall!
                     .copyWith(color: PsColors.mainColor),
               ),
             ),

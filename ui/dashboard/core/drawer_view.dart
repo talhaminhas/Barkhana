@@ -59,6 +59,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../../../provider/basket/basket_provider.dart';
+
 class DashboardView extends StatefulWidget {
   @override
   _HomeViewState createState() => _HomeViewState();
@@ -164,6 +166,12 @@ class _HomeViewState extends State<DashboardView>
       case PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT:
         index = 0;
         break;
+      case PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT:
+        index = 0;
+        break;
+      case PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT:
+        index = 0;
+        break;
       case PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT:
         index = 1;
         break;
@@ -172,7 +180,7 @@ class _HomeViewState extends State<DashboardView>
         break;
       // case PsConst.REQUEST_CODE__MENU_SHOPS_FRAGMENT:
       //   index = 1;
-        break;
+        //break;
       case PsConst.REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT:
         index = 4;
         break;
@@ -218,7 +226,7 @@ class _HomeViewState extends State<DashboardView>
     switch (param) {
       case 0:
         index = PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT;
-        title = Utils.getString(context, 'app_name');
+        title = Utils.getString(context, 'home__drawer_menu_menu');
         break;
       case 1:
         index = PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT;
@@ -246,7 +254,7 @@ class _HomeViewState extends State<DashboardView>
         break;
       default:
         index = 0;
-        title = Utils.getString(context, 'app_name');
+        title = 'default';//Utils.getString(context, 'app_name');
         break;
     }
     return <dynamic>[title, index];
@@ -387,6 +395,14 @@ class _HomeViewState extends State<DashboardView>
                         psValueHolder: valueHolder);
                     return deleteTaskProvider;
               }),
+          ChangeNotifierProvider<BasketProvider>(
+              lazy: false,
+              create: (BuildContext context) {
+                final BasketProvider provider =
+                BasketProvider(repo: basketRepository!);
+                provider.loadBasketList();
+                return provider;
+              }),
             ],
             child: Consumer<UserProvider>(
               builder:
@@ -413,15 +429,7 @@ class _HomeViewState extends State<DashboardView>
                         updateSelectedIndexWithAnimation(
                             Utils.getString(context, 'app_name'), index);
                       }),*/
-                  _DrawerMenuWidget(
-                      icon: Icons.category,
-                      title: Utils.getString(
-                          context, 'home__drawer_menu_menu'),
-                      index: PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT,
-                      onTap: (String title, int index) {
-                        Navigator.pop(context);
-                        updateSelectedIndexWithAnimation(title, index);
-                      }),
+
                   /*_DrawerMenuWidget(
                       icon: Icons.folder_open,
                       title: Utils.getString(
@@ -431,6 +439,15 @@ class _HomeViewState extends State<DashboardView>
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
                       }),*/
+                  _DrawerMenuWidget(
+                      icon: Icons.category,
+                      title: Utils.getString(
+                          context, 'home__drawer_menu_menu'),
+                      index: PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT,
+                      onTap: (String title, int index) {
+                        Navigator.pop(context);
+                        updateSelectedIndexWithAnimation(title, index);
+                      }),
                   _DrawerMenuWidget(
                       icon: Icons.schedule,
                       title: Utils.getString(
@@ -747,8 +764,8 @@ class _HomeViewState extends State<DashboardView>
         ),
         appBar: AppBar(
           backgroundColor: PsColors.backgroundColor,
-          title: Text(
-            Utils.getString(context, 'app_name'),
+          title: Text( appBarTitle,
+            //'title1',//Utils.getString(context, 'app_name'),
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.bold,
                   color: PsColors.textPrimaryColor,
@@ -762,7 +779,7 @@ class _HomeViewState extends State<DashboardView>
             statusBarIconBrightness: Utils.getBrightnessForAppBar(context),
           ),
           actions: <Widget>[
-            IconButton(
+        /*IconButton(
               icon: Icon(
                 Icons.notifications_none,
                 color: Theme.of(context).iconTheme.color,
@@ -785,74 +802,136 @@ class _HomeViewState extends State<DashboardView>
                   RoutePaths.blogList,
                 );
               },
+            ),*/
+            ChangeNotifierProvider<BasketProvider>(
+            lazy: false,
+            create: (BuildContext context) {
+              final BasketProvider provider =
+                  BasketProvider(repo: basketRepository!);
+              provider.loadBasketList();
+              return provider;
+            },
+              child: Consumer<BasketProvider>(
+                builder: (BuildContext context, BasketProvider basketProvider, Widget? child) {
+                  //return Container(
+                    /*child: InkWell(
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            width: PsDimens.space40,
+                            height: PsDimens.space40,
+                            margin: const EdgeInsets.only(
+                              top: PsDimens.space8,
+                              left: PsDimens.space8,
+                              right: PsDimens.space8,
+                            ),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.shopping_basket,
+                                color: PsColors.mainColor,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            right: PsDimens.space4,
+                            top: PsDimens.space1,
+                            child: Container(
+                              width: PsDimens.space28,
+                              height: PsDimens.space28,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: PsColors.black.withAlpha(200),
+                              ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  basketProvider.basketList.data!.length! > 99 ? '99+' : basketProvider.basketList.data!.length.toString(),
+                                  textAlign: TextAlign.left,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(color: PsColors.white),
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          RoutePaths.basketList,
+                        );
+                      },
+                    ),*/
+                  if (_currentIndex != PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
+                  return GestureDetector(
+                  onTap: () {
+                    updateSelectedIndexWithAnimation(Utils.getString(
+                        context,
+                        Utils.getString(context, 'home__bottom_app_bar_basket_list')),
+                        PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
+
+                  },
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          width: PsDimens.space40,
+                          height: PsDimens.space40,
+                          margin: const EdgeInsets.only(
+                              top: PsDimens.space8,
+                              left: PsDimens.space8,
+                              right: PsDimens.space8),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.shopping_basket,
+                              color: PsColors.mainColor,
+                            ),
+                          ),
+                        ),
+                        if (basketProvider
+                            .basketList.data!.isNotEmpty)
+                          Positioned(
+                            right: PsDimens.space4,
+                            top: PsDimens.space1,
+                            child: Container(
+                              width: PsDimens.space28,
+                              height: PsDimens.space28,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: PsColors.black.withAlpha(200),
+                              ),
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  basketProvider.basketList.data!.length > 99
+                                      ? '99+'
+                                      : basketProvider.basketList.data!.length
+                                      .toString(),
+                                  textAlign: TextAlign.left,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(color: PsColors.white),
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                  return Container();
+                },
+              ),
             ),
-            // ChangeNotifierProvider<BasketProvider>(
-            // lazy: false,
-            // create: (BuildContext context) {
-            //   final BasketProvider provider =
-            //       BasketProvider(repo: basketRepository);
-            //   provider.loadBasketList();
-            //   return provider;
-            // },
-            // child: Consumer<BasketProvider>(builder: (BuildContext context,
-            //     BasketProvider basketProvider, Widget child) {
-            //   return InkWell(
-            //       child: Stack(
-            //         children: <Widget>[
-            //           Container(
-            //             width: PsDimens.space40,
-            //             height: PsDimens.space40,
-            //             margin: const EdgeInsets.only(
-            //                 top: PsDimens.space8,
-            //                 left: PsDimens.space8,
-            //                 right: PsDimens.space8),
-            //             child: Align(
-            //               alignment: Alignment.center,
-            //               child: Icon(
-            //                 Icons.shopping_basket,
-            //                 color: PsColors.mainColor,
-            //               ),
-            //             ),
-            //           ),
-            //           Positioned(
-            //             right: PsDimens.space4,
-            //             top: PsDimens.space1,
-            //             child: Container(
-            //               width: PsDimens.space28,
-            //               height: PsDimens.space28,
-            //               decoration: BoxDecoration(
-            //                 shape: BoxShape.circle,
-            //                 color: PsColors.black.withAlpha(200),
-            //               ),
-            //               child: Align(
-            //                 alignment: Alignment.center,
-            //                 child: Text(
-            //                   basketProvider.basketList.data.length > 99
-            //                       ? '99+'
-            //                       : basketProvider.basketList.data.length
-            //                           .toString(),
-            //                   textAlign: TextAlign.left,
-            //                   style: Theme.of(context)
-            //                       .textTheme
-            //                       .bodyLarge
-            //                       .copyWith(color: PsColors.white),
-            //                   maxLines: 1,
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //       onTap: () {
-            //         Navigator.pushNamed(
-            //           context,
-            //           RoutePaths.basketList,
-            //         );
-            //       });
-            // })),
-          ],
+        ]
         ),
-        bottomNavigationBar: _currentIndex ==
+
+      bottomNavigationBar: _currentIndex ==
                     PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT ||
                 _currentIndex == PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT ||
                 _currentIndex ==
@@ -879,7 +958,12 @@ class _HomeViewState extends State<DashboardView>
                 _currentIndex ==
                     PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
                 _currentIndex ==
-                    PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT
+                    PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT||
+            _currentIndex ==
+                PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT||
+            _currentIndex ==
+                PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT
+
             ? Visibility(
                 visible: true,
                 child: BottomNavigationBar(
@@ -954,7 +1038,12 @@ class _HomeViewState extends State<DashboardView>
                 _currentIndex ==
                     PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
                 _currentIndex ==
-                    PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT
+                    PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT||
+            _currentIndex ==
+                PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT||
+            _currentIndex ==
+                PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT ||
+        _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_VERIFY_FRAGMENT
             ? Container(
                 height: 65.0,
                 width: 65.0,
@@ -1626,7 +1715,8 @@ class _HomeViewState extends State<DashboardView>
                   PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT) {
                 return FavouriteProductListView(
                     animationController: animationController);
-              } else if (_currentIndex ==
+              }
+                else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT) {
                 return TransactionListView(
                     scaffoldKey: scaffoldKey,

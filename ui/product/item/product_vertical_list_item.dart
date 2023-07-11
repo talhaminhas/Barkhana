@@ -5,6 +5,7 @@ import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/ui/common/ps_hero.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
+import 'package:flutterrestaurant/viewobject/basket.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/product.dart';
 
@@ -17,19 +18,23 @@ class ProductVeticalListItem extends StatelessWidget {
       required this.valueHolder,
       this.onTap,
       this.onBasketTap,
-        this.onAddTap,
+        this.onUpdateQuantityTap,
         this.onRemoveTap,
       this.animationController,
       this.animation,
       this.coreTagKey,
-      this.qty})
+      this.qty,
+      this.basket
+      })
       : super(key: key);
 
+  final OnAddTapCallback? onUpdateQuantityTap;
   final String? qty;
   final Product product;
+  final Basket? basket;
   final Function? onTap;
   final Function? onBasketTap;
-  final Function? onAddTap;
+  //final Function? onAddTap;
   final Function? onRemoveTap;
   final String? coreTagKey;
   final AnimationController? animationController;
@@ -205,8 +210,9 @@ class ProductVeticalListItem extends StatelessWidget {
                                 updateQty: updateQty,
                                 qty: qty,
                                 onBasketTap: onBasketTap,
-                                onAddTap: onAddTap,
+                                onUpdateQuantityTap: onUpdateQuantityTap,
                                 onRemoveTap: onRemoveTap,
+                                basket: basket,
                               ),
                             ]
                         )
@@ -256,6 +262,8 @@ class ProductVeticalListItem extends StatelessWidget {
       });
   }
 }
+typedef OnAddTapCallback = void Function(String? parameter);
+
 class _IconAndTextWidget extends StatefulWidget {
    const _IconAndTextWidget({
     Key? key,
@@ -264,14 +272,16 @@ class _IconAndTextWidget extends StatefulWidget {
     required this.qty,
     required this.onBasketTap,
      required this.onRemoveTap,
-     required this.onAddTap
+     required this.onUpdateQuantityTap,
+     required this.basket
   }) : super(key: key);
-
+   final OnAddTapCallback? onUpdateQuantityTap;
   final Product product;
   final Function updateQty;
   final String? qty;
+  final Basket? basket;
   final Function? onBasketTap;
-   final Function? onAddTap;
+   //final Function? onAddTap;
    final Function? onRemoveTap;
 
   @override
@@ -299,10 +309,26 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
   }
 
   void initQty() {
-    if (orderQty == 0 && widget.qty != null && widget.qty != '') {
-      orderQty = int.parse(widget.qty!);
-    } else if (orderQty == 0) {
+    //print('init called');
+    //print(widget.basket?.qty);
+    //print(orderQty);
+    if (orderQty == 0 && widget.basket?.qty != null && widget.basket?.qty != '') {
+      orderQty = int.parse(widget.basket!.qty!);
+      setState(() {
+        showBasket = false;
+      });
+    }
+    /*else if (orderQty > 0 && orderQty < int.parse(widget.basket!.qty!) && widget.basket?.qty != null && widget.basket?.qty != '') {
+      orderQty = int.parse(widget.basket!.qty!);
+      setState(() {
+        showBasket = false;
+      });
+    }*/
+    else if (orderQty == 0) {
       orderQty = int.parse(widget.product.minimumOrder!);
+      setState(() {
+        showBasket = true;
+      });
     }
   }
 
@@ -319,12 +345,15 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
   }
 
   void _decreaseItemCount() {
-    if (orderQty != 0 && orderQty > minimumOrder) {
+    /*if (orderQty != 0 && orderQty > minimumOrder) {*/
       orderQty--;
       setState(() {
         widget.updateQty('$orderQty');
       });
-    } else {
+    //}
+
+    if (orderQty == 0)
+    {
       /*PsToast().showToast(
           ' ${Utils.getString(context, 'product_detail__minimum_order')}  ${widget.product.minimumOrder}');*/
       setState(() {
@@ -338,6 +367,10 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
       _increaseItemCount();
     } else if (buttonType == 2) {
       _decreaseItemCount();
+      if (orderQty == 0)
+        {
+          widget.basket?.qty = null;
+        }
     }
   }
 
@@ -355,7 +388,7 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
         icon: Icon(Icons.add_circle, color: PsColors.mainColor),
         onPressed: () {
           onUpdateItemCount(1);
-          widget.onAddTap!();
+          widget.onUpdateQuantityTap!.call(orderQty.toString());
           setState(() {
             showBasket = false;
           });
@@ -366,10 +399,11 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
         icon: Icon(Icons.remove_circle, color: PsColors.discountColor),
         onPressed: () {
           onUpdateItemCount(2);
+          widget.onUpdateQuantityTap!.call(orderQty.toString());
         });
 
     return Container(
-      //margin: const EdgeInsets.only(top: PsDimens.space1, bottom: PsDimens.space8),
+      margin: const EdgeInsets.only(top: PsDimens.space1, bottom: PsDimens.space8),
       decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
           borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
       ),

@@ -22,6 +22,7 @@ class PsColors {
   static Color mainLightShadowColor = Colors.black.withOpacity(0.5);
   static Color mainDividerColor = _d_divider_color;
   static Color whiteColorWithBlack = Colors.black;
+  static Color greenColor= Colors.green;
 
   ///
   /// Base Color

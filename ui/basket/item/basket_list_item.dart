@@ -91,6 +91,7 @@ class _ImageAndTextWidget extends StatelessWidget {
                 margin: const EdgeInsets.all(PsDimens.space8),
                 decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
             borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))),
+              alignment: Alignment.center,
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -159,7 +160,22 @@ class _ImageAndTextWidget extends StatelessWidget {
                           ),
                         ]),
                   ),
-                  _DeleteButtonWidget(onDeleteTap: onDeleteTap!),
+                  Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: PsColors.discountColor.withAlpha(29),
+                            border: Border.all(color: PsColors.discountColor, width: 2),
+                            borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
+                        ),
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(
+                            bottom: PsDimens.space10, right: PsDimens.space10,left:PsDimens.space8 ),
+                        child: _DeleteButtonWidget(onDeleteTap: onDeleteTap!),
+                      )
+                    ],
+                  )
+
                 ],
               ),
             );
@@ -183,16 +199,17 @@ class _DeleteButtonWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onDeleteTap as void Function()?,
       child: Container(
+        /*decoration: BoxDecoration(
+            border: Border.all(color: PsColors.mainColor, width: 2),
+            borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
+        ),*/
         width: PsDimens.space40,
         height: PsDimens.space56,
         padding: const EdgeInsets.all(8.0),
-        margin: const EdgeInsets.only(
-            bottom: PsDimens.space10, right: PsDimens.space10,left:PsDimens.space10 ),
-        color: PsColors.mainLightColor,
         alignment: Alignment.centerRight,
         child: Icon(
           Icons.delete,
-          color: PsColors.grey,
+          color: PsColors.discountColor,
         ),
       ),
     );

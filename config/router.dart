@@ -19,7 +19,7 @@ import 'package:flutterrestaurant/ui/comment/list/comment_list_view.dart';
 import 'package:flutterrestaurant/ui/contact/contact_us_container_view.dart';
 import 'package:flutterrestaurant/ui/create_reservation/entry/create_reservation_container_view.dart';
 import 'package:flutterrestaurant/ui/create_reservation/list/reservation_list_container.dart';
-import 'package:flutterrestaurant/ui/dashboard/core/dashboard_view.dart';
+import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/force_update/force_update_view.dart';
 import 'package:flutterrestaurant/ui/gallery/detail/gallery_view.dart';
 import 'package:flutterrestaurant/ui/gallery/grid/gallery_grid_view.dart';

@@ -204,6 +204,7 @@ class PsConst {
   static const int REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT = 2011;
   static const int REQUEST_CODE__DASHBOARD_FB_SIGNIN_FRAGMENT = 2012;
   static const int REQUEST_CODE__DASHBOARD_GOOGLE_VERIFY_FRAGMENT = 2013;
+  static const int REQUEST_CODE__DASHBOARD_SUBCATEGORY_VERIFY_FRAGMENT = 2014;
 
   // static final NumberFormat psFormat = NumberFormat(PsConfig.priceFormat);
   static const String priceTwoDecimalFormatString = '###.00';
