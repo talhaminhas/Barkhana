@@ -4,6 +4,8 @@ import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/ps_api_service.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
@@ -28,14 +30,19 @@ import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/api_status.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
+import 'package:flutterrestaurant/viewobject/global_token_header.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/credit_card_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/paystack_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import '../../api/common/ps_status.dart';
+import '../../api/ps_url.dart';
 import '../../ui/checkout/checkout1_view.dart';
 import '../../ui/checkout/checkout2_view.dart';
 import '../../ui/checkout/checkout3_view.dart';
+import '../../utils/ps_progress_dialog.dart';
+import '../../viewobject/holder/globalTokenPost.dart';
 import '../common/dialog/demo_warning_dialog.dart';
 
 class CheckoutContainerView extends StatefulWidget {
@@ -297,13 +304,88 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
     }
   }
 
+  Future<String?> postGlobalTokenData(GlobalTokenPost dataToSend, String url) async {
+
+    bool isConnectedToInternet = await Utils.checkInternetConnectivity();
+    if( isConnectedToInternet) {
+      try {
+        final http.Response response = await http.post(
+          Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(dataToSend.toJson()),
+        );
+
+        if (response.statusCode == 200) {
+          return response.body;
+        } else {
+          print('Failed to post data: ${response.statusCode}');
+          return null;
+        }
+      } catch (e) {
+        print('Error: $e');
+        return null;
+      }
+    }
+    else
+      {
+        showDialog<dynamic>(
+            context: context,
+            builder: (BuildContext context) {
+              return ErrorDialog(
+                message: Utils.getString(context, 'error_dialog__no_internet'),
+              );
+            });
+      }
+  }
   dynamic clickToNextCheck(User user, Function _closeCheckoutContainer,
       TokenProvider tokenProvider) async {
     if (viewNo < maxViewNo) {
       if (viewNo == 3) {
         checkout3ViewState.checkStatus();
         if (checkout3ViewState.isCheckBoxSelect) {
-          if (checkout3ViewState.isPaypalClicked) {
+          print('global');
+          showDialog<dynamic>(
+              context: context,
+              builder: (BuildContext context) {
+                return ConfirmDialogView(
+                    description: Utils.getString(
+                        context, 'checkout_container__confirm_order'),
+                    leftButtonText: Utils.getString(
+                        context, 'home__logout_dialog_cancel_button'),
+                    rightButtonText: Utils.getString(
+                        context, 'home__logout_dialog_ok_button'),
+                    onAgreeTap: () async {
+                      if (PsConfig.isDemo) {
+                        await callDemoWarningDialog(context);
+                      }
+                      Navigator.pop(context);
+                      const String url = '${PsConfig.ps_app_url}${PsUrl.ps_global_token_submit_url}';
+                      print(url);
+                      final GlobalTokenPost dataToSend = GlobalTokenPost(
+                        userEmail: user.userEmail,
+                        userPhone: user.userPhone,
+                        userAddress1: user.address,
+                        userAddress2: '',
+                        userCity: user.userCity,
+                        userPostcode: user.userPostcode,
+                        userTotal: '100',
+                      );
+                      String? token = await postGlobalTokenData(dataToSend, url);
+
+                      if (token != null) {
+                      // Handle the JSON response
+                      print('Received Token: $token');
+                      checkout3ViewState.callGlobalNow(token);
+                      } else {
+                      // Handle the failure case
+                      print('Failed to post data.');
+                      }
+                      
+                    });
+              });
+          /*if (checkout3ViewState.isPaypalClicked) {
             showDialog<dynamic>(
                 context: context,
                 builder: (BuildContext context) {
@@ -559,7 +641,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                         context, 'checkout_container__choose_payment'),
                   );
                 });
-          }
+          }*/
         } else {
           showDialog<dynamic>(
               context: context,

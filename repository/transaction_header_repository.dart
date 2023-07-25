@@ -4,6 +4,7 @@ import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/api/ps_api_service.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/db/transaction_header_dao.dart';
+import 'package:flutterrestaurant/viewobject/global_token_header.dart';
 import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:sembast/sembast.dart';
 
@@ -106,6 +107,25 @@ late  TransactionHeaderDao _transactionHeaderDao;
     } else {
       final Completer<PsResource<TransactionHeader>> completer =
           Completer<PsResource<TransactionHeader>>();
+      completer.complete(_resource);
+      return completer.future;
+    }
+  }
+  Future<PsResource<GlobalTokenHeader>> postGlobalTokenSubmit(
+      Map<dynamic, dynamic> jsonMap,
+      bool isConnectedToInternet,
+      PsStatus status,
+      {bool isLoadFromServer = true}) async {
+    final String jsonMapData = jsonMap.toString();
+    print(jsonMapData);
+
+    final PsResource<GlobalTokenHeader> _resource =
+    await _psApiService.postGlobalTokenSubmit(jsonMap);
+    if (_resource.status == PsStatus.SUCCESS) {
+      return _resource;
+    } else {
+      final Completer<PsResource<GlobalTokenHeader>> completer =
+      Completer<PsResource<GlobalTokenHeader>>();
       completer.complete(_resource);
       return completer.future;
     }

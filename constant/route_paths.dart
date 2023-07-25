@@ -76,6 +76,7 @@ class RoutePaths {
   static const String onepage_checkout_container = '/onepage_checkout_container';
   static const String whatsAppCheckout_container = '/whatsAppCheckout_container';
   static const String checkoutSuccess = '/checkoutSuccess';
+  static const String globalWebview = '/globalWebview';
   static const String trendingCategoryList = '/Trending Category List';
   static const String relatedProduct = '/RelatedProduct';
   static const String attributeDetailList = '/attributeDetailList';

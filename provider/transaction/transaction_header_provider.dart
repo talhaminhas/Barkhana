@@ -9,6 +9,7 @@ import 'package:flutterrestaurant/viewobject/basket.dart';
 import 'package:flutterrestaurant/viewobject/basket_selected_add_on.dart';
 import 'package:flutterrestaurant/viewobject/basket_selected_attribute.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
+import 'package:flutterrestaurant/viewobject/global_token_header.dart';
 import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 
@@ -67,6 +68,8 @@ class TransactionHeaderProvider extends PsProvider {
   PsResource<TransactionHeader> get transactionHeader => _transactionSubmit;
   PsResource<TransactionHeader> _transactionSubmit =
       PsResource<TransactionHeader>(PsStatus.NOACTION, '', null);
+  PsResource<GlobalTokenHeader> _globalTokenSubmit =
+  PsResource<GlobalTokenHeader>(PsStatus.NOACTION, '', null);
  late StreamSubscription<PsResource<TransactionHeader>> subscriptionObject;
  late StreamController<PsResource<TransactionHeader>> transactionHeaderStream;
 
@@ -129,6 +132,30 @@ late  StreamSubscription<PsResource<List<TransactionHeader>>> subscription;
         PsStatus.PROGRESS_LOADING);
 
     isLoading = false;
+  }
+  Future<dynamic> postGlobalTokenSubmit(
+      User user,
+      String totalItemAmount,
+      PsValueHolder valueHolder) async {
+    psValueHolder = valueHolder;
+
+    final GlobalTokenSubmitMap newGlobalTokenPost = GlobalTokenSubmitMap(
+      userEmail: user.userEmail!,
+      userPhone: user.userPhone,
+      userAddress1: user.address,
+      userAddress2: '',
+      userCity: user.userCity,
+      userPostcode: user.userPostcode,
+        userTotal: totalItemAmount
+    );
+    isLoading = true;
+
+    isConnectedToInternet = await Utils.checkInternetConnectivity();
+
+    _globalTokenSubmit = await _repo!.postGlobalTokenSubmit(
+        newGlobalTokenPost.toMap(), isConnectedToInternet, PsStatus.PROGRESS_LOADING);
+
+    return _globalTokenSubmit;
   }
 
   Future<dynamic> postTransactionSubmit(
@@ -379,7 +406,41 @@ class DetailMap {
     return map;
   }
 }
+class GlobalTokenSubmitMap {
+  GlobalTokenSubmitMap(
+      {this.userEmail,
+        this.userPhone,
+        this.userAddress1,
+        this.userAddress2,
+        this.userCity,
+        this.userPostcode,
+        this.userTotal,
+        this.details});
 
+  String? userEmail;
+  String? userPhone;
+  String? userAddress1;
+  String? userAddress2;
+  String? userCity;
+  String? userPostcode;
+  String? userTotal;
+
+  List<Map<String, dynamic>>? details;
+
+  Map<String, dynamic> toMap() {
+    final Map<String, dynamic> map = <String, dynamic>{};
+    map['user_email'] = userEmail;
+    map['user_phone'] = userPhone;
+    map['user_address1'] = userAddress1;
+    map['user_address2'] = userAddress2;
+    map['user_city'] = userCity;
+    map['user_postcode'] = userPostcode;
+    map['user_total'] = userTotal;
+    map['details'] = details;
+
+    return map;
+  }
+}
 class TransactionSubmitMap {
   TransactionSubmitMap(
       {this.userId,

@@ -61,7 +61,7 @@ class Checkout3View extends StatefulWidget {
 class _Checkout3ViewState extends State<Checkout3View> {
   bool isCheckBoxSelect = false;
   bool isCashClicked = false;
-  bool isGlobalPayment = false;
+  bool isGlobalClicked = false;
   bool isPickUpClicked = false;
   bool isPaypalClicked = false;
   bool isStripeClicked = false;
@@ -80,6 +80,16 @@ class _Checkout3ViewState extends State<Checkout3View> {
     print('Checking Status ... $isCheckBoxSelect');
   }
 
+  dynamic callGlobalNow(
+      String token
+      )
+  {
+    Navigator.pushNamed(context, RoutePaths.globalWebview,
+
+      /*arguments: CheckoutStatusIntentHolder(
+                            transactionHeader: _apiStatus.data!,
+                          )*/);
+  }
   dynamic callBankNow(
       BasketProvider basketProvider,
       UserProvider userLoginProvider,
@@ -848,13 +858,14 @@ class _Checkout3ViewState extends State<Checkout3View> {
           PsProgressDialog.dismissDialog();
 
           if (_apiStatus.status == PsStatus.SUCCESS) {
-            await basketProvider.deleteWholeBasketList();
+            print(_apiStatus.data);
+            /*await basketProvider.deleteWholeBasketList();
 
             // Navigator.pop(context, true);
             await Navigator.pushNamed(context, RoutePaths.checkoutSuccess,
                 arguments: CheckoutStatusIntentHolder(
                   transactionHeader: _apiStatus.data!,
-                ));
+                ));*/
           } else {
             PsProgressDialog.dismissDialog();
 
@@ -967,6 +978,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                           isCashClicked = true;
                                           isPickUpClicked = false;
                                           isPaypalClicked = false;
+                                          isGlobalClicked = false;
                                           isStripeClicked = false;
                                           isBankClicked = false;
                                           isRazorClicked = false;
@@ -999,6 +1011,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                           isCashClicked = false;
                                           isPickUpClicked = true;
                                           isPaypalClicked = false;
+                                          isGlobalClicked = false;
                                           isStripeClicked = false;
                                           isBankClicked = false;
                                           isRazorClicked = false;
@@ -1030,6 +1043,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                           isCashClicked = false;
                                           isPickUpClicked = false;
                                           isPaypalClicked = true;
+                                          isGlobalClicked = false;
                                           isStripeClicked = false;
                                           isBankClicked = false;
                                           isRazorClicked = false;
@@ -1040,6 +1054,36 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                         setState(() {});
                                       },
                                       child: checkIsPaypalSelected(),
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: shopInfoProvider
+                                      .shopInfo.data!.globalEnabled ==
+                                      '1' &&
+                                      !widget.isWeeklyScheduleOrder,
+                                  child: Container(
+                                    width: PsDimens.space140,
+                                    height: PsDimens.space140,
+                                    padding:
+                                    const EdgeInsets.all(PsDimens.space8),
+                                    child: InkWell(
+                                      onTap: () {
+                                        if (!isGlobalClicked) {
+                                          isCashClicked = false;
+                                          isPickUpClicked = false;
+                                          isPaypalClicked = false;
+                                          isGlobalClicked = true;
+                                          isStripeClicked = false;
+                                          isBankClicked = false;
+                                          isRazorClicked = false;
+                                          isPayStackClicked = false;
+                                          isFlutterWaveClicked = false;
+                                        }
+
+                                        setState(() {});
+                                      },
+                                      child: checkIsGlobalSelected(),
                                     ),
                                   ),
                                 ),
@@ -1059,6 +1103,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                           isCashClicked = false;
                                           isPickUpClicked = false;
                                           isPaypalClicked = false;
+                                          isGlobalClicked = false;
                                           isStripeClicked = true;
                                           isBankClicked = false;
                                           isRazorClicked = false;
@@ -1088,6 +1133,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                           isCashClicked = false;
                                           isPickUpClicked = false;
                                           isPaypalClicked = false;
+                                          isGlobalClicked = false;
                                           isStripeClicked = false;
                                           isBankClicked = true;
                                           isRazorClicked = false;
@@ -1117,6 +1163,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                           isCashClicked = false;
                                           isPickUpClicked = false;
                                           isPaypalClicked = false;
+                                          isGlobalClicked = false;
                                           isStripeClicked = false;
                                           isBankClicked = false;
                                           isRazorClicked = true;
@@ -1145,6 +1192,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                         if (!isPayStackClicked) {
                                           isCashClicked = false;
                                           isPaypalClicked = false;
+                                          isGlobalClicked = false;
                                           isStripeClicked = false;
                                           isBankClicked = false;
                                           isRazorClicked = false;
@@ -1174,6 +1222,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                                           isCashClicked = false;
                                           isPickUpClicked = false;
                                           isPaypalClicked = false;
+                                          isGlobalClicked = false;
                                           isStripeClicked = false;
                                           isBankClicked = false;
                                           isRazorClicked = false;
@@ -1375,7 +1424,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 height: PsDimens.space4,
               ),
               Container(
-                  width: 50, height: 50, child: const Icon(Icons.payment)),
+                  width: 50, height: 50, child: const Icon(Icons.delivery_dining_sharp)),
               Container(
                 margin: const EdgeInsets.only(
                   left: PsDimens.space16,
@@ -1414,7 +1463,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 width: 50,
                 height: 50,
                 child: Icon(
-                  Icons.payment,
+                  Icons.delivery_dining_sharp,
                   color: PsColors.white,
                 )),
             Container(
@@ -1515,7 +1564,84 @@ class _Checkout3ViewState extends State<Checkout3View> {
           ),
         ));
   }
-
+  Widget checkIsGlobalSelected() {
+    if (!isGlobalClicked) {
+      return changeGlobalCardToWhite();
+    } else {
+      return changeGlobalCardToOrange();
+    }
+  }
+  Widget changeGlobalCardToWhite() {
+    return Container(
+        width: PsDimens.space140,
+        child: Container(
+          decoration: BoxDecoration(
+            color: PsColors.coreBackgroundColor,
+            borderRadius:
+            const BorderRadius.all(Radius.circular(PsDimens.space8)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const SizedBox(
+                height: PsDimens.space4,
+              ),
+              Container(
+                  width: 50, height: 50, child: const Icon(FontAwesome.paypal)),
+              Container(
+                margin: const EdgeInsets.only(
+                  left: PsDimens.space16,
+                  right: PsDimens.space16,
+                ),
+                child: Text(Utils.getString(context, 'checkout3__global'),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                    !.copyWith(height: 1.3)),
+              ),
+            ],
+          ),
+        ));
+  }
+  Widget changeGlobalCardToOrange() {
+    return Container(
+      width: PsDimens.space140,
+      child: Container(
+        decoration: BoxDecoration(
+          color: PsColors.mainColor,
+          borderRadius:
+          const BorderRadius.all(Radius.circular(PsDimens.space8)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const SizedBox(
+              height: PsDimens.space4,
+            ),
+            Container(
+                width: 50,
+                height: 50,
+                child: Icon(Icons.paypal, color: PsColors.white)),
+            Container(
+              margin: const EdgeInsets.only(
+                left: PsDimens.space16,
+                right: PsDimens.space16,
+              ),
+              child: Text(Utils.getString(context, 'checkout3__global'),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                  !.copyWith(height: 1.3, color: PsColors.white)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   Widget checkIsStripeSelected() {
     if (!isStripeClicked) {
       return changeStripeCardToWhite();

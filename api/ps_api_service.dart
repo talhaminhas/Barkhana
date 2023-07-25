@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutterrestaurant/viewobject/global_token_header.dart';
 import 'package:flutterrestaurant/viewobject/postal_address.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -346,6 +347,7 @@ class PsApiService extends PsApi {
       String userId, int limit, int offset) async {
     final String url =
         '${PsUrl.ps_transactionList_url}/api_key/${PsConfig.ps_api_key}/user_id/$userId/limit/$limit/offset/$offset';
+    print (url);
 
     return await getServerCall<TransactionHeader, List<TransactionHeader>>(
         TransactionHeader(), url);
@@ -363,9 +365,14 @@ class PsApiService extends PsApi {
   Future<PsResource<TransactionHeader>> postTransactionSubmit(
       Map<dynamic, dynamic> jsonMap) async {
     const String url = '${PsUrl.ps_transaction_submit_url}';
-    print('${PsUrl.ps_transaction_submit_url}');
     return await postData<TransactionHeader, TransactionHeader>(
         TransactionHeader(), url, jsonMap);
+  }
+  Future<PsResource<GlobalTokenHeader>> postGlobalTokenSubmit(
+      Map<dynamic, dynamic> jsonMap) async {
+    const String url = '${PsUrl.ps_global_token_submit_url}';
+    return await postData<GlobalTokenHeader, GlobalTokenHeader>(
+        GlobalTokenHeader(), url, jsonMap);
   }
 
   Future<PsResource<List<TransactionStatus>>> getTransactionStatusList() async {

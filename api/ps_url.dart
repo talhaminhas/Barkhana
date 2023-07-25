@@ -160,6 +160,9 @@ class PsUrl {
   static const String ps_transaction_submit_url =
       'rest/transactionheaders/submit/api_key/${PsConfig.ps_api_key}';
 
+  static const String ps_global_token_submit_url =
+      'rest/TransactionToken/global_token/api_key/${PsConfig.ps_api_key}';
+
   static const String ps_collection_product_url =
       'rest/products/all_collection_products';
 

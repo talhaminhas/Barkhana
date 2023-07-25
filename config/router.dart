@@ -11,6 +11,7 @@ import 'package:flutterrestaurant/ui/category/list/category_list_view_container.
 import 'package:flutterrestaurant/ui/checkout/checkout_container_view.dart';
 import 'package:flutterrestaurant/ui/checkout/checkout_status_view.dart';
 import 'package:flutterrestaurant/ui/checkout/credit_card_view.dart';
+import 'package:flutterrestaurant/ui/checkout/payment_gateway/global_webview.dart';
 import 'package:flutterrestaurant/ui/checkout/pay_stack_view.dart';
 import 'package:flutterrestaurant/ui/checkout/postal_address_list_view.dart';
 import 'package:flutterrestaurant/ui/collection/header_list/collection_header_list_container.dart';
@@ -361,6 +362,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           pageBuilder: (_, Animation<double> a1, Animation<double> a2) =>
               CheckoutStatusView(
                 transactionHeader: checkoutStatusIntentHolder.transactionHeader,
+              ));
+    case '${RoutePaths.globalWebview}':
+      final Object? args = settings.arguments;
+
+      //final CheckoutStatusIntentHolder checkoutStatusIntentHolder =
+      //args as CheckoutStatusIntentHolder;
+      return PageRouteBuilder<dynamic>(
+          pageBuilder: (_, Animation<double> a1, Animation<double> a2) =>
+              GlobalWebView(
+                /*transactionHeader: checkoutStatusIntentHolder.transactionHeader,*/
               ));
     case '${RoutePaths.searchCategoryViewAll}':
       final Map<String, dynamic> args = settings.arguments as Map<String,dynamic>;
