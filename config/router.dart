@@ -364,14 +364,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 transactionHeader: checkoutStatusIntentHolder.transactionHeader,
               ));
     case '${RoutePaths.globalWebview}':
-      final Object? args = settings.arguments;
-
-      //final CheckoutStatusIntentHolder checkoutStatusIntentHolder =
-      //args as CheckoutStatusIntentHolder;
+      final Map<String, dynamic> args = settings.arguments as Map<String,dynamic>;
+      final String token = args['token'];
+      final Function(String)? onHppResponse = args['onHppResponse'];
       return PageRouteBuilder<dynamic>(
           pageBuilder: (_, Animation<double> a1, Animation<double> a2) =>
               GlobalWebView(
-                /*transactionHeader: checkoutStatusIntentHolder.transactionHeader,*/
+                token: token,
+                onHppResponse: onHppResponse,
               ));
     case '${RoutePaths.searchCategoryViewAll}':
       final Map<String, dynamic> args = settings.arguments as Map<String,dynamic>;

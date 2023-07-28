@@ -176,6 +176,7 @@ late  StreamSubscription<PsResource<List<TransactionHeader>>> subscription;
       String isRazor,
       String isFlutterWave,
       String isPaystack,
+      String isGlobal,
       String razorId,
       String flutterWaveId,
       String isPickUp,
@@ -272,6 +273,7 @@ late  StreamSubscription<PsResource<List<TransactionHeader>>> subscription;
       isRazor: isRazor == PsConst.ONE ? PsConst.ONE : PsConst.ZERO,
       isFlutterWave: isFlutterWave == PsConst.ONE ? PsConst.ONE : PsConst.ZERO,
       isPaystack: isPaystack == PsConst.ONE ? PsConst.ONE : PsConst.ZERO,
+      isGlobal: isGlobal == PsConst.ONE ? PsConst.ONE : PsConst.ZERO,
       razorId: razorId,
       flutterWaveId: flutterWaveId,
       pickAtShop: pickAtShop,
@@ -469,6 +471,7 @@ class TransactionSubmitMap {
       this.isRazor,
       this.isFlutterWave,
       this.isPaystack,
+        this.isGlobal,
       this.razorId,
       this.flutterWaveId,
       this.paymentMethodNonce,
@@ -507,6 +510,7 @@ class TransactionSubmitMap {
   String? isRazor;
   String? isFlutterWave;
   String? isPaystack;
+  String? isGlobal;
   String? razorId;
   String? flutterWaveId;
   String? paymentMethodNonce;
@@ -547,6 +551,7 @@ class TransactionSubmitMap {
     map['is_razor'] = isRazor;
     map['is_flutter_wave'] = isFlutterWave;
     map['is_paystack'] = isPaystack;
+    map['is_global'] = isGlobal;
     map['razor_id'] = razorId;
     map['flutter_wave_id'] = flutterWaveId;
     map['payment_method_nonce'] = paymentMethodNonce;

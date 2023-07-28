@@ -268,13 +268,13 @@ class _Checkout1ViewState extends State<Checkout1View> {
                   // scheduleOrder: scheduleOrder!,
                   latestDate: latestDate!, isWeeklySchedule: isWeeklyScheduleOrder,
                 ),
-                _EditAndDeleteButtonWidget(
+                /*_EditAndDeleteButtonWidget(
                     userProvider: userProvider,
                     shopInfoProvider: shopInfoProvider!,
                     updateDeliveryClick: updateDeliveryClick,
                     updatePickUpClick: updatePickUpClick,
                     isClickDeliveryButton: userProvider.isClickDeliveryButton,
-                    isClickPickUpButton: userProvider.isClickPickUpButton),
+                    isClickPickUpButton: userProvider.isClickPickUpButton),*/
                 const SizedBox(height: PsDimens.space8),
                 if (userProvider.isClickDeliveryButton)
                   Column(
@@ -304,6 +304,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                     userCityController.text = selectedAddress.townOrCity!;
                                     userCountryController.text = selectedAddress.country!;
                                   });
+                                  userProvider!.setUserLatLng(LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!)));
                                 }
                               }
                               else{

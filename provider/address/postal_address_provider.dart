@@ -70,7 +70,7 @@ class PostalAddressProvider extends PsProvider {
 
     isConnectedToInternet = await Utils.checkInternetConnectivity();
 
-    await _repo!.getPostalAddressList(
+    return await _repo!.getPostalAddressList(
         addressListStream, jsonMap,
         isConnectedToInternet,
         PsStatus.PROGRESS_LOADING);

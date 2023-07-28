@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutterrestaurant/viewobject/global_token_header.dart';
@@ -32,6 +33,9 @@ import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:flutterrestaurant/viewobject/transaction_status.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 
+import '../utils/utils.dart';
+import '../viewobject/holder/globalTokenPost.dart';
+import '../viewobject/holder/global_transaction_status.dart';
 import '../viewobject/schedule_detail.dart';
 import '../viewobject/schedule_header.dart';
 import '../viewobject/search_result.dart';
@@ -374,7 +378,13 @@ class PsApiService extends PsApi {
     return await postData<GlobalTokenHeader, GlobalTokenHeader>(
         GlobalTokenHeader(), url, jsonMap);
   }
-
+  ///
+  /// Token
+  ///
+  Future<PsResource<ApiStatus>> getToken() async {
+    const String url = '${PsUrl.ps_token_url}/api_key/${PsConfig.ps_api_key}';
+    return await getServerCall<ApiStatus, ApiStatus>(ApiStatus(), url);
+  }
   Future<PsResource<List<TransactionStatus>>> getTransactionStatusList() async {
     const String url =
         '${PsUrl.ps_transactionStatus_url}/api_key/${PsConfig.ps_api_key}';
@@ -601,14 +611,52 @@ class PsApiService extends PsApi {
         CouponDiscount(), url, jsonMap);
   }
 
-  ///
-  /// Token
-  ///
-  Future<PsResource<ApiStatus>> getToken() async {
-    const String url = '${PsUrl.ps_token_url}/api_key/${PsConfig.ps_api_key}';
-    return await getServerCall<ApiStatus, ApiStatus>(ApiStatus(), url);
-  }
+  Future<Map<String, dynamic>?> getGlobalTransactionStatus(GlobalTokenPost dataToSend) async {
 
+    const String url = '${PsConfig.ps_app_url}${PsUrl.ps_global_token_submit_url}';
+    try {
+      final http.Response response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(dataToSend.toJson()),
+      );
+
+      if (response.statusCode != 500) {
+        return json.decode(response.body);
+      } else {
+        print('Failed to post data: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+  Future<String?> postGlobalTokenData(GlobalTokenPost dataToSend) async {
+
+    const String url = '${PsConfig.ps_app_url}${PsUrl.ps_global_token_submit_url}';
+      try {
+        final http.Response response = await http.post(
+          Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(dataToSend.toJson()),
+        );
+
+        if (response.statusCode == 200) {
+          return response.body;
+        } else {
+          print('Failed to post data: ${response.statusCode}');
+          return null;
+        }
+      } catch (e) {
+        print('Error: $e');
+        return null;
+      }
+  }
   ///
   /// Reservation
   ///

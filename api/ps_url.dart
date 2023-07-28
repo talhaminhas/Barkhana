@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutterrestaurant/config/ps_config.dart';
 
 class PsUrl {
@@ -6,6 +8,9 @@ class PsUrl {
   ///
   /// APIs Url
   ///
+  static const String ps_global_payment_url = 'https://pay.sandbox.realexpayments.com/pay';
+  static const String ps_global_payment_hpp_url = 'http://62.31.67.208:88/barkhana/global.html';
+
   static const String ps_product_detail_url = 'rest/products/get';
 
   static const String ps_shipping_method_url =

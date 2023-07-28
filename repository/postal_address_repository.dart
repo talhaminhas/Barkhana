@@ -36,6 +36,7 @@ class PostalAddressRepository extends PsRepository {
       final PsResource<List<Address>> _resource =
       PsResource<List<Address>>(PsStatus.NOACTION, '', postalAddressResource.data?.addresses);
       addressListStream.sink.add(_resource);
+      return postalAddressResource.data;
     }
 
    /* if (_resource.status == PsStatus.SUCCESS) {

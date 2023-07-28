@@ -99,7 +99,7 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
                 postalAddress = await provider.loadPostalAddressesList(jsonMap);
                 print(postalAddress.addresses![0].line_1);
               });*/
-              provider.loadPostalAddressesList(jsonMap);
+              postalAddress = await provider.loadPostalAddressesList(jsonMap);
               postalAddressProvider = provider;
               return postalAddressProvider;
             },
@@ -152,6 +152,8 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
                                 city: provider.addressList.data![index].townOrCity! + ', ' +
                                     provider.addressList.data![index].country! + '.',
                                 onTap: () {
+                                  provider.addressList.data![index].longitude = postalAddress.longitude;
+                                  provider.addressList.data![index].latitude = postalAddress.latitude;
                                   Navigator.pop(context,
                                       provider.addressList.data![index]);
                                 },

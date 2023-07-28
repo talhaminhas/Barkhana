@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:flutterrestaurant/repository/token_repository.dart';
+import 'package:flutterrestaurant/viewobject/holder/global_transaction_status.dart';
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-
+import 'dart:convert';
+import 'dart:io';
 import '../../api/common/ps_resource.dart';
 import '../../api/common/ps_status.dart';
 import '../../config/ps_colors.dart';
@@ -23,6 +26,7 @@ import '../../utils/ps_progress_dialog.dart';
 import '../../utils/utils.dart';
 import '../../viewobject/basket.dart';
 import '../../viewobject/common/ps_value_holder.dart';
+import '../../viewobject/holder/globalTokenPost.dart';
 import '../../viewobject/holder/intent_holder/checkout_status_intent_holder.dart';
 import '../../viewobject/holder/intent_holder/schedule_checkout_intent_holder.dart';
 import '../../viewobject/schedule_header.dart';
@@ -80,15 +84,39 @@ class _Checkout3ViewState extends State<Checkout3View> {
     print('Checking Status ... $isCheckBoxSelect');
   }
 
-  dynamic callGlobalNow(
-      String token
-      )
+  dynamic callGlobalNow(String token,
+      GlobalTokenPost globalTokenPost,
+      TokenRepository tokenRepository,
+      BasketProvider basketProvider,
+      UserProvider userProvider,
+      TransactionHeaderProvider transactionHeaderProvider)
   {
     Navigator.pushNamed(context, RoutePaths.globalWebview,
+        arguments:{
+          'token': token,
+          'onHppResponse': (String hppResponse) async {
+            globalTokenPost.jsonResponse = '{' + hppResponse + '}';
+            final Map<String, dynamic>? jsonResponse = await tokenRepository.getGlobalTransactionStatus(globalTokenPost, context);
+            print('''payment response from server${jsonResponse!['status']},${jsonResponse!['error']}''');
+            if(jsonResponse!['status'] == true)//payment successfully
+              {
+                callCardNow(basketProvider, userProvider, transactionHeaderProvider);
+            }
+            //payment unsuccessfully
+            else{
+              showDialog<dynamic>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ErrorDialog(
+                      message: Utils.getString(context, 'error_dialog__payment_unsuccessful'
+                      ),
+                    );
+                  });
+            }
 
-      /*arguments: CheckoutStatusIntentHolder(
-                            transactionHeader: _apiStatus.data!,
-                          )*/);
+          },
+        });
+
   }
   dynamic callBankNow(
       BasketProvider basketProvider,
@@ -119,6 +147,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ONE,
+                PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
@@ -271,13 +300,14 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 basketProvider.checkoutCalculationHelper.totalPrice.toString(),
                 basketProvider.checkoutCalculationHelper.totalOriginalPrice
                     .toString(),
+                PsConst.ZERO,
+                PsConst.ZERO,
+                PsConst.ZERO,
+                PsConst.ZERO,
+                PsConst.ZERO,
+                PsConst.ZERO,
+                PsConst.ZERO,
                 PsConst.ONE,
-                PsConst.ZERO,
-                PsConst.ZERO,
-                PsConst.ZERO,
-                PsConst.ZERO,
-                PsConst.ZERO,
-                PsConst.ZERO,
                 '',
                 '',
                 PsConst.ZERO,
@@ -348,6 +378,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 basketProvider.checkoutCalculationHelper.totalPrice.toString(),
                 basketProvider.checkoutCalculationHelper.totalOriginalPrice
                     .toString(),
+                PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
@@ -498,6 +529,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
               PsConst.ZERO,
               PsConst.ZERO,
               PsConst.ONE,
+              PsConst.ZERO,
               PsConst.ZERO,
               response.paymentId.toString(),
               '',
@@ -711,6 +743,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
               PsConst.ZERO, // Razor
               PsConst.ONE, // Wave
               PsConst.ZERO, // Paystack
+              PsConst.ZERO, // global
               '', // Razor Id
               transactionId, // Wave Id
               PsConst.ZERO, // Pickup Or Not
@@ -840,6 +873,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
+                PsConst.ZERO,
                 '',
                 '',
                 PsConst.ZERO,
@@ -930,7 +964,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const SizedBox(
+                    /*const SizedBox(
                       height: PsDimens.space16,
                     ),
                     Container(
@@ -949,8 +983,8 @@ class _Checkout3ViewState extends State<Checkout3View> {
                     ),
                     const SizedBox(
                       height: PsDimens.space8,
-                    ),
-                    Consumer<ShopInfoProvider>(builder: (BuildContext context,
+                    ),*/
+                    /*Consumer<ShopInfoProvider>(builder: (BuildContext context,
                         ShopInfoProvider shopInfoProvider, Widget? child) {
                       if (shopInfoProvider.shopInfo.data == null) {
                         return Container();
@@ -1256,12 +1290,12 @@ class _Checkout3ViewState extends State<Checkout3View> {
                       );
                     }),
                     PsTextFieldWidget(
-                        titleText: Utils.getString(context, 'checkout3__memo'),
+                        titleText: Utils.getString(context, 'checkout3__delivery_notes'),
                         height: PsDimens.space80,
                         textAboutMe: true,
-                        hintText: Utils.getString(context, 'checkout3__memo'),
+                        hintText: Utils.getString(context, 'checkout3__delivery_notes'),
                         keyboardType: TextInputType.multiline,
-                        textEditingController: memoController),
+                        textEditingController: memoController),*/
                     Row(
                       children: <Widget>[
                         Checkbox(

@@ -226,6 +226,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
                 PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
+                PsConst.ZERO,
                 '',
                 '',
                 PsConst.ZERO,
@@ -349,6 +350,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
                       .toString(),
                   PsConst.ZERO,
                   PsConst.ONE,
+                  PsConst.ZERO,
                   PsConst.ZERO,
                   PsConst.ZERO,
                   PsConst.ZERO,
@@ -528,6 +530,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
                 PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
+                PsConst.ZERO,
                 '',
                 '',
                 PsConst.ONE,
@@ -598,6 +601,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
                 basketProvider!.checkoutCalculationHelper.totalOriginalPrice
                     .toString(),
                 PsConst.ONE,
+                PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
                 PsConst.ZERO,
@@ -715,6 +719,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
               PsConst.ZERO, // Razor
               PsConst.ONE, // Wave
               PsConst.ZERO, // Paystack
+              PsConst.ZERO,
               '', // Razor Id
               transactionId, // Wave Id
               PsConst.ZERO, // Pickup Or Not
@@ -898,6 +903,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
               PsConst.ZERO,
               PsConst.ZERO,
               PsConst.ONE,
+              PsConst.ZERO,
               PsConst.ZERO,
               response.paymentId.toString(),
               '',

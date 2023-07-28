@@ -304,48 +304,12 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
     }
   }
 
-  Future<String?> postGlobalTokenData(GlobalTokenPost dataToSend, String url) async {
-
-    bool isConnectedToInternet = await Utils.checkInternetConnectivity();
-    if( isConnectedToInternet) {
-      try {
-        final http.Response response = await http.post(
-          Uri.parse(url),
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(dataToSend.toJson()),
-        );
-
-        if (response.statusCode == 200) {
-          return response.body;
-        } else {
-          print('Failed to post data: ${response.statusCode}');
-          return null;
-        }
-      } catch (e) {
-        print('Error: $e');
-        return null;
-      }
-    }
-    else
-      {
-        showDialog<dynamic>(
-            context: context,
-            builder: (BuildContext context) {
-              return ErrorDialog(
-                message: Utils.getString(context, 'error_dialog__no_internet'),
-              );
-            });
-      }
-  }
   dynamic clickToNextCheck(User user, Function _closeCheckoutContainer,
       TokenProvider tokenProvider) async {
     if (viewNo < maxViewNo) {
       if (viewNo == 3) {
         checkout3ViewState.checkStatus();
         if (checkout3ViewState.isCheckBoxSelect) {
-          print('global');
           showDialog<dynamic>(
               context: context,
               builder: (BuildContext context) {
@@ -358,11 +322,9 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                         context, 'home__logout_dialog_ok_button'),
                     onAgreeTap: () async {
                       if (PsConfig.isDemo) {
-                        await callDemoWarningDialog(context);
+                        //await callDemoWarningDialog(context);
                       }
                       Navigator.pop(context);
-                      const String url = '${PsConfig.ps_app_url}${PsUrl.ps_global_token_submit_url}';
-                      print(url);
                       final GlobalTokenPost dataToSend = GlobalTokenPost(
                         userEmail: user.userEmail,
                         userPhone: user.userPhone,
@@ -370,18 +332,29 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                         userAddress2: '',
                         userCity: user.userCity,
                         userPostcode: user.userPostcode,
-                        userTotal: '100',
+                        userTotal: basketProvider?.checkoutCalculationHelper.totalPrice.toString(),
+                        jsonResponse: '0',// zero means posting to get token, if it is assigned with a response then server will return transaction result
                       );
-                      String? token = await postGlobalTokenData(dataToSend, url);
-
+                      final String? token = await tokenRepository?.postGlobalToken(dataToSend,context);
                       if (token != null) {
                       // Handle the JSON response
-                      print('Received Token: $token');
-                      checkout3ViewState.callGlobalNow(token);
+                        print(token);
+                        final dynamic returnData = checkout3ViewState.callGlobalNow(
+                            token,
+                            dataToSend,
+                            tokenRepository,
+                            basketProvider,
+                            userProvider,
+                            transactionSubmitProvider,
+                        );
+                        if (returnData != null && returnData) {
+                          _closeCheckoutContainer();
+                        }
                       } else {
                       // Handle the failure case
                       print('Failed to post data.');
                       }
+
                       
                     });
               });
