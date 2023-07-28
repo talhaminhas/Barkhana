@@ -27,40 +27,55 @@ class PostalAddressListItem extends StatelessWidget {
       animation: animationController!,
       child: GestureDetector(
         onTap: onTap as void Function()?,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          color: PsColors.backgroundColor,
-          height: PsDimens.space72,
-          margin: const EdgeInsets.only(top: PsDimens.space4),
-          child: Padding(
-              padding: const EdgeInsets.all(PsDimens.space16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 8.0, right: 8.0), // Add margin around the DecoratedBox
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: PsColors.backgroundColor, // Background color
+              borderRadius: BorderRadius.circular(8.0), // Border radius
+              border: Border.all(
+                color: PsColors.mainColor, // Border color
+                width: 1.0, // Border width
+              ),
+            ),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        address,
-                        textAlign: TextAlign.start,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        city,
-                        textAlign: TextAlign.start,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(PsDimens.space10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                address,
+                                textAlign: TextAlign.start,
+                                style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                city,
+                                textAlign: TextAlign.start,
+                                style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-              )),
-        ),
+              ),
+            ),
+          ),
+        )
+
+
+        ,
       ),
       builder: (BuildContext contenxt, Widget? child) {
         return FadeTransition(

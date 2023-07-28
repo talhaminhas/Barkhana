@@ -220,7 +220,8 @@ class _Checkout1ViewState extends State<Checkout1View> {
                   ')';
           userProvider.selectedArea = userProvider.user.data!.area;
           latlng = userProvider.getUserLatLng(valueHolder!);
-          bindDataFirstTime = false;
+          print('${latlng?.latitude} +' '+${latlng?.longitude}');
+;          bindDataFirstTime = false;
         }
         return SingleChildScrollView(
           child: Container(
@@ -303,8 +304,17 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                     addressController.text = selectedAddress.line_1!;
                                     userCityController.text = selectedAddress.townOrCity!;
                                     userCountryController.text = selectedAddress.country!;
+                                    deliveryCostCalculate(
+                                      provider!,
+                                      widget.basketList,
+                                      selectedAddress.latitude!,
+                                      selectedAddress.longitude!,
+                                    );
                                   });
-                                  userProvider!.setUserLatLng(LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!)));
+                                  //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
+                                  LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
+                                  userProvider!.setUserLatLng(coordinates);
+
                                 }
                               }
                               else{
@@ -352,10 +362,10 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                 BorderRadius.circular(PsDimens.space4),
                             border:
                                 Border.all(color: PsColors.mainDividerColor),
-                          ),*/
+                          ),
 
 
-                          /*child: TextField(
+                          child: TextField(
                               keyboardType: TextInputType.multiline,
                               maxLines: null,
                               controller: addressController,
@@ -374,7 +384,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                     .bodyMedium!
                                     .copyWith(
                                         color: PsColors.textPrimaryLightColor),
-                              )))*/
+                              ))),*/
                       if (shopInfoProvider!.shopInfo.data!.isArea != null &&
                           shopInfoProvider!.shopInfo.data!.isArea ==
                               PsConst.ONE)
@@ -446,12 +456,10 @@ class _Checkout1ViewState extends State<Checkout1View> {
               userLat: lat,
               userLng: lng,
               productId: widget.basketList[0].product!.id!);
-
+      print(lat +' '+ lng);
       await PsProgressDialog.showDialog(context);
-
       final PsResource<DeliveryCost> _apiStatus =
           await provider.postDeliveryCost(deliveryCostParameterHolder.toMap());
-
       if (_apiStatus.data != null) {
         PsProgressDialog.dismissDialog();
         costPerChargesController.text = _apiStatus.data!.costPerCharges!;
@@ -508,13 +516,13 @@ class _Checkout1ViewState extends State<Checkout1View> {
         PsProgressDialog.dismissDialog();
         isSuccess = true;
 
-        showDialog<dynamic>(
+        /*showDialog<dynamic>(
             context: context,
             builder: (BuildContext context) {
               return SuccessDialog(
                 message: Utils.getString(context, 'edit_profile__success'),
               );
-            });
+            });*/
       } else {
         // PsProgressDialog.dismissDialog();
 
@@ -852,7 +860,7 @@ class _DeliveryCostWidget extends StatelessWidget {
           deliveryInfoText:
               '$currencySymbol ${provider.deliveryCost.data!.costPerCharges}',
           title:
-              '${Utils.getString(context, 'checkout__delivery_cost_per_km')} :',
+              '${Utils.getString(context, 'checkout__delivery_cost_per_mile')} :',
         ),
         _DeliveryTextWidget(
           deliveryInfoText:
@@ -890,7 +898,7 @@ class _DefaultDeliveryCostWidget extends StatelessWidget {
         _DeliveryTextWidget(
           deliveryInfoText: '0',
           title:
-              '${Utils.getString(context, 'checkout__delivery_cost_per_km')} :',
+              '${Utils.getString(context, 'checkout__delivery_cost_per_mile')} :',
         ),
         _DeliveryTextWidget(
           deliveryInfoText: '0',

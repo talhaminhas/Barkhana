@@ -600,7 +600,7 @@ class _DeliveryCostWidget extends StatelessWidget {
           deliveryInfoText:
               '$currencySymbol ${provider.deliveryCost.data!.costPerCharges}',
           title:
-              '${Utils.getString(context, 'checkout__delivery_cost_per_km')} :',
+              '${Utils.getString(context, 'checkout__delivery_cost_per_mile')} :',
         ),
         _DeliveryTextWidget(
           deliveryInfoText:
@@ -638,7 +638,7 @@ class _DefaultDeliveryCostWidget extends StatelessWidget {
         _DeliveryTextWidget(
           deliveryInfoText: '0',
           title:
-              '${Utils.getString(context, 'checkout__delivery_cost_per_km')} :',
+              '${Utils.getString(context, 'checkout__delivery_cost_per_mile')} :',
         ),
         _DeliveryTextWidget(
           deliveryInfoText: '0',

@@ -13,6 +13,7 @@ class PsFrameUIForLoading extends StatelessWidget {
         height: 200,
         width: 200,
         margin: const EdgeInsets.all(PsDimens.space16),
-        decoration: BoxDecoration(color: PsColors.grey));
+        decoration: BoxDecoration(color: PsColors.grey)
+    );
   }
 }
