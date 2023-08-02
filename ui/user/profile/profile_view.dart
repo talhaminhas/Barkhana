@@ -235,9 +235,9 @@ class __ProfileDetailWidgetState extends State<_ProfileDetailWidget> {
                         _dividerWidget,
                         _EditAndHistoryRowWidget(userProvider: provider),
                         _dividerWidget,
-                        _FavAndSettingWidget(
+                        /*_FavAndSettingWidget(
                           userProvider: provider,
-                          callLogoutCallBack: widget.callLogoutCallBack),
+                          callLogoutCallBack: widget.callLogoutCallBack),*/
                         _dividerWidget,
                         _JoinDateWidget(userProvider: provider),
                         _dividerWidget,
@@ -403,7 +403,7 @@ class _EditAndHistoryRowWidget extends StatelessWidget {
           checkText: 0,
         ),
         _verticalLineWidget,
-        _EditAndHistoryTextWidget(
+        /*_EditAndHistoryTextWidget(
           userProvider: userProvider!,
           checkText: 1,
         ),
@@ -411,7 +411,7 @@ class _EditAndHistoryRowWidget extends StatelessWidget {
         _EditAndHistoryTextWidget(
           userProvider: userProvider!,
           checkText: 2,
-        )
+        )*/
       ],
     );
   }
@@ -540,31 +540,38 @@ class _ImageAndTextWidget extends StatelessWidget {
     );
     return Container(
       width: double.infinity,
-      height: PsDimens.space100,
-      margin: const EdgeInsets.only(top: PsDimens.space16),
+      height: PsDimens.space200,
+      margin: const EdgeInsets.only(
+          top: PsDimens.space10,
+        bottom: PsDimens.space10,
+        left: PsDimens.space10,
+        right: PsDimens.space10,
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              const SizedBox(width: PsDimens.space16),
-              Container(
-                  width: PsDimens.space80,
-                  height: PsDimens.space80,
-                  child: _imageWidget),
-              const SizedBox(width: PsDimens.space16),
-            ],
+          const SizedBox(width: PsDimens.space16),
+          Container(
+            width: PsDimens.space140,
+            height: PsDimens.space140,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(width: 2.0, color: PsColors.mainColor),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: _imageWidget,
+            ),
           ),
+          const SizedBox(width: PsDimens.space16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
                   userProvider!.user.data!.userName!,
-                  textAlign: TextAlign.start,
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 _spacingWidget,
                 Text(
@@ -573,7 +580,7 @@ class _ImageAndTextWidget extends StatelessWidget {
                       : Utils.getString(context, 'profile__phone_no'),
                   style: Theme.of(context)
                       .textTheme
-                      .bodyMedium!
+                      .titleLarge!
                       .copyWith(color: PsColors.textPrimaryLightColor),
                 ),
                 _spacingWidget,
@@ -583,7 +590,7 @@ class _ImageAndTextWidget extends StatelessWidget {
                       : Utils.getString(context, 'profile__about_me'),
                   style: Theme.of(context)
                       .textTheme
-                      .bodySmall!
+                      .titleSmall!
                       .copyWith(color: PsColors.textPrimaryLightColor),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -596,3 +603,4 @@ class _ImageAndTextWidget extends StatelessWidget {
     );
   }
 }
+

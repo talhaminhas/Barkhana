@@ -55,12 +55,12 @@ class PostalAddressListItem extends StatelessWidget {
                               Text(
                                 address,
                                 textAlign: TextAlign.start,
-                                style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
+                                style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 city,
                                 textAlign: TextAlign.start,
-                                style: Theme.of(context).textTheme.headline6!.copyWith(fontWeight: FontWeight.bold),
+                                style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),

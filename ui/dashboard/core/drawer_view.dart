@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/services.dart';
@@ -41,7 +42,11 @@ import 'package:flutterrestaurant/ui/privacy_policy/privacy_policy_view.dart';
 import 'package:flutterrestaurant/ui/product/favourite/favourite_product_list_view.dart';
 import 'package:flutterrestaurant/ui/product/list_with_filter/product_list_with_filter_view.dart';
 import 'package:flutterrestaurant/ui/search/home_item_search_view.dart';
+import 'package:flutterrestaurant/ui/search_item/search_item_list_view.dart';
 import 'package:flutterrestaurant/ui/setting/setting_view.dart';
+import 'package:flutterrestaurant/ui/subcategory/list/sub_category_grid_view.dart';
+import 'package:flutterrestaurant/ui/subcategory/list/sub_category_list_view.dart';
+import 'package:flutterrestaurant/ui/transaction/detail/transaction_item_list_view.dart';
 import 'package:flutterrestaurant/ui/transaction/list/transaction_list_view.dart';
 import 'package:flutterrestaurant/ui/user/forgot_password/forgot_password_view.dart';
 import 'package:flutterrestaurant/ui/user/login/login_view.dart';
@@ -58,21 +63,32 @@ import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-
+import 'package:flutterrestaurant/viewobject/category.dart' as restaurant;
 import '../../../provider/basket/basket_provider.dart';
+import '../../../provider/product/product_provider.dart';
+import '../../../provider/transaction/transaction_header_provider.dart';
+import '../../../viewobject/transaction_header.dart';
+import '../../gallery/grid/gallery_grid_view.dart';
+import '../../product/detail/product_detail_view.dart';
+import '../../product/list_with_filter/product_list_with_filter_container.dart';
+import '../../search_history/search_history_list_view.dart';
 
+final GlobalKey<_HomeViewState> DASHBOARD_VIEW_KEY = GlobalKey<_HomeViewState>();
 class DashboardView extends StatefulWidget {
+  const DashboardView({Key? key}) : super(key: key);
   @override
   _HomeViewState createState() => _HomeViewState();
+
+
 }
 
 class _HomeViewState extends State<DashboardView>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
  late AnimationController animationController;
 
-  Animation<double>? animation;
+ Animation<double>? animation;
   BasketRepository? basketRepository;
-
+ //late DashboardStateController dashboardStateController;
   String appBarTitle = 'Home';
   int _currentIndex = PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT;
   String _userId = '';
@@ -100,7 +116,9 @@ class _HomeViewState extends State<DashboardView>
     animationController =
         AnimationController(duration: PsConfig.animation_duration, vsync: this);
     initDynamicLinks(context);
+    //dashboardStateController = Provider.of<DashboardStateController>(context);
     super.initState();
+
   }
 
   @override
@@ -169,6 +187,9 @@ class _HomeViewState extends State<DashboardView>
       case PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT:
         index = 0;
         break;
+      case PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT:
+        index = 0;
+        break;
       case PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT:
         index = 0;
         break;
@@ -181,6 +202,15 @@ class _HomeViewState extends State<DashboardView>
       // case PsConst.REQUEST_CODE__MENU_SHOPS_FRAGMENT:
       //   index = 1;
         //break;
+      case PsConst.REQUEST_CODE__MENU_USER_HISTORY_FRAGMENT:
+        index = 4;
+        break;
+      case PsConst.REQUEST_CODE__MENU_SELECT_WHICH_USER_FRAGMENT:
+        index = 4;
+        break;
+      case PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT:
+        index = 4;
+        break;
       case PsConst.REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT:
         index = 4;
         break;
@@ -218,7 +248,7 @@ class _HomeViewState extends State<DashboardView>
     return index;
   }
 
-  dynamic getIndexFromBottonNavigationIndex(int param) {
+  dynamic getIndexFromBottomNavigationIndex(int param) {
     int index = PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT;
     String title;
     final PsValueHolder psValueHolder =
@@ -230,7 +260,7 @@ class _HomeViewState extends State<DashboardView>
         break;
       case 1:
         index = PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT;
-        title = Utils.getString(context, 'home__drawer_menu_menu');
+        title = Utils.getString(context, 'home__bottom_app_bar_search');
         break;
       case 5:
         index = PsConst.REQUEST_CODE__MENU_SHOPS_FRAGMENT;
@@ -270,6 +300,45 @@ class _HomeViewState extends State<DashboardView>
   DeleteTaskProvider? deleteTaskProvider;
   UserProvider? userProvider;
 
+ Future<void> updateSelectedIndexWithAnimationUserId(
+     String title, int index, String? userId) async {
+   await animationController.reverse().then<dynamic>((void data) {
+     if (!mounted) {
+       return;
+     }
+     if (userId != null) {
+       _userId = userId;
+     }
+     setState(() {
+       appBarTitle = title;
+       _currentIndex = index;
+     });
+   });
+ }
+
+ Future<void> updateSelectedIndexWithAnimation(
+     String title, int index) async {
+   await animationController.reverse().then<dynamic>((void data) {
+     if (!mounted) {
+       return;
+     }
+
+     setState(() {
+       appBarTitle = title;
+       _currentIndex = index;
+     });
+   });
+ }
+ String? currentPath;
+ restaurant.Category? selectedCategory;
+ ProductParameterHolder? selectedProductParameterHolder;
+ ProductDetailIntentHolder? selectedProductDetailHolder;
+ ProductDetailProvider? selectedProductDetailProvider;
+ TransactionHeader? selectedTransactionHeader;
+ void someMethod() {
+   // Perform the desired action here
+   print('This method was called from an outside controller.');
+ }
   @override
   Widget build(BuildContext context) {
     shopInfoRepository = Provider.of<ShopInfoRepository>(context);
@@ -280,7 +349,6 @@ class _HomeViewState extends State<DashboardView>
     productRepository = Provider.of<ProductRepository>(context);
     basketRepository = Provider.of<BasketRepository>(context);
     deleteTaskRepository = Provider.of<DeleteTaskRepository>(context);
-
     timeDilation = 1.0;
 
     if (isFirstTime) {
@@ -292,35 +360,7 @@ class _HomeViewState extends State<DashboardView>
       isFirstTime = false;
     }
 
-    Future<void> updateSelectedIndexWithAnimation(
-        String title, int index) async {
-      await animationController.reverse().then<dynamic>((void data) {
-        if (!mounted) {
-          return;
-        }
 
-        setState(() {
-          appBarTitle = title;
-          _currentIndex = index;
-        });
-      });
-    }
-
-    Future<void> updateSelectedIndexWithAnimationUserId(
-        String title, int index, String? userId) async {
-      await animationController.reverse().then<dynamic>((void data) {
-        if (!mounted) {
-          return;
-        }
-        if (userId != null) {
-          _userId = userId;
-        }
-        setState(() {
-          appBarTitle = title;
-          _currentIndex = index;
-        });
-      });
-    }
 
     Future<void> updateSelectedIndex(int index) async {
       setState(() {
@@ -367,12 +407,53 @@ class _HomeViewState extends State<DashboardView>
           return Future<bool>.value(false);
       }
     }
-
+    void _onTapBack(){
+      if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            Utils.getString(context, 'home__drawer_menu_home'),
+            PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            selectedCategory!.name!,
+            PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT) {
+        if(currentPath == Utils.getString(context, 'profile__favourite')){
+          updateSelectedIndexWithAnimation(
+              Utils.getString(context, 'profile__favourite'),
+              PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT
+          );
+        }
+        //show subcategory screen
+        else {
+          updateSelectedIndexWithAnimation(
+              currentPath!,
+              PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT
+          );
+        }
+      }
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            '',
+            PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            Utils.getString(
+                context, 'profile__order'),
+            PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT) {
+        updateSelectedIndexWithAnimation(Utils.getString(
+            context, 'home__bottom_app_bar_search'),
+            PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT);
+        }
+    }
     final Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0)
         .animate(CurvedAnimation(
             parent: animationController,
             curve: const Interval(0.5 * 1, 1.0, curve: Curves.fastOutSlowIn)));
-
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -439,6 +520,15 @@ class _HomeViewState extends State<DashboardView>
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
                       }),*/
+                  /*_DrawerMenuWidget(
+                      icon: Icons.category,
+                      title: Utils.getString(
+                          context, 'home__drawer_menu_menu'),
+                      index: PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT,
+                      onTap: (String title, int index) {
+                        Navigator.pop(context);
+                        updateSelectedIndexWithAnimation(title, index);
+                      }),*/
                   _DrawerMenuWidget(
                       icon: Icons.category,
                       title: Utils.getString(
@@ -448,7 +538,7 @@ class _HomeViewState extends State<DashboardView>
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
                       }),
-                  _DrawerMenuWidget(
+                  /*_DrawerMenuWidget(
                       icon: Icons.schedule,
                       title: Utils.getString(
                           context, 'home__drawer_menu_latest_product'),
@@ -456,7 +546,7 @@ class _HomeViewState extends State<DashboardView>
                       onTap: (String title, int index) {
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
-                      }),
+                      }),*/
                   _DrawerMenuWidget(
                       icon: FontAwesome5.percent,
                       title: Utils.getString(
@@ -465,7 +555,7 @@ class _HomeViewState extends State<DashboardView>
                           PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT,
                       onTap: (String title, int index) {
                         Navigator.pop(context);
-                        updateSelectedIndexWithAnimation(title, index);
+                        DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(title, index);
                       }),
                   _DrawerMenuWidget(
                       icon: FontAwesome5.gem,
@@ -487,7 +577,7 @@ class _HomeViewState extends State<DashboardView>
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
                       }),*/
-                  _DrawerMenuWidget(
+                  /*_DrawerMenuWidget(
                       icon: Icons.folder_open,
                       title: Utils.getString(
                           context, 'home__menu_drawer_collection'),
@@ -495,7 +585,7 @@ class _HomeViewState extends State<DashboardView>
                       onTap: (String title, int index) {
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
-                      }),
+                      }),*/
                   const Divider(
                     height: PsDimens.space1,
                   ),
@@ -577,7 +667,7 @@ class _HomeViewState extends State<DashboardView>
                   if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
-                      Visibility(
+                      /*Visibility(
                         visible: true,
                         child: _DrawerMenuWidget(
                             icon: Icons.book,
@@ -589,9 +679,9 @@ class _HomeViewState extends State<DashboardView>
                               Navigator.pop(context);
                               updateSelectedIndexWithAnimation(title, index);
                             }),
-                      ),
+                      ),*/
                   // ignore: unnecessary_null_comparison
-                  if (provider != null)
+                  /*if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
                       Visibility(
@@ -606,9 +696,9 @@ class _HomeViewState extends State<DashboardView>
                               Navigator.pop(context);
                               updateSelectedIndexWithAnimation(title, index);
                             }),
-                      ),
+                      ),*/
                   // ignore: unnecessary_null_comparison
-                  if (provider != null)
+                 /* if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
                       Visibility(
@@ -623,7 +713,7 @@ class _HomeViewState extends State<DashboardView>
                               Navigator.pop(context);
                               updateSelectedIndexWithAnimation(title, index);
                             }),
-                      ),
+                      ),*/
                   // ignore: unnecessary_null_comparison
                   if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
@@ -676,7 +766,7 @@ class _HomeViewState extends State<DashboardView>
                     title:
                         Text(Utils.getString(context, 'home__menu_drawer_app')),
                   ),
-                  _DrawerMenuWidget(
+                  /*_DrawerMenuWidget(
                       icon: Icons.g_translate,
                       title: Utils.getString(
                           context, 'home__menu_drawer_language'),
@@ -684,7 +774,7 @@ class _HomeViewState extends State<DashboardView>
                       onTap: (String title, int index) {
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation('', index);
-                      }),
+                      }),*/
                   _DrawerMenuWidget(
                       icon: Icons.contacts,
                       title: Utils.getString(
@@ -763,6 +853,22 @@ class _HomeViewState extends State<DashboardView>
           ),
         ),
         appBar: AppBar(
+            centerTitle: true,
+            leading: _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
+                ? IconButton(
+              icon: const Icon(
+                Icons.arrow_back, // Replace with your preferred icon for the back button
+              ),
+              onPressed: () {
+                _onTapBack();
+              },
+            )
+                : null,
           backgroundColor: PsColors.backgroundColor,
           title: Text( appBarTitle,
             //'title1',//Utils.getString(context, 'app_name'),
@@ -813,8 +919,8 @@ class _HomeViewState extends State<DashboardView>
             },
               child: Consumer<BasketProvider>(
                 builder: (BuildContext context, BasketProvider basketProvider, Widget? child) {
-                  //return Container(
-                    /*child: InkWell(
+                  /*return Container(
+                    child: InkWell(
                       child: Stack(
                         children: <Widget>[
                           Container(
@@ -962,7 +1068,18 @@ class _HomeViewState extends State<DashboardView>
             _currentIndex ==
                 PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT||
             _currentIndex ==
-                PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT
+                PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT||
+            _currentIndex == PsConst.REQUEST_CODE__MENU_FEATURED_PRODUCT_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__MENU_USER_HISTORY_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__MENU_SELECT_WHICH_USER_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
+
 
             ? Visibility(
                 visible: true,
@@ -976,7 +1093,7 @@ class _HomeViewState extends State<DashboardView>
                   showSelectedLabels: true,
                   onTap: (int index) {
                     final dynamic _returnValue =
-                        getIndexFromBottonNavigationIndex(index);
+                        getIndexFromBottomNavigationIndex(index);
 
                     updateSelectedIndexWithAnimation(
                         _returnValue[0], _returnValue[1]);
@@ -1043,7 +1160,11 @@ class _HomeViewState extends State<DashboardView>
                 PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT||
             _currentIndex ==
                 PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT ||
-        _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_VERIFY_FRAGMENT
+        _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
+            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT||
+            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
+            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT||
+            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
             ? Container(
                 height: 65.0,
                 width: 65.0,
@@ -1344,8 +1465,51 @@ class _HomeViewState extends State<DashboardView>
                 );
               } else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT) {
-                return CategoryListView();
-              } else if (_currentIndex ==
+                return SearchHistoryListView();
+
+              }
+              else if (_currentIndex ==
+                  PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT) {
+                return SubCategoryGridView(category: selectedCategory);
+              }
+              else if (_currentIndex ==
+                  PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT) {
+                return SearchItemListView(
+                    productParameterHolder: selectedProductParameterHolder!);
+              }
+              else if (_currentIndex ==
+                  PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT) {
+                return ProductListWithFilterContainerView(
+                    productParameterHolder: selectedProductParameterHolder!,
+                    appBarTitle: '');
+              }
+              else if (_currentIndex ==
+                  PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT) {
+
+                return ProductDetailView(
+                  productId: selectedProductDetailHolder!.productId,
+                  heroTagImage: selectedProductDetailHolder!.heroTagImage,
+                  heroTagTitle: selectedProductDetailHolder!.heroTagTitle,
+                  heroTagOriginalPrice: selectedProductDetailHolder!.heroTagOriginalPrice,
+                  heroTagUnitPrice: selectedProductDetailHolder!.heroTagUnitPrice,
+                  intentId: selectedProductDetailHolder!.id,
+                  intentQty: selectedProductDetailHolder!.qty,
+                  intentSelectedColorId: selectedProductDetailHolder!.selectedColorId,
+                  intentSelectedColorValue: selectedProductDetailHolder!.selectedColorValue,
+                  intentBasketPrice: selectedProductDetailHolder!.basketPrice,
+                  intentBasketSelectedAttributeList: selectedProductDetailHolder!.basketSelectedAttributeList,
+                  intentBasketSelectedAddOnList: selectedProductDetailHolder!.basketSelectedAddOnList,
+                );
+              }
+              else if (_currentIndex ==
+                  PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT) {
+                return GalleryGridView( provider: selectedProductDetailProvider!);
+              }
+              else if (_currentIndex ==
+                  PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT) {
+                return TransactionItemListView(transaction: selectedTransactionHeader!);
+              }
+              else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT) {
                 return ProductListWithFilterView(
                   key: const Key('1'),
@@ -1773,7 +1937,12 @@ class _HomeViewState extends State<DashboardView>
               //   );
               } else {
                 animationController.forward();
-                return HomeDashboardViewWidget(animationController, context);
+                return HomeDashboardViewWidget(animationController, context,
+                    (category){
+                      Navigator.pushNamed(
+                          context, RoutePaths.subCategoryGrid,
+                          arguments: category);
+                    });
               }
             },
           ),

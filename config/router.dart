@@ -115,7 +115,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute<dynamic>(
           settings: const RouteSettings(name: RoutePaths.home),
           builder: (BuildContext context) {
-            return DashboardView();
+            return DashboardView(key: DASHBOARD_VIEW_KEY);
           });
     case '${RoutePaths.orderList}':
       /*return PageRouteBuilder<dynamic>(

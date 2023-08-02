@@ -11,6 +11,7 @@ import 'package:flutterrestaurant/config/router.dart' as router;
 import 'package:flutterrestaurant/provider/common/ps_theme_provider.dart';
 import 'package:flutterrestaurant/provider/ps_provider_dependencies.dart';
 import 'package:flutterrestaurant/repository/ps_theme_repository.dart';
+import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/language.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';

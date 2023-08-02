@@ -294,7 +294,7 @@ class PsNetworkCircleImage extends StatelessWidget {
         return GestureDetector(
             onTap: onTap as void Function()?,
             child: ClipRRect(
-                borderRadius: BorderRadius.circular(10000.0),
+                //borderRadius: BorderRadius.circular(10000.0),
                 child: Image.asset(
                   'assets/images/placeholder_image.png',
                   width: width,
@@ -309,7 +309,7 @@ class PsNetworkCircleImage extends StatelessWidget {
             child: Hero(
               tag: '$photoKey$asset',
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10000.0),
+                //borderRadius: BorderRadius.circular(10000.0),
                 child: Image.asset(asset!,
                     width: width, height: height, fit: boxfit),
               ),
@@ -324,7 +324,7 @@ class PsNetworkCircleImage extends StatelessWidget {
         return GestureDetector(
             onTap: onTap as void Function()?,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(10000.0),
+              //borderRadius: BorderRadius.circular(10000.0),
               child: CachedNetworkImage(
                 placeholder: (BuildContext context, String url) {
                   if (isUseThumbnailAsPlaceholder) {

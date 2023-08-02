@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/transaction/transaction_header_provider.dart';
 import 'package:flutterrestaurant/repository/transaction_header_repository.dart';
 import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
+import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/transaction/item/transaction_list_item.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:intl/number_symbols_data.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/utils.dart';
@@ -125,10 +128,15 @@ class _TransactionListViewState extends State<TransactionListView>
                                     transaction:
                                         provider.transactionList.data![index],
                                     onTap: () {
-                                      Navigator.pushNamed(
+                                      DASHBOARD_VIEW_KEY.currentState?.selectedTransactionHeader = provider
+                                          .transactionList.data![index];
+                                      DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(Utils.getString(
+                                          context, 'transaction_detail__title'),
+                                          PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT);
+                                      /*Navigator.pushNamed(
                                           context, RoutePaths.orderDetail,
                                           arguments: provider
-                                              .transactionList.data![index]);
+                                              .transactionList.data![index]);*/
 
                                     },
                                   );

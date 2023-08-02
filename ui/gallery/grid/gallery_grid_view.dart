@@ -34,7 +34,8 @@ class _GalleryGridViewState extends State<GalleryGridView>
     print(
         '............................Build UI Again ............................');
     return PsWidgetWithAppBar<GalleryProvider>(
-        appBarTitle: Utils.getString(context, 'ingredients__title') ,
+
+        appBarTitle: ''/*Utils.getString(context, 'ingredients__title')*/ ,
         initProvider: () {
           return GalleryProvider(repo: productRepo);
         },
@@ -45,6 +46,7 @@ class _GalleryGridViewState extends State<GalleryGridView>
         },
         builder:
             (BuildContext context, GalleryProvider provider, Widget? child) {
+
           if (
             //provider.galleryList != null &&
               provider.galleryList.data!.isNotEmpty) {

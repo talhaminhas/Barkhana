@@ -23,7 +23,7 @@ import 'package:flutterrestaurant/ui/common/dialog/rating_dialog/core.dart';
 import 'package:flutterrestaurant/ui/common/dialog/rating_dialog/style.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
-import 'package:flutterrestaurant/ui/dashboard/home/home_tabbar_slider.dart';
+import 'package:flutterrestaurant/ui/dashboard/home/home_tabbar_product_list_view.dart';
 import 'package:flutterrestaurant/ui/product/item/product_vertical_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
@@ -39,11 +39,14 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 class HomeDashboardViewWidget extends StatefulWidget {
-  const HomeDashboardViewWidget(this.animationController, this.context);
+  const HomeDashboardViewWidget(
+      this.animationController,
+      this.context,
+      this.onTapCategory);
 
   final AnimationController animationController;
   final BuildContext context;
-
+  final Function (Category category) onTapCategory;
   @override
   _HomeDashboardViewWidgetState createState() =>
       _HomeDashboardViewWidgetState();
@@ -264,7 +267,10 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
                   CurvedAnimation(
                       parent: widget.animationController,
                       curve: Interval((1 / count) * 2, 1.0,
-                          curve: Curves.fastOutSlowIn))), //animation
+                          curve: Curves.fastOutSlowIn))),
+              onTapCategory: (Category category) {
+                  widget.onTapCategory(category);
+              }, //animation
             //),
           ),
         ));
@@ -639,7 +645,8 @@ class _HomeCategoryHorizontalListWidget extends StatefulWidget {
       required this.animation,
       required this.psValueHolder,
         required this.categoryProvider,
-      required this.userInputItemNameTextEditingController})
+      required this.userInputItemNameTextEditingController,
+      required this.onTapCategory})
       : super(key: key);
 
   final CategoryProvider? categoryProvider;
@@ -648,7 +655,7 @@ class _HomeCategoryHorizontalListWidget extends StatefulWidget {
   final Animation<double> animation;
   final PsValueHolder psValueHolder;
   final TextEditingController userInputItemNameTextEditingController;
-
+  final Function (Category category) onTapCategory;
   @override
   __HomeCategoryHorizontalListWidgetState createState() =>
       __HomeCategoryHorizontalListWidgetState();
@@ -729,7 +736,10 @@ class __HomeCategoryHorizontalListWidgetState
                 userInputItemNameTextEditingController:
                     widget.userInputItemNameTextEditingController,
                 valueHolder: widget.psValueHolder,
-                key: Key('${_tmpList.length}')),
+                key: Key('${_tmpList.length}'),
+              onTapCategory: (Category category) {
+                widget.onTapCategory(category);
+              },),
             builder: (BuildContext context, Widget? child) {
               return FadeTransition(
                   opacity: widget.animation,

@@ -49,6 +49,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../dashboard/core/drawer_view.dart';
 import 'views/description_tile_view.dart';
 import 'views/detail_info_tile_view.dart';
 import 'views/terms_and_policy_tile_view.dart';
@@ -357,7 +358,9 @@ class _ProductDetailState extends State<ProductDetailView>
                   }
                   print(
                       'detail : latest${provider.productDetail.data!.defaultPhoto!.imgId}');
+
                   return Stack(
+
                     children: <Widget>[
                       CustomScrollView(slivers: <Widget>[
                         SliverAppBar(
@@ -371,7 +374,7 @@ class _ProductDetailState extends State<ProductDetailView>
                               .iconTheme
                               .copyWith(color: PsColors.mainColorWithWhite),
                           leading: PsBackButtonWithCircleBgWidget(
-                            isReadyToShow: isReadyToShowAppBarIcons,
+                            isReadyToShow: false/*isReadyToShowAppBarIcons*/,
                           ),
                           floating: false,
                           pinned: false,
@@ -382,7 +385,7 @@ class _ProductDetailState extends State<ProductDetailView>
                                     BasketProvider basketProvider,
                                     Widget? child) {
                               return Visibility(
-                                visible: isReadyToShowAppBarIcons,
+                                visible: false/*isReadyToShowAppBarIcons*/,
                                 child: Row(
                                   children: <Widget>[
                                     InkWell(
@@ -469,6 +472,7 @@ class _ProductDetailState extends State<ProductDetailView>
                               );
                             })
                           ],
+
                           backgroundColor: PsColors.mainColorWithBlack,
                           flexibleSpace: FlexibleSpaceBar(
                             background: Container(
@@ -481,9 +485,13 @@ class _ProductDetailState extends State<ProductDetailView>
                                 width: MediaQuery.of(context).size.width,
                                 //height: double.infinity,
                                 onTap: () {
-                                  Navigator.pushNamed(
+                                  DASHBOARD_VIEW_KEY.currentState?.selectedProductDetailProvider = provider;
+                                  DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
+                                      Utils.getString(context, 'ingredients__title'),
+                                      PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT);
+                                  /*Navigator.pushNamed(
                                       context, RoutePaths.galleryGrid,
-                                      arguments: provider);
+                                      arguments: provider);*/
                                 },
                               ),
                             ),
@@ -2301,8 +2309,8 @@ class __AddToBasketAndBuyButtonWidgetState
           timeInSecForIosWeb: 1,
           backgroundColor: PsColors.mainColor,
           textColor: PsColors.white);
-
       if (isBuyButtonType) {
+        //DASHBOARD_VIEW_KEY.currentState?
         final dynamic result = await Navigator.pushNamed(
             context, RoutePaths.basketList,
             arguments: widget.productProvider.productDetail.data);

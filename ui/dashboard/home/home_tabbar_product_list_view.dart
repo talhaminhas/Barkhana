@@ -20,6 +20,7 @@ import '../../../viewobject/holder/product_parameter_holder.dart';
 import '../../../viewobject/holder/touch_count_parameter_holder.dart';
 import '../../category/item/category_vertical_list_item.dart';
 import '../../noti/detail/noti_view.dart';
+import '../core/drawer_view.dart';
 
 class HomeTabbarProductListView extends StatefulWidget {
   const HomeTabbarProductListView({
@@ -29,7 +30,8 @@ class HomeTabbarProductListView extends StatefulWidget {
     required this.categoryList,
     required this.userInputItemNameTextEditingController,
     required this.valueHolder,
-    required this.categoryProvider
+    required this.categoryProvider,
+    required this.onTapCategory
   }) : super(key: key);
 
   final ShopInfo shopInfo;
@@ -38,6 +40,7 @@ class HomeTabbarProductListView extends StatefulWidget {
   final List<Category> categoryList;
   final TextEditingController userInputItemNameTextEditingController;
   final PsValueHolder valueHolder;
+  final Function (Category category) onTapCategory;
   @override
   _HomeTabbarProductListViewState createState() =>
       _HomeTabbarProductListViewState();
@@ -176,12 +179,12 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
         : widget.valueHolder.phone == ''
             ? <IconData>[
                 FontAwesome5.shopping_bag,
-                Icons.note_add,
+                /*Icons.note_add,*/
               ]
             : <IconData>[
                 // MaterialCommunityIcons.facebook_messenger,
                 FontAwesome5.shopping_bag,
-                Icons.note_add,
+                /*Icons.note_add,*/
               ];
     iconsLabel = widget.valueHolder.phone == ''
         ? <String>[]
@@ -189,9 +192,9 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
             ? <String>[]
             : <String>[
                 Utils.getString(context, 'reservation_shop_info'),
-                Utils.getString(
+               /* Utils.getString(
                     context, 'home__menu_drawer_create_reservation'),
-                Utils.getString(context, 'home__menu_drawer_create_reservation')
+                Utils.getString(context, 'home__menu_drawer_create_reservation')*/
               ];
     final List<int> fixedList =
         Iterable<int>.generate(widget.categoryList.length).toList();
@@ -216,7 +219,7 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
             if(widget.shopInfo.shopSchedules != null)
               getOpenAndCloseTime(),
             Row(
-              children: <Widget>[
+              children: const <Widget>[
                 /*const SizedBox(
                   width: PsDimens.space4,
                 ),*/
@@ -310,11 +313,21 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
                                       widget.categoryProvider.categoryList.data![index],
                                       onTap: () {
                                         if(PsConfig.isShowSubCategory){
-                                          Navigator.pushNamed(
+                                          /*Navigator.pushNamed(
                                               context, RoutePaths.subCategoryGrid,
                                               arguments: widget.categoryProvider
                                                   .categoryList
-                                                  .data![index]);
+                                                  .data![index]);*/
+                                          //
+                                          final Category selectedCategory = widget.categoryProvider
+                                              .categoryList
+                                              .data![index];
+
+                                          DASHBOARD_VIEW_KEY.currentState?.selectedCategory = selectedCategory;
+                                          DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
+                                              selectedCategory.name!,
+                                              PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT);
+                                          //widget.onTapCategory(widget.categoryProvider.categoryList.data![index]);
                                         }else{
                                           final String loginUserId =
                                           Utils.checkUserLoginId(

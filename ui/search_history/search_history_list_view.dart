@@ -8,12 +8,15 @@ import 'package:flutterrestaurant/provider/search_history/search_history_provide
 import 'package:flutterrestaurant/repository/search_history_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/confirm_dialog_view.dart';
 import 'package:flutterrestaurant/ui/common/ps_search_textfield_widget.dart';
+import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/search_history/search_history_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';
 import 'package:flutterrestaurant/viewobject/search_history.dart';
 import 'package:provider/provider.dart';
+
+import '../../constant/ps_constants.dart';
 
 class SearchHistoryListView extends StatefulWidget {
 
@@ -152,9 +155,14 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
                                 onTap: () {
                                   productParameterHolder.searchTerm = 
                                     provider.historyList.data![index].searchTeam;
-                                  Navigator.pushNamed(
+                                  DASHBOARD_VIEW_KEY.currentState?.selectedProductParameterHolder = productParameterHolder;
+                                  DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
+                                      Utils.getString(
+                                          context, 'home__bottom_app_bar_search'),
+                                      PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
+                                  /*Navigator.pushNamed(
                                       context, RoutePaths.searchItemList,
-                                      arguments: productParameterHolder);
+                                      arguments: productParameterHolder);*/
                                 },
                                 onDeleteTap: () {
                                 showDialog<dynamic>(

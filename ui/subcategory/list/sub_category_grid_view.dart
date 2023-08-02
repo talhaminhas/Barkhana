@@ -20,6 +20,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../constant/ps_constants.dart';
+import '../../dashboard/core/drawer_view.dart';
+
 
 class SubCategoryGridView extends StatefulWidget {
   const SubCategoryGridView({this.category});
@@ -81,7 +84,9 @@ class _ModelGridViewState extends State<SubCategoryGridView>
     //     data: data,
     //     child:
     return Scaffold(
-        appBar: AppBar(
+        appBar: PreferredSize(
+        preferredSize: Size.fromHeight(0),
+            child: AppBar(
           backgroundColor: PsColors.mainColor,
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarIconBrightness: Utils.getBrightnessForAppBar(context),
@@ -93,7 +98,8 @@ class _ModelGridViewState extends State<SubCategoryGridView>
           iconTheme: IconThemeData(
             color: PsColors.white,
           ),
-        ),
+        )),
+
         body: ChangeNotifierProvider<SubCategoryProvider>(
             lazy: false,
             create: (BuildContext context) {
@@ -159,7 +165,15 @@ class _ModelGridViewState extends State<SubCategoryGridView>
                                           provider.subCategoryByCatIdParamenterHolder
                                                   .subCatId =
                                               provider.subCategoryList.data![index].id;
-                                          Navigator.pushNamed(context,
+                                          DASHBOARD_VIEW_KEY.currentState?.selectedProductParameterHolder =
+                                              provider
+                                                  .subCategoryByCatIdParamenterHolder;
+                                          DASHBOARD_VIEW_KEY.currentState?.currentPath =
+                                          provider.subCategoryList.data![index].name!;
+                                              DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
+                                                  DASHBOARD_VIEW_KEY.currentState!.currentPath!,
+                                              PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT);
+                                          /*Navigator.pushNamed(context,
                                               RoutePaths.filterProductList,
                                               arguments: ProductListIntentHolder(
                                                   appBarTitle: provider
@@ -167,7 +181,7 @@ class _ModelGridViewState extends State<SubCategoryGridView>
                                                       .data![index]
                                                       .name!,
                                                   productParameterHolder: provider
-                                                      .subCategoryByCatIdParamenterHolder));
+                                                      .subCategoryByCatIdParamenterHolder));*/
                                         },
                                         animationController:
                                             animationController,

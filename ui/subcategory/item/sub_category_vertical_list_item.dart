@@ -4,6 +4,7 @@ import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/sub_category.dart';
 
+
 class SubCategoryVerticalListItem extends StatelessWidget {
   const SubCategoryVerticalListItem({
     Key? key,
@@ -35,6 +36,7 @@ class SubCategoryVerticalListItem extends StatelessWidget {
                   height: PsDimens.space44,
                   onTap: () {
                     Utils.psPrint(subCategory.defaultPhoto!.imgParentId!);
+
                   },
                 ),
                 const SizedBox(

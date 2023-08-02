@@ -127,6 +127,7 @@ class _SubCategoryListViewState extends State<SubCategoryListView>
                                       onTap: () {
                                         print(provider.subCategoryList
                                             .data![index].defaultPhoto!.imgPath);
+
                                       },
                                     );
                                   }

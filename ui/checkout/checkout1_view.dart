@@ -858,13 +858,13 @@ class _DeliveryCostWidget extends StatelessWidget {
           ),
         _DeliveryTextWidget(
           deliveryInfoText:
-              '$currencySymbol ${provider.deliveryCost.data!.costPerCharges}',
+              '$currencySymbol ${double.parse(provider.deliveryCost.data!.costPerCharges!).toStringAsFixed(2)}',
           title:
               '${Utils.getString(context, 'checkout__delivery_cost_per_mile')} :',
         ),
         _DeliveryTextWidget(
           deliveryInfoText:
-              '$currencySymbol ${provider.deliveryCost.data!.totalCost}',
+              '$currencySymbol ${double.parse(provider.deliveryCost.data!.totalCost!).toStringAsFixed(2)}',
           title:
               '${Utils.getString(context, 'checkout__delivery_total_cost')} :',
         )

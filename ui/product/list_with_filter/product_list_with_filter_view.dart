@@ -13,6 +13,7 @@ import 'package:flutterrestaurant/ui/common/dialog/choose_attribute_dialog.dart'
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
 import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
+import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/product/item/product_vertical_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
@@ -225,10 +226,14 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                     PsConst
                                                         .HERO_TAG__UNIT_PRICE,
                                               );
+                                              DASHBOARD_VIEW_KEY.currentState?.selectedProductDetailHolder = holder;
+                                              DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
+                                                  '',
+                                                  PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
 
-                                              Navigator.pushNamed(context,
+                                              /*Navigator.pushNamed(context,
                                                   RoutePaths.productDetail,
-                                                  arguments: holder);
+                                                  arguments: holder);*/
                                             },
                                             onUpdateQuantityTap: (String? productQuantity) async{
                                               //print(productQuantity!);

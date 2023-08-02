@@ -60,9 +60,10 @@ class _ProductListWithFilterContainerViewState
     print(
         '............................Build UI Again< Filter Container > ............................');
     return WillPopScope(
+
       onWillPop: _requestPop,
       child: Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarIconBrightness: Utils.getBrightnessForAppBar(context),
           ), 
@@ -148,7 +149,11 @@ class _ProductListWithFilterContainerViewState
               }),
             )
           ],
-        ),
+        ),*/
+        appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(0),
+            child: AppBar(
+            )),
         body: ProductListWithFilterView(
           animationController: animationController!,
           productParameterHolder: widget.productParameterHolder,
