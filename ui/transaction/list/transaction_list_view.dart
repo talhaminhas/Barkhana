@@ -27,7 +27,7 @@ class TransactionListView extends StatefulWidget {
 class _TransactionListViewState extends State<TransactionListView>
     with TickerProviderStateMixin, WidgetsBindingObserver{
   final ScrollController _scrollController = ScrollController();
-  GlobalKey<_TransactionListViewState> _key = GlobalKey<_TransactionListViewState>();
+  final GlobalKey<_TransactionListViewState> _key = GlobalKey<_TransactionListViewState>();
   TransactionHeaderProvider? _transactionProvider;
 
   @override
@@ -128,9 +128,9 @@ class _TransactionListViewState extends State<TransactionListView>
                                     transaction:
                                         provider.transactionList.data![index],
                                     onTap: () {
-                                      DASHBOARD_VIEW_KEY.currentState?.selectedTransactionHeader = provider
+                                      dashboardViewKey.currentState?.selectedTransactionHeader = provider
                                           .transactionList.data![index];
-                                      DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(Utils.getString(
+                                      dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(Utils.getString(
                                           context, 'transaction_detail__title'),
                                           PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT);
                                       /*Navigator.pushNamed(

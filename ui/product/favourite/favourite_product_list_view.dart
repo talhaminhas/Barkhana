@@ -188,11 +188,9 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                                   PsConst.HERO_TAG__UNIT_PRICE,
                                             );
 
-                                            DASHBOARD_VIEW_KEY.currentState?.selectedProductDetailHolder = holder;
-                                            DASHBOARD_VIEW_KEY.currentState?.currentPath = Utils.getString(context,
-                                                'profile__favourite');
-                                            DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
-                                                '',
+                                            dashboardViewKey.currentState?.selectedProductDetailHolder = holder;
+                                            dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                                                Utils.getString(context, 'product_detail__title'),
                                                 PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
 
                                             /*await Navigator.pushNamed(context,

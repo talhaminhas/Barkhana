@@ -21,6 +21,7 @@ import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/noti_register_holder.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -45,7 +46,6 @@ class Utils {
       return '';
     }
   }
-
   static bool? checkEmailFormat(String ?email) {
     bool? emailFormat;
     if (email != '') {

@@ -323,8 +323,8 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
                                               .categoryList
                                               .data![index];
 
-                                          DASHBOARD_VIEW_KEY.currentState?.selectedCategory = selectedCategory;
-                                          DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
+                                          dashboardViewKey.currentState?.selectedCategory = selectedCategory;
+                                          dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
                                               selectedCategory.name!,
                                               PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT);
                                           //widget.onTapCategory(widget.categoryProvider.categoryList.data![index]);

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
@@ -12,6 +13,7 @@ import 'package:flutterrestaurant/repository/basket_repository.dart';
 import 'package:flutterrestaurant/repository/coupon_discount_repository.dart';
 import 'package:flutterrestaurant/repository/transaction_header_repository.dart';
 import 'package:flutterrestaurant/repository/user_repository.dart';
+import 'package:flutterrestaurant/ui/category/list/category_list_view.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/success_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
@@ -24,19 +26,39 @@ import 'package:flutterrestaurant/viewobject/coupon_discount.dart';
 import 'package:flutterrestaurant/viewobject/holder/coupon_discount_holder.dart';
 import 'package:provider/provider.dart';
 
+import '../../constant/route_paths.dart';
+import '../../provider/transaction/transaction_header_provider.dart';
+import '../../repository/token_repository.dart';
+import '../../utils/ps_progress_dialog.dart';
+import '../../viewobject/holder/globalTokenPost.dart';
+import '../../viewobject/holder/intent_holder/checkout_status_intent_holder.dart';
+import '../../viewobject/holder/intent_holder/privacy_policy_intent_holder.dart';
+import '../../viewobject/transaction_header.dart';
+import '../privacy_policy/privacy_policy_view.dart';
+
 class Checkout2View extends StatefulWidget {
   const Checkout2View({
     Key? key,
+    required this.updateCheckout2ViewState,
     required this.basketList,
     required this.shopInfoProvider,
     required this.publishKey,
+    required this.deliveryPickUpDate,
+    required this.deliveryPickUpTime,
   }) : super(key: key);
 
+  final String deliveryPickUpDate;
+  final String deliveryPickUpTime;
+  final Function updateCheckout2ViewState;
   final List<Basket> basketList;
   final ShopInfoProvider shopInfoProvider;
   final String publishKey;
   @override
-  _Checkout2ViewState createState() => _Checkout2ViewState();
+  _Checkout2ViewState createState() {
+    final _Checkout2ViewState _state = _Checkout2ViewState();
+    updateCheckout2ViewState(_state);
+    return _state;
+  }
 }
 
 class _Checkout2ViewState extends State<Checkout2View> {
@@ -50,6 +72,126 @@ class _Checkout2ViewState extends State<Checkout2View> {
   UserProvider? userProvider;
   DeliveryCostProvider? provider;
   ShopInfoProvider? shopInfoProvider;
+  bool isCheckBoxSelect = false;
+  void updateCheckBox() {
+    if (isCheckBoxSelect) {
+      isCheckBoxSelect = false;
+    } else {
+      isCheckBoxSelect = true;
+    }
+  }
+  dynamic callGlobalNow(String token,
+      GlobalTokenPost globalTokenPost,
+      TokenRepository tokenRepository,
+      BasketProvider basketProvider,
+      UserProvider userProvider,
+      TransactionHeaderProvider transactionHeaderProvider)
+  {
+    Navigator.pushNamed(context, RoutePaths.globalWebview,
+        arguments:{
+          'token': token,
+          'onHppResponse': (String hppResponse) async {
+            globalTokenPost.jsonResponse = '{' + hppResponse + '}';
+            final Map<String, dynamic>? jsonResponse = await tokenRepository.getGlobalTransactionStatus(globalTokenPost, context);
+            print('''payment response from server${jsonResponse!['status']},${jsonResponse!['error']}''');
+            if(jsonResponse!['status'] == true)//payment successfully
+                {
+              callCardNow(basketProvider, userProvider, transactionHeaderProvider);
+            }
+            //payment unsuccessfully
+            else{
+              showDialog<dynamic>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ErrorDialog(
+                      message: Utils.getString(context, 'error_dialog__payment_unsuccessful'
+                      ),
+                    );
+                  });
+            }
+
+          },
+        });
+
+  }
+  dynamic callCardNow(
+      BasketProvider basketProvider,
+      UserProvider userLoginProvider,
+      TransactionHeaderProvider transactionSubmitProvider) async {
+    if (await Utils.checkInternetConnectivity()) {
+      if (userLoginProvider.user.data != null) {
+        await PsProgressDialog.showDialog(context);
+        print(
+            basketProvider.checkoutCalculationHelper.subTotalPrice.toString());
+        final PsValueHolder valueHolder =
+        Provider.of<PsValueHolder>(context, listen: false);
+
+        final PsResource<TransactionHeader> _apiStatus =
+        await transactionSubmitProvider.postTransactionSubmit(
+            userLoginProvider.user.data!,
+            widget.basketList,
+            '',
+            couponDiscountProvider!.couponDiscount.toString(),
+            basketProvider.checkoutCalculationHelper.tax.toString(),
+            basketProvider.checkoutCalculationHelper.totalDiscount
+                .toString(),
+            basketProvider.checkoutCalculationHelper.subTotalPrice
+                .toString(),
+            basketProvider.checkoutCalculationHelper.shippingCost
+                .toString(),
+            basketProvider.checkoutCalculationHelper.totalPrice.toString(),
+            basketProvider.checkoutCalculationHelper.totalOriginalPrice
+                .toString(),
+            PsConst.ZERO,
+            PsConst.ZERO,
+            PsConst.ZERO,
+            PsConst.ZERO,
+            PsConst.ZERO,
+            PsConst.ZERO,
+            PsConst.ZERO,
+            PsConst.ONE,
+            '',
+            '',
+            PsConst.ZERO,
+            PsConst.ZERO,//isClickPickUpButton == true ? PsConst.ONE : PsConst.ZERO,
+            widget.deliveryPickUpDate,
+            widget.deliveryPickUpTime,
+            basketProvider.checkoutCalculationHelper.shippingCost
+                .toString(),
+            userLoginProvider.user.data!.area!.areaName!,
+            ''/*memoController.text*/,
+            valueHolder);
+
+        if (_apiStatus.data != null) {
+          PsProgressDialog.dismissDialog();
+          await basketProvider.deleteWholeBasketList();
+          // Navigator.pop(context, true);
+          await Navigator.pushNamed(context, RoutePaths.checkoutSuccess,
+              arguments: CheckoutStatusIntentHolder(
+                transactionHeader: _apiStatus.data!,
+              ));
+        } else {
+          PsProgressDialog.dismissDialog();
+
+          return showDialog<dynamic>(
+              context: context,
+              builder: (BuildContext context) {
+                return ErrorDialog(
+                  message: _apiStatus.message,
+                );
+              });
+        }
+      }
+    } else {
+      showDialog<dynamic>(
+          context: context,
+          builder: (BuildContext context) {
+            return ErrorDialog(
+              message: Utils.getString(context, 'error_dialog__no_internet'),
+            );
+          });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -255,6 +397,80 @@ class _Checkout2ViewState extends State<Checkout2View> {
               userProvider: userProvider,
               shopInfoProvider: widget.shopInfoProvider,
             ),
+        Container(
+          color: PsColors.backgroundColor,
+          margin: const EdgeInsets.only(top: PsDimens.space8),
+          padding: const EdgeInsets.only(
+            left: PsDimens.space12,
+            right: PsDimens.space12,
+          ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Checkbox(
+                  activeColor: PsColors.mainColor,
+                  value: isCheckBoxSelect,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      updateCheckBox();
+                    });
+                  },
+                ),
+                Expanded(
+                  child: InkWell(
+                    child: Text.rich(
+                      TextSpan(
+                        text: Utils.getString(context, 'checkout2__agree_policy'),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        children: [
+                          TextSpan(
+                            text: 'terms/conditions', // The word you want to make tappable
+                            style: const TextStyle(
+                              color: Colors.blue, // Customize the link text color
+                              decoration: TextDecoration.underline, // Add underline for the link
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                // Add your navigation logic here
+                                Navigator.pushNamed(context, RoutePaths.termsAndRefund,
+                                    arguments: PrivacyPolicyIntentHolder(
+                                        title: Utils.getString(context, 'terms_and_condition__toolbar_name'),
+                                        description: PsConst.TERMS_FLAG
+                                    ));
+                              },
+                          ),
+                          const TextSpan(text: ' and '),
+                          TextSpan(
+                            text: 'refund policy.', // The word you want to make tappable
+                            style: const TextStyle(
+                              color: Colors.blue, // Customize the link text color
+                              decoration: TextDecoration.underline, // Add underline for the link
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                // Add your navigation logic here
+                                Navigator.pushNamed(context, RoutePaths.termsAndRefund,
+                                    arguments: PrivacyPolicyIntentHolder(
+                                        title: Utils.getString(context, 'refund_policy__toolbar_name'),
+                                        description: PsConst.REFUND_FLAG
+                                    ));
+                              },
+                          ),
+                        ],
+                      ),
+                      maxLines: 2,
+                    ),/*
+                    onTap: () {
+                      setState(() {
+                        updateCheckBox();
+                      });
+                    },*/
+                  ),
+                ),
+              ],
+            ),
+        ),
           ],
         ),
       );

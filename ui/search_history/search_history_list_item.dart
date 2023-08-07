@@ -19,48 +19,67 @@ class SearchHistoryListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: onTap as void Function()?,
-        child: Container(
-            width: PsDimens.space140,
+        child:IntrinsicWidth(
+          child: Container(
             padding: const EdgeInsets.only(
-              left: PsDimens.space4,
-              right: PsDimens.space4,
-              top: PsDimens.space8),
-            child: MaterialButton(
-                color: PsColors.baseColor,
-                height: 28,
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(color: PsColors.mainDividerColor),
-                    borderRadius:
-                        const BorderRadius.all(Radius.circular(15.0))),
-                  child: Align(
-                   alignment: Alignment.center,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              searchHistory.searchTeam!,
-                              textAlign: TextAlign.center,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge!
-                                    .copyWith(color: PsColors.iconColor),
-                              ),
-                            ),
-                            InkWell(
-                              child: Icon(
-                                  Icons.clear,
-                                  color: PsColors.iconColor,
-                                  size: 16,
-                                  ),
-                                onTap: onDeleteTap as void Function()?, 
-                            ),
-                          ]),
-                       ),
-                    onPressed: onTap as void Function()?),
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: PsColors.mainColor,
+                width: 2.0,
               ),
+              borderRadius: BorderRadius.circular(25.0),
+            ),
+            child: MaterialButton(
+              color: PsColors.baseColor,
+              elevation: 0,
+              // Remove fixed height to fit content
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        searchHistory.searchTeam!,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(),
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    InkWell(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle, // Make the container circular
+                          border: Border.all(
+                            color: PsColors.discountColor,
+                            width: 2.0,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.clear,
+                          size: 20,
+                          color: PsColors.discountColor,
+                        ),
+                      ),
+                      onTap: onDeleteTap as void Function()?,
+                    ),
+
+                  ],
+                ),
+              ),
+              onPressed: onTap as void Function()?,
+            ),
+          ),
+        ),
+
+
     );
   }
 }

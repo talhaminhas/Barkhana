@@ -181,17 +181,17 @@ class ProductVeticalListItem extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1),
 
-                                const SizedBox(
+                                /*const SizedBox(
                                   height: PsDimens.space4,
-                                )
+                                )*/
                                   ]
                                     else
                                       Container()
                                 ]
                               )),
-                              const SizedBox(
+                              /*const SizedBox(
                                 width: PsDimens.space4,
-                              ),
+                              ),*/
                               /*Container(
                                 decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
                                   borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))

@@ -485,8 +485,8 @@ class _ProductDetailState extends State<ProductDetailView>
                                 width: MediaQuery.of(context).size.width,
                                 //height: double.infinity,
                                 onTap: () {
-                                  DASHBOARD_VIEW_KEY.currentState?.selectedProductDetailProvider = provider;
-                                  DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
+                                  dashboardViewKey.currentState?.selectedProductDetailProvider = provider;
+                                  dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
                                       Utils.getString(context, 'ingredients__title'),
                                       PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT);
                                   /*Navigator.pushNamed(
@@ -2299,25 +2299,30 @@ class __AddToBasketAndBuyButtonWidgetState
           basketSelectedAddOnList:
               widget.basketSelectedAddOn.getSelectedAddOnList());
 
+      Navigator.pop(context);
       await widget.basketProvider.addBasket(basket!);
+
 
       Fluttertoast.showToast(
           msg:
-              Utils.getString(context, 'product_detail__success_add_to_basket'),
+          Utils.getString(context, 'product_detail__success_add_to_basket'),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
-          backgroundColor: PsColors.mainColor,
+          backgroundColor: PsColors.greenColor,
           textColor: PsColors.white);
       if (isBuyButtonType) {
-        //DASHBOARD_VIEW_KEY.currentState?
-        final dynamic result = await Navigator.pushNamed(
+        dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+            Utils.getString(context, 'home__bottom_app_bar_basket_list'),
+        PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
+
+        /*final dynamic result = await Navigator.pushNamed(
             context, RoutePaths.basketList,
             arguments: widget.productProvider.productDetail.data);
         if (result != null && result) {
           widget.productProvider
               .loadProduct(widget.product.id!, widget.psValueHolder.loginUserId!);
-        }
+        }*/
       }
     }
 
@@ -2355,7 +2360,11 @@ class __AddToBasketAndBuyButtonWidgetState
                       double.parse(widget.product.unitPrice!),
                   updateQty: updateQty,
                   qty: qty,
-                ),/*
+                ),
+                const SizedBox(
+                  width: PsDimens.space12,
+                ),
+                /*
                 Divider(height: PsDimens.space20, color: PsColors.mainColor),*/
                 Flexible(
                   child: SingleChildScrollView(
@@ -2613,9 +2622,9 @@ class __ImageAndTextForBottomSheetWidgetState
               ),
             ),
           ),
-          /*const SizedBox(
+          const SizedBox(
             width: PsDimens.space20,
-          ),*/
+          ),
           Flexible(
             child: Column(
               mainAxisSize: MainAxisSize.min,

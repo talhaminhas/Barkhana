@@ -113,7 +113,7 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
           child: Consumer<TransactionDetailProvider>(builder:
               (BuildContext context, TransactionDetailProvider provider,
                   Widget? child) {
-                if (provider.transactionDetailList.data != null ||
+                if (provider.transactionDetailList.data != null &&
                     provider
                         .transactionDetailList.data!.isNotEmpty) {
                   print(provider.transactionDetailList.data!.length);
@@ -864,7 +864,7 @@ class __RefundButtonWidgetState extends State<_RefundButtonWidget> {
               left: PsDimens.space18,
               right: PsDimens.space12,
               bottom: PsDimens.space24),
-          child: PSButtonWidget(
+         /* child: PSButtonWidget(
             hasShadow: true,
             width: double.infinity,
             titleText: Utils.getString(context, 'refund_button_refund'),
@@ -914,7 +914,7 @@ class __RefundButtonWidgetState extends State<_RefundButtonWidget> {
                 }
               }
             },
-          ),
+          ),*/
         );
       }),
     );

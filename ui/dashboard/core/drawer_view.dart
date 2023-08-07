@@ -73,7 +73,7 @@ import '../../product/detail/product_detail_view.dart';
 import '../../product/list_with_filter/product_list_with_filter_container.dart';
 import '../../search_history/search_history_list_view.dart';
 
-final GlobalKey<_HomeViewState> DASHBOARD_VIEW_KEY = GlobalKey<_HomeViewState>();
+final GlobalKey<_HomeViewState> dashboardViewKey = GlobalKey<_HomeViewState>();
 class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
   @override
@@ -217,6 +217,24 @@ class _HomeViewState extends State<DashboardView>
       case PsConst.REQUEST_CODE__DASHBOARD_REGISTER_FRAGMENT:
         index = 4;
         break;
+      case PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT:
+        index = 4;
+        break;
+      case PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT:
+        index = 1;
+        break;
+      /*case PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT:
+        if(previousControllerProductDetail == Utils.getString(context, 'home__bottom_app_bar_search'))
+          index = 1;
+        else
+          index = 2;
+        break;
+      case PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT:
+        if(previousControllerProductDetail == Utils.getString(context, 'home__bottom_app_bar_search'))
+          index = 1;
+        else
+          index = 2;
+        break;*/
       case PsConst.REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT:
         index = 4;
         break;
@@ -322,22 +340,118 @@ class _HomeViewState extends State<DashboardView>
      if (!mounted) {
        return;
      }
-
+     //print(dashboardViewKey.currentState);
+     if(controllersStack.last[title] != index)
+      controllersStack.add({title:index});
+     print(controllersStack);
      setState(() {
        appBarTitle = title;
        _currentIndex = index;
      });
    });
  }
- String? currentPath;
+ List<Map<String, int>> controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];// to keep track of controller before basket page.
  restaurant.Category? selectedCategory;
+ List<StatefulWidget> controllers = [];
  ProductParameterHolder? selectedProductParameterHolder;
  ProductDetailIntentHolder? selectedProductDetailHolder;
  ProductDetailProvider? selectedProductDetailProvider;
  TransactionHeader? selectedTransactionHeader;
- void someMethod() {
-   // Perform the desired action here
-   print('This method was called from an outside controller.');
+ void onTapBack(){
+   /*if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT) {
+        //show fav screen
+        if(previousControllerProductDetail == Utils.getString(context, 'profile__favourite')){
+          updateSelectedIndexWithAnimation(
+              previousControllerProductDetail!,
+              PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT
+          );
+        }
+        //show basket screen
+        else if (previousControllerProductDetail == Utils.getString(context, 'home__bottom_app_bar_basket_list')){
+          updateSelectedIndexWithAnimation(
+              previousControllerProductDetail!,
+              PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT
+          );
+        }
+        //show search history screen
+        else if (previousControllerProductDetail == Utils.getString(context, 'home__bottom_app_bar_search')){
+          updateSelectedIndexWithAnimation(
+              previousControllerProductDetail!,
+              PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
+          );
+        }
+        //show discount screen
+        else if (previousControllerProductDetail == Utils.getString(context, 'home__drawer_menu_discount_product')){
+          updateSelectedIndexWithAnimation(
+              previousControllerProductDetail!,
+              PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT
+          );
+        }
+        //show featured screen
+        else if (previousControllerProductDetail == Utils.getString(context, 'home__menu_drawer_featured_product')){
+          updateSelectedIndexWithAnimation(
+              previousControllerProductDetail!,
+              PsConst.REQUEST_CODE__MENU_FEATURED_PRODUCT_FRAGMENT
+          );
+        }
+        //show subcategory screen
+        else {
+          updateSelectedIndexWithAnimation(
+              previousControllerProductDetail!,
+              PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT
+          );
+        }
+      }
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            previousControllerBasketList[0],
+            previousControllerBasketList[1]
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            Utils.getString(context, 'home__drawer_menu_home'),
+            PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            selectedCategory!.name!,
+            PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            '',
+            PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT)
+        updateSelectedIndexWithAnimation(
+            Utils.getString(
+                context, 'profile__order'),
+            PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT
+        );
+      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT) {
+        updateSelectedIndexWithAnimation(Utils.getString(
+            context, 'home__bottom_app_bar_search'),
+            PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT);
+      }
+
+*/
+   controllersStack.removeLast();
+   Map<String, int>? lastRemovedController = controllersStack.last;
+   print(lastRemovedController);
+   if (lastRemovedController != null) {
+     final String key = lastRemovedController.keys.first;
+     updateSelectedIndexWithAnimation(key, lastRemovedController[key]!);
+     // Do something with the key and value...
+   }
+   else{
+     /*Navigator.pushReplacementNamed(
+          context,
+          RoutePaths.home,
+        );*/
+     updateSelectedIndexWithAnimation(
+         Utils.getString(context, 'home__drawer_menu_menu'),
+         PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT);
+   }
  }
   @override
   Widget build(BuildContext context) {
@@ -400,56 +514,11 @@ class _HomeViewState extends State<DashboardView>
                 }) .then((dynamic value) => value as bool);
 
        } else {
-         Navigator.pushReplacementNamed(
-            context,
-            RoutePaths.home,
-          );
+        onTapBack();
           return Future<bool>.value(false);
       }
     }
-    void _onTapBack(){
-      if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            Utils.getString(context, 'home__drawer_menu_home'),
-            PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            selectedCategory!.name!,
-            PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT) {
-        if(currentPath == Utils.getString(context, 'profile__favourite')){
-          updateSelectedIndexWithAnimation(
-              Utils.getString(context, 'profile__favourite'),
-              PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT
-          );
-        }
-        //show subcategory screen
-        else {
-          updateSelectedIndexWithAnimation(
-              currentPath!,
-              PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT
-          );
-        }
-      }
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            '',
-            PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            Utils.getString(
-                context, 'profile__order'),
-            PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT) {
-        updateSelectedIndexWithAnimation(Utils.getString(
-            context, 'home__bottom_app_bar_search'),
-            PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT);
-        }
-    }
+
     final Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0)
         .animate(CurvedAnimation(
             parent: animationController,
@@ -555,7 +624,7 @@ class _HomeViewState extends State<DashboardView>
                           PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT,
                       onTap: (String title, int index) {
                         Navigator.pop(context);
-                        DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(title, index);
+                        dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(title, index);
                       }),
                   _DrawerMenuWidget(
                       icon: FontAwesome5.gem,
@@ -859,13 +928,18 @@ class _HomeViewState extends State<DashboardView>
                 _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
                 _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT||
                 _currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT||
-                _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
+                _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__MENU_SETTING_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__MENU_TERMS_AND_CONDITION_FRAGMENT||
+                _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT
+
                 ? IconButton(
               icon: const Icon(
                 Icons.arrow_back, // Replace with your preferred icon for the back button
               ),
               onPressed: () {
-                _onTapBack();
+                onTapBack();
               },
             )
                 : null,
@@ -975,6 +1049,7 @@ class _HomeViewState extends State<DashboardView>
                   if (_currentIndex != PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
                   return GestureDetector(
                   onTap: () {
+                    /*controllersStack.add({appBarTitle:_currentIndex});*/
                     updateSelectedIndexWithAnimation(Utils.getString(
                         context,
                         Utils.getString(context, 'home__bottom_app_bar_basket_list')),
@@ -1094,7 +1169,7 @@ class _HomeViewState extends State<DashboardView>
                   onTap: (int index) {
                     final dynamic _returnValue =
                         getIndexFromBottomNavigationIndex(index);
-
+                      controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];
                     updateSelectedIndexWithAnimation(
                         _returnValue[0], _returnValue[1]);
                   },
@@ -1938,7 +2013,7 @@ class _HomeViewState extends State<DashboardView>
               } else {
                 animationController.forward();
                 return HomeDashboardViewWidget(animationController, context,
-                    (category){
+                    (restaurant.Category category){
                       Navigator.pushNamed(
                           context, RoutePaths.subCategoryGrid,
                           arguments: category);

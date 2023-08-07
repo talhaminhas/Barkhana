@@ -94,66 +94,75 @@ class _ImageAndTextWidget extends StatelessWidget {
               alignment: Alignment.center,
               child: Row(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(PsDimens.space8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(PsDimens.space8),
+                        child: PsNetworkImage(
+                          width: PsDimens.space160,
+                          height: PsDimens.space120,
+                          photoKey: '',
+                          defaultPhoto: basket.product!.defaultPhoto!,
+                          boxfit: BoxFit.cover,
+                        ),
+                      ),
+                  ),
+                  const SizedBox(
+                    width: PsDimens.space8,
+                  ),
                   Expanded(
                     child: Row(
                         mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(PsDimens.space8),
-                            child: ClipRRect(
 
-                              borderRadius: BorderRadius.circular(PsDimens.space8),
-                              child: PsNetworkImage(
-                                width: PsDimens.space160,
-                                height: PsDimens.space120,
-                                photoKey: '',
-                                defaultPhoto: basket.product!.defaultPhoto!,
-                                boxfit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: PsDimens.space8,
-                          ),
                           Flexible(
                             child: Column(
                               //mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       top: PsDimens.space8,
                                       bottom: PsDimens.space8),
-                                  child: Text(
-                                    basket.product!.name!,
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      basket.product!.name!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.titleLarge,
+                                    ),
                                   ),
+
+
                                 ),
                                 Text(
                                   '${Utils.getString(context, 'basket_list__price')}  ${basket.product!.currencySymbol} ${Utils.getPriceFormat(basket.basketPrice!,psValueHolder)}',
                                   style: Theme.of(context).textTheme.titleMedium,
 
                                 ),
-                                /*const SizedBox(
-                                  height: PsDimens.space8,
-                                ),*/
+
                                 Text(
                                   '${Utils.getString(context, 'basket_list__sub_total')} ${basket.product!.currencySymbol} ${Utils.getPriceFormat(subTotalPrice.toString(),psValueHolder)}',
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 _AttributeAndColorWidget(basket: basket),
                                 _AddOnWidget(basket: basket),
+                                const SizedBox(
+                                  height: PsDimens.space8,
+                                ),
                                 _IconAndTextWidget(
                                   basket: basket,
                                   basketProvider: basketProvider,
+                                ),
+                                const SizedBox(
+                                  height: PsDimens.space8,
                                 ),
                               ],
                             ),
@@ -482,12 +491,14 @@ class _AddOnWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         if (basket.basketSelectedAttributeList!.isNotEmpty &&
             basket.selectedColorValue != null)
           Text(
             '${Utils.getString(context, 'basket_list__attributes')}',
             style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
           )
         else
           Container(),
@@ -509,6 +520,7 @@ class _AddOnWidget extends StatelessWidget {
             child: Text(
               '( ${getSelectedAddOn().toString()} )',
               style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.center,
             ),
           )
         else

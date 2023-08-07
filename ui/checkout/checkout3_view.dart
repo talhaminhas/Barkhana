@@ -11,6 +11,7 @@ import 'dart:convert';
 import 'dart:io';
 import '../../api/common/ps_resource.dart';
 import '../../api/common/ps_status.dart';
+import '../../api/ps_url.dart';
 import '../../config/ps_colors.dart';
 import '../../constant/ps_constants.dart';
 import '../../constant/ps_dimens.dart';
@@ -33,19 +34,30 @@ import '../../viewobject/schedule_header.dart';
 import '../../viewobject/transaction_header.dart';
 import '../common/dialog/error_dialog.dart';
 import '../common/ps_textfield_widget.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf/shelf_io.dart' as io;
 
 class Checkout3View extends StatefulWidget {
   const Checkout3View(
-    this.updateCheckout3ViewState,
-    this.basketList,
-    this.isClickDeliveryButton,
-    this.isClickPickUpButton,
-    this.deliveryPickUpDate,
-    this.deliveryPickUpTime,
-    this.isWeeklyScheduleOrder,
+      this.basketProvider,
+      this.userProvider,
+      this.transactionSubmitProvider,
+      this.tokenRepository,
+      this.updateCheckout3ViewState,
+      this.basketList,
+      this.isClickDeliveryButton,
+      this.isClickPickUpButton,
+      this.deliveryPickUpDate,
+      this.deliveryPickUpTime,
+      this.isWeeklyScheduleOrder,
   );
 
+  final BasketProvider? basketProvider;
+  final TransactionHeaderProvider? transactionSubmitProvider;
+  final UserProvider? userProvider;
   final Function updateCheckout3ViewState;
+  final TokenRepository tokenRepository;
 
   final List<Basket> basketList;
   final bool isClickDeliveryButton;
@@ -74,11 +86,93 @@ class _Checkout3ViewState extends State<Checkout3View> {
   bool isPayStackClicked = false;
   bool isFlutterWaveClicked = false;
   bool isRazorSupportMultiCurrency = false;
+  String? token;
+  late GlobalTokenPost tokenPostRequest;
 
   late PsValueHolder valueHolder;
   CouponDiscountProvider? couponDiscountProvider;
   BasketProvider? basketProvider;
   final TextEditingController memoController = TextEditingController();
+
+  late final  WebViewController? webController;
+  HttpServer? _httpServer;
+  late String deviceIp;
+  @override
+  void initState() {
+    super.initState();
+
+    // Get the IP address of the development machine
+    _getIpAddress().then((String ipAddress) {
+      // Start the HTTP server
+      final shelf.Handler handler = const shelf.Pipeline()
+          .addMiddleware(shelf.logRequests())
+          .addHandler(_receiveHandler);
+      deviceIp = ipAddress;
+      io.serve(handler, ipAddress, 8080).then((HttpServer server) {
+        setState(() {
+          _httpServer = server;
+        });
+      });
+    });
+  }
+  Future<String> _getIpAddress() async {
+    // Get the IP address of the first non-loopback network interface
+    for (var interface in await NetworkInterface.list()) {
+      for (var addr in interface.addresses) {
+        if (!addr.isLoopback) {
+          return addr.address;
+        }
+      }
+    }
+    // If no non-loopback address is found, fallback to localhost
+    return 'localhost';
+  }
+  @override
+  void dispose() {
+    // Close the HTTP server when the widget is disposed
+    _httpServer?.close();
+    super.dispose();
+  }
+
+
+
+  Future<shelf.Response> _receiveHandler(shelf.Request request) async {
+    if (request.method == 'POST') {
+      // Handle the incoming POST data
+      final String body = await request.readAsString();
+      // Decode the JSON data into a Dart object
+      String hppResponse = Uri.decodeFull(body);
+
+      // Remove the "hppResponse=" prefix from the string
+      hppResponse = hppResponse.replaceFirst('hppResponse=', '');
+      tokenPostRequest.jsonResponse = '{' + hppResponse + '}';
+      final Map<String, dynamic>? jsonResponse = await widget.tokenRepository!.getGlobalTransactionStatus(tokenPostRequest, context);
+      print('''payment response from server${jsonResponse!['status']},${jsonResponse!['error']}''');
+      if(jsonResponse!['status'] == true)//payment successfully
+          {
+        callCardNow(widget.basketProvider!, widget.userProvider!, widget.transactionSubmitProvider!);
+      }
+      //payment unsuccessfully
+      else{
+        /*setState(() {
+                viewNo--;
+              });*/
+        webController!.reload();
+        showDialog<dynamic>(
+            context: context,
+            builder: (BuildContext context) {
+              return ErrorDialog(
+                message: Utils.getString(context, 'error_dialog__payment_unsuccessful'
+                ),
+              );
+            });
+      }
+      return shelf.Response.ok('');
+    } else {
+      // Respond with a method not allowed message for other request methods
+      return shelf.Response(HttpStatus.methodNotAllowed);
+    }
+  }
 
   void checkStatus() {
     print('Checking Status ... $isCheckBoxSelect');
@@ -496,7 +590,6 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
   Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     // Do something when payment succeeds
-    print('success');
 
     print(response);
 
@@ -580,7 +673,6 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
   void _handlePaymentError(PaymentFailureResponse response) {
     // Do something when payment fails
-    print('error');
     showDialog<dynamic>(
         context: context,
         builder: (BuildContext context) {
@@ -954,8 +1046,49 @@ class _Checkout3ViewState extends State<Checkout3View> {
             basketProvider = Provider.of<BasketProvider>(context,
                 listen: false); // Listen : False is important.
 
-            return SingleChildScrollView(
-              child: Container(
+            //return SingleChildScrollView(
+              child:
+            return  WebView(
+                    initialUrl: PsUrl.ps_global_payment_hpp_url,
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (WebViewController webViewController) {
+                      webController = webViewController;
+                    },
+                    onPageFinished: (String url) async{
+                      if (webController != null) {
+                          tokenPostRequest = GlobalTokenPost(
+                          userEmail: userProvider?.user.data!.userEmail,
+                          userPhone: userProvider?.user.data!.userPhone,
+                          userAddress1: userProvider?.user.data!.address,
+                          userAddress2: '',
+                          userCity: userProvider?.user.data!.userCity,
+                          userPostcode: userProvider?.user.data!.userPostcode,
+                          userTotal: basketProvider?.checkoutCalculationHelper.totalPrice.toString(),
+                          jsonResponse: '0',// zero means posting to get token, if it is assigned with a response then server will return transaction result
+                        );
+                        token = await widget.tokenRepository?.postGlobalToken(tokenPostRequest,context);
+                        if (token != null) {
+                          print(token!);
+                          webController!.runJavascript('''
+                                    \$(document).ready(function() {
+                                RealexHpp.setHppUrl("${PsUrl
+                              .ps_global_payment_url}");
+                                var jsonObject = JSON.parse($token);
+                                RealexHpp.embedded.init("payButtonId", "iframeId", "http://$deviceIp:8080/", jsonObject );
+                                \$("#payButtonId").click();
+                            });
+                        ''');
+                        }
+                      }
+                    },
+                    onPageStarted: (String url) {
+                    },
+                 // ),
+
+
+
+
+              /*Container(
                 color: PsColors.backgroundColor,
                 padding: const EdgeInsets.only(
                   left: PsDimens.space12,
@@ -964,7 +1097,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    /*const SizedBox(
+                    *//*const SizedBox(
                       height: PsDimens.space16,
                     ),
                     Container(
@@ -983,8 +1116,8 @@ class _Checkout3ViewState extends State<Checkout3View> {
                     ),
                     const SizedBox(
                       height: PsDimens.space8,
-                    ),*/
-                    /*Consumer<ShopInfoProvider>(builder: (BuildContext context,
+                    ),*//*
+                    *//*Consumer<ShopInfoProvider>(builder: (BuildContext context,
                         ShopInfoProvider shopInfoProvider, Widget? child) {
                       if (shopInfoProvider.shopInfo.data == null) {
                         return Container();
@@ -1295,8 +1428,8 @@ class _Checkout3ViewState extends State<Checkout3View> {
                         textAboutMe: true,
                         hintText: Utils.getString(context, 'checkout3__delivery_notes'),
                         keyboardType: TextInputType.multiline,
-                        textEditingController: memoController),*/
-                    Row(
+                        textEditingController: memoController),*//*
+                    *//*Row(
                       children: <Widget>[
                         Checkbox(
                           activeColor: PsColors.mainColor,
@@ -1323,13 +1456,11 @@ class _Checkout3ViewState extends State<Checkout3View> {
                           ),
                         ),
                       ],
-                    ),
-                    const SizedBox(
-                      height: PsDimens.space60,
-                    ),
+                    ),*//*
+
                   ],
                 ),
-              ),
+              ),*/
             );
             // } else {
             //   return Container();

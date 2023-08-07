@@ -165,13 +165,11 @@ class _ModelGridViewState extends State<SubCategoryGridView>
                                           provider.subCategoryByCatIdParamenterHolder
                                                   .subCatId =
                                               provider.subCategoryList.data![index].id;
-                                          DASHBOARD_VIEW_KEY.currentState?.selectedProductParameterHolder =
+                                          dashboardViewKey.currentState?.selectedProductParameterHolder =
                                               provider
                                                   .subCategoryByCatIdParamenterHolder;
-                                          DASHBOARD_VIEW_KEY.currentState?.currentPath =
-                                          provider.subCategoryList.data![index].name!;
-                                              DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
-                                                  DASHBOARD_VIEW_KEY.currentState!.currentPath!,
+                                              dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                                                  provider.subCategoryList.data![index].name!,
                                               PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT);
                                           /*Navigator.pushNamed(context,
                                               RoutePaths.filterProductList,

@@ -15,7 +15,7 @@ import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/product/item/product_vertical_list_item.dart';
-import 'package:flutterrestaurant/utils/utils.dart';
+import 'package:flutterrestaurant/utils/utils.dart' ;
 import 'package:flutterrestaurant/viewobject/basket.dart';
 import 'package:flutterrestaurant/viewobject/basket_selected_add_on.dart';
 import 'package:flutterrestaurant/viewobject/basket_selected_attribute.dart';
@@ -24,6 +24,7 @@ import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_detail
 import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';
 import 'package:flutterrestaurant/viewobject/product.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:flutterwave_standard/utils.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -226,9 +227,9 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                     PsConst
                                                         .HERO_TAG__UNIT_PRICE,
                                               );
-                                              DASHBOARD_VIEW_KEY.currentState?.selectedProductDetailHolder = holder;
-                                              DASHBOARD_VIEW_KEY.currentState?.updateSelectedIndexWithAnimation(
-                                                  '',
+                                              dashboardViewKey.currentState?.selectedProductDetailHolder = holder;
+                                              dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                                                  Utils.getString(context, 'product_detail__title'),//Utils.getString(context, 'profile__favourite'),
                                                   PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
 
                                               /*Navigator.pushNamed(context,

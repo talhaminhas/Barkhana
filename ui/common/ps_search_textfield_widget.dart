@@ -5,6 +5,10 @@ import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';
 
+import '../../constant/ps_constants.dart';
+import '../../utils/utils.dart';
+import '../dashboard/core/drawer_view.dart';
+
 class PsSearchTextFieldWidget extends StatelessWidget {
   const PsSearchTextFieldWidget(
       {this.textEditingController,
@@ -43,9 +47,14 @@ class PsSearchTextFieldWidget extends StatelessWidget {
       ),
       onSubmitted: (String value) {
         productParameterHolder.searchTerm = textEditingController!.text;
-        Navigator.pushNamed(
+        dashboardViewKey.currentState?.selectedProductParameterHolder = productParameterHolder;
+        dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+            Utils.getString(
+                context, 'home__bottom_app_bar_search'),
+            PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
+        /*Navigator.pushNamed(
             context, RoutePaths.searchItemList,
-            arguments: productParameterHolder);
+            arguments: productParameterHolder);*/
       },
     );
 

@@ -36,6 +36,7 @@ import 'package:flutterrestaurant/viewobject/holder/intent_holder/paystack_inten
 import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:webview_flutter/src/webview.dart';
 import '../../api/common/ps_status.dart';
 import '../../api/ps_url.dart';
 import '../../ui/checkout/checkout1_view.dart';
@@ -75,6 +76,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
   TransactionHeaderProvider? transactionSubmitProvider;
   PsApiService? psApiService;
   TokenRepository? tokenRepository;
+  GlobalTokenPost tokenPostRequest = GlobalTokenPost();
   int? hour, minute;
   int? monOpenHour, monCloseHour, monOpenMin, monCloseMin;
   int? tuesOpenHour, tuesCloseHour, tuesOpenMin, tuesCloseMin;
@@ -217,25 +219,35 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
         widget.basketList,
       );
     } else if (viewNo == 2) {
+
       return Container(
         color: PsColors.coreBackgroundColor,
         child: Checkout2View(
+          updateCheckout2ViewState: updateCheckout2ViewState,
           basketList: widget.basketList,
           shopInfoProvider: shopInfoProvider!,
           publishKey: valueHolder!.publishKey!,
+          deliveryPickUpDate: checkout1ViewState.deliveryPickUpDate,
+          deliveryPickUpTime: checkout1ViewState.deliveryPickUpTime,
         ),
       );
+
     } else if (viewNo == 3) {
       return Container(
         color: PsColors.coreBackgroundColor,
         child: Checkout3View(
+          basketProvider,
+          userProvider,
+          transactionSubmitProvider,
+          tokenRepository!,
             updateCheckout3ViewState,
             widget.basketList,
             checkout1ViewState.userProvider.isClickDeliveryButton,
             checkout1ViewState.userProvider.isClickPickUpButton,
             checkout1ViewState.deliveryPickUpDate,
             checkout1ViewState.deliveryPickUpTime,
-            false),
+            false,
+        ),
       );
     }
   }
@@ -262,14 +274,15 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                     child: Stack(
                       alignment: const Alignment(0.0, 0.0),
                       children: <Widget>[
+                        if (viewNo != 3)
                         Container(
                           margin:
                               const EdgeInsets.only(right: PsDimens.space36),
                           child: GestureDetector(
                             child: Text(
                                 viewNo == 3
-                                    ? Utils.getString(context,
-                                        'basket_list__checkout_button_name')
+                                    ? ''/*Utils.getString(context,
+                                        'basket_list__checkout_button_name')*/
                                     : Utils.getString(
                                         context, 'checkout_container__next'),
                                 style: Theme.of(context)
@@ -282,6 +295,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                             },
                           ),
                         ),
+                        if (viewNo != 3)
                         Positioned(
                           right: 1,
                           child: IconButton(
@@ -307,9 +321,9 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
   dynamic clickToNextCheck(User user, Function _closeCheckoutContainer,
       TokenProvider tokenProvider) async {
     if (viewNo < maxViewNo) {
-      if (viewNo == 3) {
-        checkout3ViewState.checkStatus();
-        if (checkout3ViewState.isCheckBoxSelect) {
+      if (viewNo == 2) {
+        //checkout2ViewState.checkStatus();
+        if (checkout2ViewState.isCheckBoxSelect) {
           showDialog<dynamic>(
               context: context,
               builder: (BuildContext context) {
@@ -321,11 +335,11 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                     rightButtonText: Utils.getString(
                         context, 'home__logout_dialog_ok_button'),
                     onAgreeTap: () async {
-                      if (PsConfig.isDemo) {
+                      /*if (PsConfig.isDemo) {
                         //await callDemoWarningDialog(context);
-                      }
-                      Navigator.pop(context);
-                      final GlobalTokenPost dataToSend = GlobalTokenPost(
+                      }*/
+                      //Navigator.pop(context);
+                        tokenPostRequest = GlobalTokenPost(
                         userEmail: user.userEmail,
                         userPhone: user.userPhone,
                         userAddress1: user.address,
@@ -335,11 +349,14 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                         userTotal: basketProvider?.checkoutCalculationHelper.totalPrice.toString(),
                         jsonResponse: '0',// zero means posting to get token, if it is assigned with a response then server will return transaction result
                       );
-                      final String? token = await tokenRepository?.postGlobalToken(dataToSend,context);
+                      final String? token = await tokenRepository?.postGlobalToken(tokenPostRequest,context);
                       if (token != null) {
                       // Handle the JSON response
-                        print(token);
-                        final dynamic returnData = checkout3ViewState.callGlobalNow(
+                        _closeCheckoutContainer();
+                        setState(() {
+                          viewNo++;
+                        });
+                        /*final dynamic returnData = checkout2ViewState.callGlobalNow(
                             token,
                             dataToSend,
                             tokenRepository,
@@ -349,7 +366,41 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                         );
                         if (returnData != null && returnData) {
                           _closeCheckoutContainer();
-                        }
+                        }*/
+                        /*return Container(
+                          color: PsColors.coreBackgroundColor,
+                          child: Checkout3View(
+                              token,
+                              updateCheckout3ViewState,
+                              widget.basketList,
+                              checkout1ViewState.userProvider.isClickDeliveryButton,
+                              checkout1ViewState.userProvider.isClickPickUpButton,
+                              checkout1ViewState.deliveryPickUpDate,
+                              checkout1ViewState.deliveryPickUpTime,
+                              false,
+                                (String hppResponse) async {
+                                  dataToSend.jsonResponse = '{' + hppResponse + '}';
+                            final Map<String, dynamic>? jsonResponse = await tokenRepository!.getGlobalTransactionStatus(dataToSend, context);
+                            print('''payment response from server${jsonResponse!['status']},${jsonResponse!['error']}''');
+                            if(jsonResponse!['status'] == true)//payment successfully
+                                {
+                              checkout2ViewState.callCardNow(basketProvider, userProvider, transactionSubmitProvider);
+                            }
+                            //payment unsuccessfully
+                            else{
+                              showDialog<dynamic>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ErrorDialog(
+                                      message: Utils.getString(context, 'error_dialog__payment_unsuccessful'
+                                      ),
+                                    );
+                                  });
+                            }
+
+                          },
+                          ),
+                        );*/
                       } else {
                       // Handle the failure case
                       print('Failed to post data.');

@@ -9,6 +9,7 @@ import 'package:flutterrestaurant/repository/shop_info_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/confirm_dialog_view.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
 import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
+import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
@@ -109,40 +110,51 @@ class _BasketListViewState extends State<BasketListView>
                               basket: provider.basketList.data![index],
                               onTap: () async {
                                 // final Basket intentBasket = provider.basketList.data[index];
-                                final dynamic returnData =
+                                final ProductDetailIntentHolder holder = ProductDetailIntentHolder(
+                                  id: provider
+                                      .basketList.data![index].id,
+                                  qty: provider
+                                      .basketList.data![index].qty,
+                                  selectedColorId: provider.basketList
+                                      .data![index].selectedColorId,
+                                  selectedColorValue: provider
+                                      .basketList
+                                      .data![index]
+                                      .selectedColorValue,
+                                  basketPrice: provider.basketList
+                                      .data![index].basketPrice,
+                                  basketSelectedAttributeList: provider
+                                      .basketList
+                                      .data![index]
+                                      .basketSelectedAttributeList,
+                                  basketSelectedAddOnList: provider
+                                      .basketList
+                                      .data![index]
+                                      .basketSelectedAddOnList,
+                                  productId: provider
+                                      .basketList.data![index].product!.id,
+                                  heroTagImage: '',
+                                  heroTagTitle: '',
+                                  heroTagOriginalPrice: '',
+                                  heroTagUnitPrice: '',
+                                );
+                                /*dashboardViewKey.currentState?.controllersStack.add(
+                                    {Utils.getString(context, 'home__bottom_app_bar_basket_list'):
+                                        PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT
+                                    }
+                                )*/
+                                    ;
+                                dashboardViewKey.currentState?.selectedProductDetailHolder = holder;
+                                dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                                    Utils.getString(context, 'product_detail__title'),
+                                    PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
+                                /*final dynamic returnData =
                                     await Navigator.pushNamed(
                                         context, RoutePaths.productDetail,
-                                        arguments: ProductDetailIntentHolder(
-                                          id: provider
-                                              .basketList.data![index].id,
-                                          qty: provider
-                                              .basketList.data![index].qty,
-                                          selectedColorId: provider.basketList
-                                              .data![index].selectedColorId,
-                                          selectedColorValue: provider
-                                              .basketList
-                                              .data![index]
-                                              .selectedColorValue,
-                                          basketPrice: provider.basketList
-                                              .data![index].basketPrice,
-                                          basketSelectedAttributeList: provider
-                                              .basketList
-                                              .data![index]
-                                              .basketSelectedAttributeList,
-                                          basketSelectedAddOnList: provider
-                                              .basketList
-                                              .data![index]
-                                              .basketSelectedAddOnList,
-                                          productId: provider
-                                              .basketList.data![index].product!.id,
-                                          heroTagImage: '',
-                                          heroTagTitle: '',
-                                          heroTagOriginalPrice: '',
-                                          heroTagUnitPrice: '',
-                                        ));
+                                        arguments: holder);
                                 if (returnData == null) {
                                   provider.resetBasketList();
-                                }
+                                }*/
                               },
                               onDeleteTap: () {
                                 showDialog<dynamic>(

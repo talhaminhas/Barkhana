@@ -10,6 +10,7 @@ import 'package:flutterrestaurant/provider/search_history/search_history_provide
 import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/repository/search_history_repository.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
+import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/search_item/search_item_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
@@ -126,7 +127,8 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
         ),
       ),
       onTap: () {
-        Navigator.pop(context);
+        dashboardViewKey.currentState?.onTapBack();
+        //Navigator.pop(context);
         inputSearchController.clear();
       },
     );
@@ -146,7 +148,8 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
             child: IconButton(
               icon: Icon(Icons.search, color: PsColors.mainColor, size: 26),
               onPressed: () {
-                Navigator.pop(context);
+                dashboardViewKey.currentState?.onTapBack();
+                //Navigator.pop(context);
               },
             ),
           ),
@@ -226,7 +229,7 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                       color: PsColors.baseColor,
                       child: Column(
                         children: <Widget>[
-                          CustomResultListTileView(
+                          /*CustomResultListTileView(
                             fadeAnimation: fadeAnimation,
                             animationController: animationController,
                             viewAllPressed: () {
@@ -259,7 +262,7 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                             title: Utils.getString(
                                 context, 'search__sub_categories'),
                             dataList: subCategoriesList,
-                          ),
+                          ),*/
                           CustomItemResultListView(
                             fadeAnimation: fadeAnimation,
                             animationController: animationController,
@@ -586,7 +589,7 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                           .copyWith(fontSize: 16,fontWeight: FontWeight.bold),
                     ),
                   ),
-                  RawMaterialButton(
+                  /*RawMaterialButton(
                       onPressed: () {
                         Navigator.pushNamed(
                             context, RoutePaths.searchItemViewAll,
@@ -599,7 +602,7 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                         Utils.getString(context, 'dashboard__view_all'),
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             fontSize: 12.5, fontWeight: FontWeight.w600,color: PsColors.mainColor),
-                      )),
+                      )),*/
                 ],
               ),
             ),
@@ -615,7 +618,7 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
               padding: const EdgeInsets.symmetric(horizontal: 20),
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  childAspectRatio: 0.6, maxCrossAxisExtent: 220),
+                  childAspectRatio: 0.79, maxCrossAxisExtent: 220),
               itemCount: widget.productList.length,
               itemBuilder: (BuildContext context, int index) {
                 widget.animationController.forward();
@@ -709,9 +712,12 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                                     product.id! +
                                     PsConst.HERO_TAG__UNIT_PRICE,
                           );
-
-                          Navigator.pushNamed(context, RoutePaths.productDetail,
-                              arguments: holder);
+                          dashboardViewKey.currentState?.selectedProductDetailHolder = holder;
+                          dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                              Utils.getString(context, 'product_detail__title'),
+                              PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
+                          /*Navigator.pushNamed(context, RoutePaths.productDetail,
+                              arguments: holder);*/
                         },
                         onBasketTap: () async {
                           if (product.isAvailable == '1') {
