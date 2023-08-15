@@ -35,59 +35,55 @@ class CategoryVerticalListItem extends StatelessWidget {
                         color: PsColors.mainColor, // Set the desired border color here
                         width: 2, // Set the border width
                       ),
-                      borderRadius: BorderRadius.circular(10), // Set the desired border radius
+                      borderRadius: BorderRadius.circular(5), // Set the desired border radius
                     ),
-                    child: Column(
-                  children: <Widget>[
-                    ClipRRect(
+                    child:Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: LayoutBuilder(
+                            builder: (BuildContext context, BoxConstraints constraints) {
+                              final double width = constraints.maxWidth; // Get parent's width
+                              final double remainingHeight = constraints.maxHeight - 30; // 50 is the fixed height of the Text
 
-                        borderRadius: BorderRadius.circular(10),
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-
-                              child: PsNetworkImage(
-
-                                photoKey: '',
-                                defaultPhoto: category.defaultPhoto!,
-                                width: PsDimens.space200,
-                                height: PsDimens.space200,
-                                boxfit: BoxFit.cover,
-                              ),
-                            ),
-                            /*Container(
-                              width: 200,
-                              height: double.infinity,
-                              color: PsColors.black.withAlpha(110),
-                            )*/
-                          ],
-                        )),
-                    const SizedBox(
-                      height: PsDimens.space4,
-                    ),
-                    Text(
-                      category.name!,
-                      textAlign: TextAlign.start,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: PsColors.white, fontWeight: FontWeight.bold),
-                    ),
-                    /*Container(
-                        child: Positioned(
-                      bottom: 10,
-                      left: 10,
-                      child: Container(
-                        width: PsDimens.space40,
-                        height: PsDimens.space40,
-                        child: PsNetworkCircleIconImage(
-                          photoKey: '',
-                          defaultIcon: category.defaultIcon!,
-                          boxfit: BoxFit.cover,
-                          onTap: onTap!,
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(3),
+                                child: Container(
+                                  width: width,
+                                  height: remainingHeight, // Adjust the height to cover remaining space
+                                  child: PsNetworkImage(
+                                    photoKey: '',
+                                    defaultPhoto: category.defaultPhoto!,
+                                    boxfit: BoxFit.cover,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    )),*/
-                  ],
-                )))),
+                        const SizedBox(
+                          height: PsDimens.space4,
+                        ),
+                        Container(
+                          height: 30,
+                          padding: const EdgeInsets.only(left: PsDimens.space10,right: PsDimens.space10),
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              category.name!,
+                              maxLines: 1,
+                              textAlign: TextAlign.start,
+                              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                                  color: PsColors.white, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: PsDimens.space4,
+                        ),
+                      ],
+                    )
+
+                ))),
         builder: (BuildContext context, Widget? child) {
           return FadeTransition(
               opacity: animation!,

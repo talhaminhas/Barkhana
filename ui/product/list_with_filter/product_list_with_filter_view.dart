@@ -177,98 +177,101 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                           final Product product = provider
                                               .productList.data![index];
                                           Basket? basket = basketProvider!.basketList.data!.firstWhere((item) => item.id == product.id, orElse: () => Basket());
-                                          //print(basket.qty);
-                                          return ProductVeticalListItem(
-                                            qty: qty ?? product.minimumOrder,
-                                            basket: basket,
-                                            coreTagKey:
+                                          return
+                                            Padding(
+                                              padding: const EdgeInsets.only( bottom:PsDimens.space6), // Adjust this value for the spacing you want
+                                              child:
+                                              ProductVeticalListItem(
+                                                qty: qty ?? product.minimumOrder,
+                                                basket: basket,
+                                                coreTagKey:
                                                 provider.hashCode.toString() +
                                                     provider.productList
                                                         .data![index].id!,
-                                            animationController:
+                                                animationController:
                                                 widget.animationController,
-                                            animation: Tween<double>(
+                                                animation: Tween<double>(
                                                     begin: 0.0, end: 1.0)
-                                                .animate(
-                                              CurvedAnimation(
-                                                parent:
+                                                    .animate(
+                                                  CurvedAnimation(
+                                                    parent:
                                                     widget.animationController,
-                                                curve: Interval(
-                                                    (1 / count) * index, 1.0,
-                                                    curve:
+                                                    curve: Interval(
+                                                        (1 / count) * index, 1.0,
+                                                        curve:
                                                         Curves.fastOutSlowIn),
-                                              ),
-                                            ),
-                                            product: provider
-                                                .productList.data![index],
-                                            onTap: () {
-                                              final ProductDetailIntentHolder
+                                                  ),
+                                                ),
+                                                product: provider
+                                                    .productList.data![index],
+                                                onTap: () {
+                                                  final ProductDetailIntentHolder
                                                   holder =
                                                   ProductDetailIntentHolder(
-                                                productId: product.id,
-                                                heroTagImage: provider.hashCode
+                                                    productId: product.id,
+                                                    heroTagImage: provider.hashCode
                                                         .toString() +
-                                                    product.id! +
-                                                    PsConst.HERO_TAG__IMAGE,
-                                                heroTagTitle: provider.hashCode
+                                                        product.id! +
+                                                        PsConst.HERO_TAG__IMAGE,
+                                                    heroTagTitle: provider.hashCode
                                                         .toString() +
-                                                    product.id! +
-                                                    PsConst.HERO_TAG__TITLE,
-                                                heroTagOriginalPrice: provider
+                                                        product.id! +
+                                                        PsConst.HERO_TAG__TITLE,
+                                                    heroTagOriginalPrice: provider
                                                         .hashCode
                                                         .toString() +
-                                                    product.id! +
-                                                    PsConst
-                                                        .HERO_TAG__ORIGINAL_PRICE,
-                                                heroTagUnitPrice: provider
+                                                        product.id! +
+                                                        PsConst
+                                                            .HERO_TAG__ORIGINAL_PRICE,
+                                                    heroTagUnitPrice: provider
                                                         .hashCode
                                                         .toString() +
-                                                    product.id! +
-                                                    PsConst
-                                                        .HERO_TAG__UNIT_PRICE,
-                                              );
-                                              dashboardViewKey.currentState?.selectedProductDetailHolder = holder;
-                                              dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
-                                                  Utils.getString(context, 'product_detail__title'),//Utils.getString(context, 'profile__favourite'),
-                                                  PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
+                                                        product.id! +
+                                                        PsConst
+                                                            .HERO_TAG__UNIT_PRICE,
+                                                  );
+                                                  dashboardViewKey.currentState?.selectedProductDetailHolder = holder;
+                                                  dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                                                      Utils.getString(context, 'product_detail__title'),//Utils.getString(context, 'profile__favourite'),
+                                                      PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
 
-                                              /*Navigator.pushNamed(context,
+                                                  /*Navigator.pushNamed(context,
                                                   RoutePaths.productDetail,
                                                   arguments: holder);*/
-                                            },
-                                            onUpdateQuantityTap: (String? productQuantity) async{
-                                              //print(productQuantity!);
+                                                },
+                                                onUpdateQuantityTap: (String? productQuantity) async{
+                                                  //print(productQuantity!);
 
-                                              id =
-                                              '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
-                                              basket = Basket(
-                                                  id: id,
-                                                  productId: product!.id,
-                                                  qty: productQuantity,
-                                                  shopId: valueHolder!.shopId,
-                                                  selectedColorId: colorId,
-                                                  selectedColorValue: colorValue,
-                                                  basketPrice: bottomSheetPrice == null
-                                                      ? product.unitPrice
-                                                      : bottomSheetPrice.toString(),
-                                                  basketOriginalPrice: totalOriginalPrice == 0.0
-                                                      ? product.originalPrice
-                                                      : totalOriginalPrice.toString(),
-                                                  selectedAttributeTotalPrice:
-                                                  basketSelectedAttribute
-                                                      .getTotalSelectedAttributePrice()
-                                                      .toString(),
-                                                  product: product,
-                                                  basketSelectedAttributeList:
-                                                  basketSelectedAttribute.getSelectedAttributeList(),
-                                                  basketSelectedAddOnList:
-                                                  basketSelectedAddOn.getSelectedAddOnList());
+                                                  id =
+                                                  '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
+                                                  basket = Basket(
+                                                      id: id,
+                                                      productId: product!.id,
+                                                      qty: productQuantity,
+                                                      shopId: valueHolder!.shopId,
+                                                      selectedColorId: colorId,
+                                                      selectedColorValue: colorValue,
+                                                      basketPrice: bottomSheetPrice == null
+                                                          ? product.unitPrice
+                                                          : bottomSheetPrice.toString(),
+                                                      basketOriginalPrice: totalOriginalPrice == 0.0
+                                                          ? product.originalPrice
+                                                          : totalOriginalPrice.toString(),
+                                                      selectedAttributeTotalPrice:
+                                                      basketSelectedAttribute
+                                                          .getTotalSelectedAttributePrice()
+                                                          .toString(),
+                                                      product: product,
+                                                      basketSelectedAttributeList:
+                                                      basketSelectedAttribute.getSelectedAttributeList(),
+                                                      basketSelectedAddOnList:
+                                                      basketSelectedAddOn.getSelectedAddOnList());
 
-                                              if(productQuantity == '0')
-                                                {
-                                                  basketProvider!.deleteBasketByProduct(
-                                                      basket!);
-                                                  /*showDialog<dynamic>(
+                                                  if(productQuantity == '0')
+                                                  {
+                                                    basketProvider!.deleteBasketByProduct(
+                                                        basket!);
+                                                    /*showDialog<dynamic>(
                                                       context: context,
                                                       builder: (BuildContext context) {
                                                         return ConfirmDialogView(
@@ -287,14 +290,14 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                                       .basketList.data![index]);
                                                             });
                                                       });*/
-                                                }
-                                              else
-                                                await basketProvider!.updateBasket(basket!);
-                                              //reloadGrid();
-                                            },
-                                            onBasketTap: () async {
-                                              if (product.isAvailable == '1') {
-                                                /*if (product.addOnList!.isNotEmpty &&
+                                                  }
+                                                  else
+                                                    await basketProvider!.updateBasket(basket!);
+                                                  //reloadGrid();
+                                                },
+                                                onBasketTap: () async {
+                                                  if (product.isAvailable == '1') {
+                                                    /*if (product.addOnList!.isNotEmpty &&
                                                     product.addOnList![0].id != '' ||
                                                     product.customizedHeaderList!.isNotEmpty &&
                                                     product.customizedHeaderList![0].id != '' &&
@@ -307,62 +310,63 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                               .productList.data![index]);
                                                     });
                                                 } else {*/
-                                                  id =
-                                                      '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
-                                                  if (product.minimumOrder == '0') {
-                                                    product.minimumOrder = '1' ;
-                                                  }
-                                                  basket = Basket(
-                                                    id: id,
-                                                    productId: product.id,
-                                                    qty: qty ?? product.minimumOrder,
-                                                    shopId: valueHolder!.shopId,
-                                                    selectedColorId: colorId,
-                                                    selectedColorValue: colorValue,
-                                                    basketPrice: bottomSheetPrice == null
-                                                        ? product.unitPrice
-                                                        : bottomSheetPrice.toString(),
-                                                    basketOriginalPrice: totalOriginalPrice == 0.0
-                                                        ? product.originalPrice
-                                                        : totalOriginalPrice.toString(),
-                                                    selectedAttributeTotalPrice: basketSelectedAttribute
-                                                        .getTotalSelectedAttributePrice()
-                                                        .toString(),
-                                                    product: product,
-                                                    basketSelectedAttributeList:
+                                                    id =
+                                                    '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
+                                                    if (product.minimumOrder == '0') {
+                                                      product.minimumOrder = '1' ;
+                                                    }
+                                                    basket = Basket(
+                                                        id: id,
+                                                        productId: product.id,
+                                                        qty: qty ?? product.minimumOrder,
+                                                        shopId: valueHolder!.shopId,
+                                                        selectedColorId: colorId,
+                                                        selectedColorValue: colorValue,
+                                                        basketPrice: bottomSheetPrice == null
+                                                            ? product.unitPrice
+                                                            : bottomSheetPrice.toString(),
+                                                        basketOriginalPrice: totalOriginalPrice == 0.0
+                                                            ? product.originalPrice
+                                                            : totalOriginalPrice.toString(),
+                                                        selectedAttributeTotalPrice: basketSelectedAttribute
+                                                            .getTotalSelectedAttributePrice()
+                                                            .toString(),
+                                                        product: product,
+                                                        basketSelectedAttributeList:
                                                         basketSelectedAttribute.getSelectedAttributeList(),
-                                                    basketSelectedAddOnList:
+                                                        basketSelectedAddOnList:
                                                         basketSelectedAddOn.getSelectedAddOnList());
 
                                                     await basketProvider!.addBasket(basket!);
 
                                                     Fluttertoast.showToast(
-                                                      msg:
+                                                        msg:
                                                         Utils.getString(context, 'product_detail__success_add_to_basket'),
-                                                      toastLength: Toast.LENGTH_SHORT,
-                                                      gravity: ToastGravity.BOTTOM,
-                                                      timeInSecForIosWeb: 1,
-                                                      backgroundColor: PsColors.mainColor,
-                                                      textColor: PsColors.white);
+                                                        toastLength: Toast.LENGTH_SHORT,
+                                                        gravity: ToastGravity.BOTTOM,
+                                                        timeInSecForIosWeb: 1,
+                                                        backgroundColor: PsColors.mainColor,
+                                                        textColor: PsColors.white);
 
-                                                      /*await Navigator.pushNamed(
+                                                    /*await Navigator.pushNamed(
                                                         context,
                                                         RoutePaths.basketList,
                                                     );*/
-                                                  //}
-                                              } else {
-                                              showDialog<dynamic>(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return WarningDialog(
-                                                      message: Utils.getString(context,
-                                                          'product_detail__is_not_available'),
-                                                      onPressed: () {},
-                                                  );
-                                                });
-                                              }  
-                                            }, valueHolder: valueHolder!,
-                                          );
+                                                    //}
+                                                  } else {
+                                                    showDialog<dynamic>(
+                                                        context: context,
+                                                        builder: (BuildContext context) {
+                                                          return WarningDialog(
+                                                            message: Utils.getString(context,
+                                                                'product_detail__is_not_available'),
+                                                            onPressed: () {},
+                                                          );
+                                                        });
+                                                  }
+                                                }, valueHolder: valueHolder!,
+                                              ),
+                                            );
                                         } else {
                                           return null;
                                         }

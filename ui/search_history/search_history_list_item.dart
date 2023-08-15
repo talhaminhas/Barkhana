@@ -38,7 +38,7 @@ class SearchHistoryListItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(25.0),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(),
+                padding: const EdgeInsets.all(0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[

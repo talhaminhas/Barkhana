@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
@@ -86,108 +88,108 @@ class _ImageAndTextWidget extends StatelessWidget {
           },
           child: Consumer<BasketProvider>(builder: (BuildContext context,
               BasketProvider basketProvider, Widget? child) {
-            return Container(
-                //color: PsColors.backgroundColor,
-                margin: const EdgeInsets.all(PsDimens.space8),
-                decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
-            borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))),
-              alignment: Alignment.center,
+            return
+            IntrinsicHeight(
+            child:
+              Container(
+              //height: PsDimens.space160,
+              margin: const EdgeInsets.all(PsDimens.space8),
+              decoration: BoxDecoration(
+                border: Border.all(color: PsColors.mainColor, width: 2),
+                borderRadius: BorderRadius.circular(PsDimens.space8),
+              ),
               child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                    Padding(
+                  Expanded(
+                    flex: 4, // Adjust the flex value as needed to control the width ratio
+                    child: Padding(
                       padding: const EdgeInsets.all(PsDimens.space8),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(PsDimens.space8),
-                        child: PsNetworkImage(
-                          width: PsDimens.space160,
-                          height: PsDimens.space120,
-                          photoKey: '',
-                          defaultPhoto: basket.product!.defaultPhoto!,
-                          boxfit: BoxFit.cover,
-                        ),
+                      child: AspectRatio(
+                          aspectRatio: 1/1, // Adjust the aspect ratio as needed
+                          child: Container(
+                            height: double.infinity,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(PsDimens.space8),
+                              child: PsNetworkImage(
+                                //height: double.infinity,
+                                photoKey: '',
+                                defaultPhoto: basket.product!.defaultPhoto!,
+                                boxfit: BoxFit.cover,
+                              ),
+                            ),
+                          )
                       ),
-                  ),
-                  const SizedBox(
-                    width: PsDimens.space8,
+                    ),
                   ),
                   Expanded(
-                    child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    flex: 6, // Adjust the flex value as needed to control the width ratio
+                    child: Container(
+                      //height: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: PsDimens.space8),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-
-                          Flexible(
-                            child: Column(
-                              //mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: PsDimens.space8,
-                                      bottom: PsDimens.space8),
-                                  child: FittedBox(
+                          Container(
+                            /*child:FittedBox(
                                     fit: BoxFit.scaleDown,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      basket.product!.name!,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context).textTheme.titleLarge,
-                                    ),
+                                    alignment: Alignment.topLeft,*/
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start, // Align children to the top
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    basket.product!.name!,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.headlineSmall,
+                                    maxLines: 2,
                                   ),
-
-
-                                ),
-                                Text(
-                                  '${Utils.getString(context, 'basket_list__price')}  ${basket.product!.currencySymbol} ${Utils.getPriceFormat(basket.basketPrice!,psValueHolder)}',
-                                  style: Theme.of(context).textTheme.titleMedium,
-
-                                ),
-
-                                Text(
-                                  '${Utils.getString(context, 'basket_list__sub_total')} ${basket.product!.currencySymbol} ${Utils.getPriceFormat(subTotalPrice.toString(),psValueHolder)}',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                _AttributeAndColorWidget(basket: basket),
-                                _AddOnWidget(basket: basket),
-                                const SizedBox(
-                                  height: PsDimens.space8,
-                                ),
+                                  //_AttributeAndColorWidget(basket: basket),
+                                  _AddOnWidget(basket: basket, psValueHolder: psValueHolder,),
+                                  const SizedBox(
+                                    height: PsDimens.space6,
+                                  ),
+                                  Text(
+                                    '${Utils.getString(context, 'basket_list__price')}  ${basket.product!.currencySymbol} ${Utils.getPriceFormat(basket.basketPrice!, psValueHolder)}',
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  Text(
+                                    '${Utils.getString(context, 'basket_list__sub_total')} ${basket.product!.currencySymbol} ${Utils.getPriceFormat(subTotalPrice.toString(), psValueHolder)}',
+                                    style: Theme.of(context).textTheme.titleLarge,
+                                  ),
+                                ]),
+                            //)
+                          ),
+                          const SizedBox(
+                            height: PsDimens.space4,
+                          ),
+                          const Spacer(),
+                          Container(
+                            height: PsDimens.space52,
+                            child:
+                            Row(
+                              children: [
                                 _IconAndTextWidget(
                                   basket: basket,
                                   basketProvider: basketProvider,
                                 ),
-                                const SizedBox(
-                                  height: PsDimens.space8,
-                                ),
+                                const Spacer(),
+                                _DeleteButtonWidget(onDeleteTap: onDeleteTap!),
                               ],
                             ),
-                          ),
-                        ]),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                  Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            color: PsColors.discountColor.withAlpha(29),
-                            border: Border.all(color: PsColors.discountColor, width: 2),
-                            borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
-                        ),
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.only(
-                            bottom: PsDimens.space10, right: PsDimens.space10,left:PsDimens.space8 ),
-                        child: _DeleteButtonWidget(onDeleteTap: onDeleteTap!),
-                      )
-                    ],
+                  const SizedBox(
+                    width: PsDimens.space8,
                   )
-
                 ],
               ),
-            );
+            )
+            )
+            ;
+
           }));
     } else {
       return Container();
@@ -212,10 +214,14 @@ class _DeleteButtonWidget extends StatelessWidget {
             border: Border.all(color: PsColors.mainColor, width: 2),
             borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
         ),*/
-        width: PsDimens.space40,
-        height: PsDimens.space56,
-        padding: const EdgeInsets.all(8.0),
-        alignment: Alignment.centerRight,
+        decoration: BoxDecoration(
+          color: PsColors.discountColor.withAlpha(29),
+          borderRadius:
+          const BorderRadius.all(Radius.circular(PsDimens.space8)),
+        ),
+        width: PsDimens.space52,
+        height: PsDimens.space52,
+        alignment: Alignment.center,
         child: Icon(
           Icons.delete,
           color: PsColors.discountColor,
@@ -458,7 +464,7 @@ class _AttributeAndColorWidget extends StatelessWidget {
         if (basket.basketSelectedAttributeList!.isNotEmpty)
           Flexible(
             child: Text(
-              '( ${getSelectedAttribute().toString()} )',
+              '${getSelectedAttribute().toString()}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           )
@@ -473,9 +479,11 @@ class _AddOnWidget extends StatelessWidget {
   const _AddOnWidget({
     Key? key,
     required this.basket,
+    required this.psValueHolder,
   }) : super(key: key);
 
   final Basket basket;
+  final PsValueHolder psValueHolder;
   Color hexToColor(String code) {
     return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
@@ -483,22 +491,22 @@ class _AddOnWidget extends StatelessWidget {
   String getSelectedAddOn() {
     final List<String> addOnName = <String>[];
     for (BasketSelectedAddOn addOn in basket.basketSelectedAddOnList!) {
-      addOnName.add(addOn.name!);
+      addOnName.add(addOn.name! + ': ${basket.product!.currencySymbol} ${Utils.getPriceFormat(addOn.price.toString(), psValueHolder)}');
     }
-    return addOnName.join(',').toString();
+    return addOnName.join('\n').toString();
   }
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         if (basket.basketSelectedAttributeList!.isNotEmpty &&
             basket.selectedColorValue != null)
           Text(
             '${Utils.getString(context, 'basket_list__attributes')}',
             style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
+            //textAlign: TextAlign.center,
           )
         else
           Container(),
@@ -516,13 +524,13 @@ class _AddOnWidget extends StatelessWidget {
         else
           Container(),
         if (basket.basketSelectedAddOnList!.isNotEmpty)
-          Flexible(
-            child: Text(
-              '( ${getSelectedAddOn().toString()} )',
+          /*Flexible(
+            child: */Text(
+              '${getSelectedAddOn().toString()}',
               style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-          )
+              textAlign: TextAlign.left,
+            )
+          //)
         else
           Container(),
       ],

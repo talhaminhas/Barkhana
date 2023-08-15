@@ -128,7 +128,7 @@ class _EditProfileViewState extends State<EditProfileView>
                               Utils.getString(context, 'edit_profile__address'),
                           textEditingController: userAddressController,
                         ),
-                        PsDropdownBaseWithControllerWidget(
+                        /*PsDropdownBaseWithControllerWidget(
                             title: Utils.getString(context, 'checkout1__area'),
                             textEditingController: shippingAreaController,
                             onTap: () async {
@@ -144,7 +144,7 @@ class _EditProfileViewState extends State<EditProfileView>
                             }),
                         const SizedBox(
                           height: PsDimens.space8,
-                        ),
+                        ),*/
                         _TwoButtonWidget(
                           userProvider: userProvider!,
                           userNameController: userNameController,

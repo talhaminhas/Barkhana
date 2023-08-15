@@ -135,7 +135,7 @@ class _ModelGridViewState extends State<SubCategoryGridView>
                                 gridDelegate:
                                     const SliverGridDelegateWithMaxCrossAxisExtent(
                                         maxCrossAxisExtent: 240,
-                                        childAspectRatio: 1.4),
+                                        childAspectRatio: 1.2),
                                 delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int index) {
                                     if (provider.subCategoryList.status ==

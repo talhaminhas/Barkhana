@@ -56,6 +56,7 @@ import 'package:flutterrestaurant/ui/user/profile/profile_view.dart';
 import 'package:flutterrestaurant/ui/user/register/register_view.dart';
 import 'package:flutterrestaurant/ui/user/verify/verify_email_view.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
+import 'package:flutterrestaurant/viewobject/basket.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_detail_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';
@@ -518,7 +519,6 @@ class _HomeViewState extends State<DashboardView>
           return Future<bool>.value(false);
       }
     }
-
     final Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0)
         .animate(CurvedAnimation(
             parent: animationController,
@@ -922,7 +922,7 @@ class _HomeViewState extends State<DashboardView>
           ),
         ),
         appBar: AppBar(
-            centerTitle: true,
+            centerTitle: false,
             leading: _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
                 _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT||
                 _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
@@ -993,117 +993,93 @@ class _HomeViewState extends State<DashboardView>
             },
               child: Consumer<BasketProvider>(
                 builder: (BuildContext context, BasketProvider basketProvider, Widget? child) {
-                  /*return Container(
-                    child: InkWell(
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            width: PsDimens.space40,
-                            height: PsDimens.space40,
-                            margin: const EdgeInsets.only(
-                              top: PsDimens.space8,
-                              left: PsDimens.space8,
-                              right: PsDimens.space8,
-                            ),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Icons.shopping_basket,
-                                color: PsColors.mainColor,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            right: PsDimens.space4,
-                            top: PsDimens.space1,
-                            child: Container(
-                              width: PsDimens.space28,
-                              height: PsDimens.space28,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: PsColors.black.withAlpha(200),
-                              ),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  basketProvider.basketList.data!.length! > 99 ? '99+' : basketProvider.basketList.data!.length.toString(),
-                                  textAlign: TextAlign.left,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(color: PsColors.white),
-                                  maxLines: 1,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          RoutePaths.basketList,
-                        );
-                      },
-                    ),*/
+                  int totalQuantity = 0;
+                  double totalPrice = 0.0;
+                  String? currencySymbol;
+                  for (Basket basket in basketProvider.basketList.data!) {
+                    totalQuantity += int.parse(basket.qty!);
+                    totalPrice += double.parse(basket.basketPrice!) * double.parse(basket.qty!);
+                    currencySymbol = basket.product!.currencySymbol!;
+                  }
                   if (_currentIndex != PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
                   return GestureDetector(
-                  onTap: () {
-                    /*controllersStack.add({appBarTitle:_currentIndex});*/
-                    updateSelectedIndexWithAnimation(Utils.getString(
-                        context,
-                        Utils.getString(context, 'home__bottom_app_bar_basket_list')),
-                        PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
+                      onTap: () {
+                        /*controllersStack.add({appBarTitle:_currentIndex});*/
+                        updateSelectedIndexWithAnimation(Utils.getString(
+                            context,
+                            Utils.getString(context, 'home__bottom_app_bar_basket_list')),
+                            PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
 
-                  },
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          width: PsDimens.space40,
-                          height: PsDimens.space40,
-                          margin: const EdgeInsets.only(
-                              top: PsDimens.space8,
-                              left: PsDimens.space8,
-                              right: PsDimens.space8),
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.shopping_basket,
-                              color: PsColors.mainColor,
-                            ),
-                          ),
-                        ),
-                        if (basketProvider
-                            .basketList.data!.isNotEmpty)
-                          Positioned(
-                            right: PsDimens.space4,
-                            top: PsDimens.space1,
-                            child: Container(
-                              width: PsDimens.space28,
-                              height: PsDimens.space28,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: PsColors.black.withAlpha(200),
+                      },
+                      child:Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (basketProvider
+                                .basketList.data!.isNotEmpty)
+                              FittedBox(
+                                  child:
+                                  Container(
+                                    child: Align(
+                                      /*alignment: Alignment.center,*/
+                                      child: Text(
+                                        '${Utils.getString(context, 'checkout__price')} $currencySymbol ${totalPrice.toStringAsFixed(2)}',
+                                        textAlign: TextAlign.left,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  )
                               ),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  basketProvider.basketList.data!.length > 99
-                                      ? '99+'
-                                      : basketProvider.basketList.data!.length
-                                      .toString(),
-                                  textAlign: TextAlign.left,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(color: PsColors.white),
-                                  maxLines: 1,
+                            Stack(
+                              children: <Widget>[
+                                Container(
+                                  width: PsDimens.space40,
+                                  height: PsDimens.space40,
+                                  margin: const EdgeInsets.only(
+                                      top: PsDimens.space8,
+                                      left: PsDimens.space8,
+                                      right: PsDimens.space8),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.shopping_basket,
+                                      color: PsColors.mainColor,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                if (basketProvider
+                                    .basketList.data!.isNotEmpty)
+                                  Positioned(
+                                    right: PsDimens.space4,
+                                    top: PsDimens.space1,
+                                    child: Container(
+                                      width: PsDimens.space28,
+                                      height: PsDimens.space28,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: PsColors.black.withAlpha(200),
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          totalQuantity > 99 ? '99+' : totalQuantity.toString(),
+                                          textAlign: TextAlign.left,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(color: PsColors.white),
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
-                          ),
-                      ],
-                    ),
+                          ]
+                      )
                   );
                   return Container();
                 },

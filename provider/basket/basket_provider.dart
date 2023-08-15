@@ -7,6 +7,7 @@ import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 
+import '../../viewobject/basket_selected_add_on.dart';
 import 'helper/checkout_calculation_helper.dart';
 
 class BasketProvider extends PsProvider {
@@ -71,7 +72,25 @@ late  StreamController<PsResource<List<Basket>>> basketListStream;
       basket,
     );
   }
+  Future<Basket?> getBasketById(String basketId) async {
+    return await _repo!.getBasketById(basketId);
+  }
+  Future<dynamic> updateBasketWithAddOns(Basket product, List<BasketSelectedAddOn>?  basketSelectedAddOnList) async {
+    isLoading = true;
+    product.basketSelectedAddOnList = basketSelectedAddOnList?.map((BasketSelectedAddOn addOn) {
+      return BasketSelectedAddOn(
+          id: addOn.id,
+          name: addOn.name,
+          price: addOn.price,
+          currencySymbol: addOn.currencySymbol
+      );
+    }).toList();
 
+    await _repo!.updateBasket(
+      basketListStream,
+      product,
+    );
+  }
   Future<dynamic> updateBasket(Basket product) async {
     isLoading = true;
     await _repo!.updateBasket(

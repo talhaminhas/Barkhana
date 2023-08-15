@@ -232,6 +232,21 @@ class __ProfileDetailWidgetState extends State<_ProfileDetailWidget> {
                     child: Column(
                       children: <Widget>[
                         _ImageAndTextWidget(userProvider: provider),
+                        Container(
+                            margin: const EdgeInsets.all(PsDimens.space10),
+                            child:
+                            Text(
+                              provider!.user.data!.userAboutMe != ''
+                                  ? provider!.user.data!.userAboutMe!
+                                  : Utils.getString(context, 'profile__about_me'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(color: PsColors.textPrimaryLightColor),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 5,
+                            )
+                        ),
                         _dividerWidget,
                         _EditAndHistoryRowWidget(userProvider: provider),
                         _dividerWidget,
@@ -539,18 +554,10 @@ class _ImageAndTextWidget extends StatelessWidget {
       height: PsDimens.space4,
     );
     return Container(
-      width: double.infinity,
-      height: PsDimens.space200,
-      margin: const EdgeInsets.only(
-          top: PsDimens.space10,
-        bottom: PsDimens.space10,
-        left: PsDimens.space10,
-        right: PsDimens.space10,
-      ),
+      margin: const EdgeInsets.all(PsDimens.space10),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const SizedBox(width: PsDimens.space16),
           Container(
             width: PsDimens.space140,
             height: PsDimens.space140,
@@ -583,18 +590,8 @@ class _ImageAndTextWidget extends StatelessWidget {
                       .titleLarge!
                       .copyWith(color: PsColors.textPrimaryLightColor),
                 ),
-                _spacingWidget,
-                Text(
-                  userProvider!.user.data!.userAboutMe != ''
-                      ? userProvider!.user.data!.userAboutMe!
-                      : Utils.getString(context, 'profile__about_me'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall!
-                      .copyWith(color: PsColors.textPrimaryLightColor),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                //_spacingWidget,
+
               ],
             ),
           ),

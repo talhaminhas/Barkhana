@@ -91,30 +91,37 @@ class __ShopInfoViewWidgetState extends State<_ShopInfoViewWidget> {
           _PhoneAndContactWidget(
             phone: widget.provider.shopInfo.data!,
           ),
+          if(widget.provider.shopInfo.data!.aboutWebsite!.isNotEmpty)
           _LinkAndTitle(
               icon: FontAwesome.wordpress,
               title: Utils.getString(context, 'shop_info__visit_our_website'),
               link: widget.provider.shopInfo.data!.aboutWebsite!),
+          if(widget.provider.shopInfo.data!.facebook!.isNotEmpty)
           _LinkAndTitle(
               icon: FontAwesome.facebook,
               title: Utils.getString(context, 'shop_info__facebook'),
               link: widget.provider.shopInfo.data!.facebook!),
+          if(widget.provider.shopInfo.data!.googlePlus!.isNotEmpty)
           _LinkAndTitle(
               icon: FontAwesome.google_plus_circle,
               title: Utils.getString(context, 'shop_info__google_plus'),
               link: widget.provider.shopInfo.data!.googlePlus!),
+          if(widget.provider.shopInfo.data!.twitter!.isNotEmpty)
           _LinkAndTitle(
               icon: FontAwesome.twitter_squared,
               title: Utils.getString(context, 'shop_info__twitter'),
               link: widget.provider.shopInfo.data!.twitter!),
+          if(widget.provider.shopInfo.data!.instagram!.isNotEmpty)
           _LinkAndTitle(
               icon: FontAwesome.instagram,
               title: Utils.getString(context, 'shop_info__instagram'),
               link: widget.provider.shopInfo.data!.instagram!),
+          if(widget.provider.shopInfo.data!.youtube!.isNotEmpty)
           _LinkAndTitle(
               icon: FontAwesome.youtube,
               title: Utils.getString(context, 'shop_info__youtube'),
               link: widget.provider.shopInfo.data!.youtube!),
+          if(widget.provider.shopInfo.data!.pinterest!.isNotEmpty)
           _LinkAndTitle(
               icon: FontAwesome.pinterest,
               title: Utils.getString(context, 'shop_info__pinterest'),
@@ -144,56 +151,50 @@ class _LinkAndTitle extends StatelessWidget {
         margin: const EdgeInsets.only(top: PsDimens.space8),
         padding: const EdgeInsets.all(PsDimens.space16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                      width: PsDimens.space20,
-                      height: PsDimens.space20,
-                      child: Icon(
-                        icon,
-                      )),
-                  const SizedBox(
-                    width: PsDimens.space12,
-                  ),
-                  Text(
+            Row(
+              children: <Widget>[
+                Icon(icon, size: PsDimens.space20),
+                const SizedBox(width: PsDimens.space12),
+                Flexible(
+                  child: Text(
                     title,
                     style: Theme.of(context).textTheme.bodyLarge,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(
-              height: PsDimens.space8,
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    width: PsDimens.space32,
-                  ),
-                  GestureDetector(
+            const SizedBox(height: PsDimens.space8),
+            Row(
+              children: <Widget>[
+                const SizedBox(width: PsDimens.space32),
+                Flexible(
+                  child: GestureDetector(
                     child: Text(
-                        link == ''
-                            ? Utils.getString(context, 'shop_info__dash')
-                            : link,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                      link.isEmpty
+                          ? Utils.getString(context, 'shop_info__dash')
+                          : link,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     onTap: () async {
-                      if (await canLaunchUrl(Uri.parse(link))) {
-                        await launchUrl(Uri.parse(link));
+                      if (await canLaunch(link)) {
+                        await launch(link);
                       } else {
-                        throw 'Could not launchUrl $link';
+                        throw 'Could not launch URL: $link';
                       }
                     },
                   ),
-                ],
-              ),
-            )
+                ),
+              ],
+            ),
           ],
-        ));
+        )
+
+
+    );
   }
 }
 
@@ -515,44 +516,34 @@ class _AddressWidget extends StatelessWidget {
         const SizedBox(
           height: PsDimens.space16,
         ),
-        if (title != '')
-          Row(
-            children: <Widget>[
-              Container(
-                  width: PsDimens.space20,
-                  height: PsDimens.space20,
-                  child: Icon(
-                    icon,
-                  )),
-              const SizedBox(
-                width: PsDimens.space8,
+        Row(
+          children: <Widget>[
+            Container(
+              width: PsDimens.space20,
+              height: PsDimens.space20,
+              child: Icon(
+                icon,
               ),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(
+              width: PsDimens.space8,
+            ),
+            Flexible( // Wrap the Text with Flexible
+              child: Wrap( // Use Wrap to handle text overflow
+                children: [
+                  Text(
+                    title != '' ? title : '-',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
               ),
-            ],
-          )
-        else
-          Row(
-            children: <Widget>[
-              Container(
-                  width: PsDimens.space20,
-                  height: PsDimens.space20,
-                  child: Icon(
-                    icon,
-                  )),
-              const SizedBox(
-                width: PsDimens.space8,
-              ),
-              Text(
-                '-',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ],
-          )
+            ),
+          ],
+        ),
       ],
     );
+
+
   }
 }
 

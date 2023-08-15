@@ -97,6 +97,7 @@ class _BasketListViewState extends State<BasketListView>
                         itemBuilder: (BuildContext context, int index) {
                           final int count = provider.basketList.data!.length;
                           widget.animationController.forward();
+
                           return BasketListItemView(
                               animationController: widget.animationController,
                               animation:
@@ -108,8 +109,11 @@ class _BasketListViewState extends State<BasketListView>
                                 ),
                               ),
                               basket: provider.basketList.data![index],
+
                               onTap: () async {
                                 // final Basket intentBasket = provider.basketList.data[index];
+                                print(provider
+                                    .basketList.data![index].id);
                                 final ProductDetailIntentHolder holder = ProductDetailIntentHolder(
                                   id: provider
                                       .basketList.data![index].id,
@@ -284,7 +288,6 @@ class _CheckoutButtonWidget extends StatelessWidget {
 
     for (Basket basket in provider.basketList.data!) {
       totalPrice += double.parse(basket.basketPrice!) * double.parse(basket.qty!);
-
       qty += int.parse(basket.qty!);
       currencySymbol = basket.product!.currencySymbol!;
     }

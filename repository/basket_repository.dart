@@ -3,6 +3,7 @@ import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/db/basket_dao.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
+import 'package:sembast/sembast.dart';
 
 import 'Common/ps_repository.dart';
 
@@ -26,6 +27,16 @@ late  BasketDao _basketDao;
     return _basketDao.delete(basket);
   }
 
+  Future<Basket?> getBasketById(String basketId) async {
+    final PsResource<Basket> result =
+    await _basketDao.getOne(finder: Finder(filter: Filter.byKey(basketId)));
+
+    if (result.data != null) {
+      return result.data;
+    } else {
+      return null;
+    }
+  }
   Future<dynamic> getAllBasketList(
       StreamController<PsResource<List<Basket>>> basketListStream,
       PsStatus status) async {
@@ -59,6 +70,7 @@ late  BasketDao _basketDao;
     basketListStream.sink
         .add(await _basketDao.getAll(status: PsStatus.SUCCESS));
   }
+
 
   Future<dynamic> deleteBasketByProduct(
       StreamController<PsResource<List<Basket>>> basketListStream,

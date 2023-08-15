@@ -80,186 +80,211 @@ class _IntroSliderViewState extends State<IntroSliderView>
             length: 3,
             child: Scaffold(
               body: AnnotatedRegion<SystemUiOverlayStyle>(
+
               value: SystemUiOverlayStyle.dark.copyWith(
                 statusBarColor: PsColors.baseColor,
               ),
-              child: GestureDetector(
-                        child: Container(
-       color: PsColors.baseColor,
-      child: OrientationBuilder(
-        builder: (BuildContext context, Orientation orientation) {
-          return Stack(children: <Widget>[
-            Positioned.fill(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  if (orientation == Orientation.portrait) 
-                  Container(
-                    child: SvgPicture.asset(
-                    pictureList[currentIndex],
-                  )) 
-                  else 
-                  Container(
-                    width: 135,
-                    height: 135,
-                    child: SvgPicture.asset(
-                    pictureList[currentIndex],
-                  )
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: PsDimens.space16),
-                    child: Text(
-                      Utils.getString(context, titleList[currentIndex]),
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: PsColors.mainColor,
-                          ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(top: PsDimens.space16),
-                    child: Text(
-                      Utils.getString(context, descriptionList[currentIndex]),
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall
-                          ?.copyWith(color: PsColors.grey),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    margin: (orientation == Orientation.portrait) ? const EdgeInsets.only(top: PsDimens.space48) : const EdgeInsets.only(bottom: PsDimens.space48),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        if (currentIndex == 0) activeDot else inactiveDot,
-                        if (currentIndex == 1) activeDot else inactiveDot,
-                        if (currentIndex == 2) activeDot else inactiveDot,
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: (currentIndex < pictureList.length - 1) ? (orientation == Orientation.portrait) ? PsDimens.space68 : PsDimens.space40 : - PsDimens.space200,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                alignment: Alignment.center,
-                child: MaterialButton(
-                  height: 35,
-                  minWidth: 230,
-                  color: PsColors.mainColor,
-                  child: Text(
-                    Utils.getString(context, 'intro_slider_next'),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: PsColors.baseColor,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  onPressed: () {
-                  //  controller!.animateTo(1);
-                      if (currentIndex != pictureList.length - 1) {
-                          setState(() {
-                            ++currentIndex;
-                          });
-                      } 
-                  },
-                ), 
-              ),
-            ),
-            Positioned(bottom: (currentIndex < pictureList.length - 1) ? (orientation == Orientation.portrait) ? PsDimens.space40 : PsDimens.space20 : - PsDimens.space200, 
-              width: MediaQuery.of(context).size.width,
-              child: InkWell(
-                  hoverColor: PsColors.black,
-                  onTap: () {
-                    Navigator.pushReplacementNamed(
-                        context,
-                        RoutePaths.home,
-                      );
-                  },
+                child: GestureDetector(
                   child: Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(
-                      top: PsDimens.space18,
-                    ),
-                    child: Text(
-                      Utils.getString(context, 'intro_slider_skip'),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: PsColors.mainColor,
-                          ),
-                    ),
-                  )),
-            ),
-            Positioned(
-              bottom: (currentIndex == pictureList.length - 1) ? orientation == Orientation.portrait ? PsDimens.space40 : PsDimens.space12 : - PsDimens.space200,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center, 
-                    crossAxisAlignment: CrossAxisAlignment.center, 
-                    children: <Widget>[
-                    Checkbox(
-                      //  fillColor: Utils.isLightMode(context)? PsColors.white : Colors.black45,
-                        activeColor: PsColors.mainColor,
-                        value: provider.isCheckBoxSelect,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            updateCheckBox(context, provider,
-                                provider.isCheckBoxSelect);
-                          });
-                        }),
-                    Text(
-                      Utils.getString(
-                          context, 'intro_slider_do_not_show_again'),
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: PsColors.mainColor,
-                          ),
-                    ),
-                    const SizedBox(
-                      width: PsDimens.space60,
-                    )
-                  ]),
-                  Container(
-                    alignment: Alignment.center,
-                    child: MaterialButton(
-                      height: 35,
-                      minWidth: 230,
-                      color: PsColors.mainColor,
-                      child: Text(
-                        Utils.getString(context, 'intro_slider_lets_explore'),
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                            color: PsColors.baseColor, fontWeight: FontWeight.bold),
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      onPressed: () async {
-                        if (provider.isCheckBoxSelect) {
-                          await provider.replaceIsToShowIntroSlider(false);
-                        } else {
-                          await provider.replaceIsToShowIntroSlider(true);
-                        }
-                        if (widget.settingSlider == 1) {
-                          Navigator.pop(context);
-                        } else {
-                            Navigator.pushNamed(
-                              context,
-                              RoutePaths.home,
-                            );
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.center,
+                          child:OrientationBuilder(
+                          builder: (BuildContext context, Orientation orientation)
+                          {
+                            return Container(
+                                    child: Column(
+                                        children: <Widget>[
+                                          Container(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                if (orientation == Orientation.portrait)
+                                                  Container(
+                                                    margin: const EdgeInsets.all(20),
+                                                    padding: const EdgeInsets.all(20),
+                                                      /*child: FittedBox(
+                                                          fit: BoxFit.contain,*/
+                                                          child: SvgPicture.asset(
+                                                            pictureList[currentIndex],
+                                                          )
+                                                      //)
+                                                  )
+                                                else
+                                                  Container(
+                                                    width: 135,
+                                                    height: 135,
+                                                    child: FittedBox(
+                                                        fit: BoxFit.contain,
+                                                        child: SvgPicture.asset(
+                                                          pictureList[currentIndex],
+                                                        )
+                                                    ),
+                                                  ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(top: PsDimens.space16),
+                                                  child: Text(
+                                                    Utils.getString(context, titleList[currentIndex]),
+                                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                                      color: PsColors.mainColor,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  alignment: Alignment.center,
+                                                  margin: const EdgeInsets.only(top: PsDimens.space16),
+                                                  child: Text(
+                                                    Utils.getString(context, descriptionList[currentIndex]),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleSmall
+                                                        ?.copyWith(color: PsColors.grey),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: (orientation == Orientation.portrait) ? const EdgeInsets.only(top: PsDimens.space48) : const EdgeInsets.only(bottom: PsDimens.space48),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      if (currentIndex == 0) activeDot else inactiveDot,
+                                                      if (currentIndex == 1) activeDot else inactiveDot,
+                                                      if (currentIndex == 2) activeDot else inactiveDot,
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          if(currentIndex != 2)
+                                            Container(
+                                              //bottom: (currentIndex < pictureList.length - 1) ? (orientation == Orientation.portrait) ? PsDimens.space68 : PsDimens.space40 : - PsDimens.space200,
+                                              width: MediaQuery.of(context).size.width,
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                child: MaterialButton(
+                                                  height: 35,
+                                                  minWidth: 230,
+                                                  color: PsColors.mainColor,
+                                                  child: Text(
+                                                    Utils.getString(context, 'intro_slider_next'),
+                                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                                                        color: PsColors.baseColor,
+                                                        fontWeight: FontWeight.bold),
+                                                  ),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10.0)),
+                                                  onPressed: () {
+                                                    //  controller!.animateTo(1);
+                                                    if (currentIndex != pictureList.length - 1) {
+                                                      setState(() {
+                                                        ++currentIndex;
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          if(currentIndex != 2)
+                                            Container(
+                                              //bottom: (currentIndex < pictureList.length - 1) ? (orientation == Orientation.portrait) ? PsDimens.space40 : PsDimens.space20 : - PsDimens.space200,
+                                              width: MediaQuery.of(context).size.width,
+                                              child: InkWell(
+                                                  hoverColor: PsColors.black,
+                                                  onTap: () {
+                                                    Navigator.pushReplacementNamed(
+                                                      context,
+                                                      RoutePaths.home,
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    margin: const EdgeInsets.only(
+                                                      top: PsDimens.space18,
+                                                    ),
+                                                    child: Text(
+                                                      Utils.getString(context, 'intro_slider_skip'),
+                                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                        color: PsColors.mainColor,
+                                                      ),
+                                                    ),
+                                                  )),
+                                            )
+                                          else
+                                            Container(
+                                              //bottom: (currentIndex == pictureList.length - 1) ? orientation == Orientation.portrait ? PsDimens.space40 : PsDimens.space12 : - PsDimens.space200,
+                                              width: MediaQuery.of(context).size.width,
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Checkbox(
+                                                          //  fillColor: Utils.isLightMode(context)? PsColors.white : Colors.black45,
+                                                            activeColor: PsColors.mainColor,
+                                                            value: provider.isCheckBoxSelect,
+                                                            onChanged: (bool? value) {
+                                                              setState(() {
+                                                                updateCheckBox(context, provider,
+                                                                    provider.isCheckBoxSelect);
+                                                              });
+                                                            }),
+                                                        Text(
+                                                          Utils.getString(
+                                                              context, 'intro_slider_do_not_show_again'),
+                                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                                            color: PsColors.mainColor,
+                                                          ),
+                                                        ),
+
+                                                      ]),
+                                                  Container(
+                                                    alignment: Alignment.center,
+                                                    child: MaterialButton(
+                                                      height: 35,
+                                                      minWidth: 230,
+                                                      color: PsColors.mainColor,
+                                                      child: Text(
+                                                        Utils.getString(context, 'intro_slider_lets_explore'),
+                                                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                                                            color: PsColors.baseColor, fontWeight: FontWeight.bold),
+                                                      ),
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(10.0)),
+                                                      onPressed: () async {
+                                                        if (provider.isCheckBoxSelect) {
+                                                          await provider.replaceIsToShowIntroSlider(false);
+                                                        } else {
+                                                          await provider.replaceIsToShowIntroSlider(true);
+                                                        }
+                                                        if (widget.settingSlider == 1) {
+                                                          Navigator.pop(context);
+                                                        } else {
+                                                          Navigator.pushNamed(
+                                                            context,
+                                                            RoutePaths.home,
+                                                          );
+                                                        }
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                        ])
+                                );
                           }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ]);
-          })),
+                          )
+                      )
+                  ),
             onHorizontalDragEnd: (DragEndDetails endDetails) {
               if (endDetails.primaryVelocity !< 0) { // right to left
                     if (currentIndex != pictureList.length - 1) {

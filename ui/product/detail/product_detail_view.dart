@@ -98,7 +98,7 @@ class _ProductDetailState extends State<ProductDetailView>
   BasketRepository? basketRepository;
   List<BasketSelectedAttribute>? holderBasketSelectedAttributeList;
   List<BasketSelectedAddOn>? holderBasketSelectedAddOnList;
-
+  Basket? oldBasket;
   @override
   void initState() {
     super.initState();
@@ -356,6 +356,7 @@ class _ProductDetailState extends State<ProductDetailView>
                     basketProvider!.loadBasketList();
                     isCallFirstTime = false;
                   }
+
                   print(
                       'detail : latest${provider.productDetail.data!.defaultPhoto!.imgId}');
 
@@ -373,7 +374,7 @@ class _ProductDetailState extends State<ProductDetailView>
                           iconTheme: Theme.of(context)
                               .iconTheme
                               .copyWith(color: PsColors.mainColorWithWhite),
-                          leading: PsBackButtonWithCircleBgWidget(
+                          leading: const PsBackButtonWithCircleBgWidget(
                             isReadyToShow: false/*isReadyToShowAppBarIcons*/,
                           ),
                           floating: false,
@@ -586,6 +587,7 @@ class _ProductDetailState extends State<ProductDetailView>
                             holderBasketSelectedAddOnList ??
                                 <BasketSelectedAddOn>[],
                         basketSelectedAddOn: basketSelectedAddOn,
+                        intentId: widget.intentId,
                       )
                     ],
                   );
@@ -602,7 +604,7 @@ class CustomizeTileView extends StatefulWidget {
       {Key? key,
       required this.productDetail,
       required this.addAttributeFromRadioView,
-      required this.intentbasketSelectedAttributeList,
+      required this.intentBasketSelectedAttributeList,
       required this.selectedcustomizedDetail,
       required this.addIntentAttributePrice,
       required this.psValueHolder,
@@ -611,7 +613,7 @@ class CustomizeTileView extends StatefulWidget {
 
   final Product productDetail;
   final Function addAttributeFromRadioView;
-  final List<BasketSelectedAttribute> intentbasketSelectedAttributeList;
+  final List<BasketSelectedAttribute> intentBasketSelectedAttributeList;
   final Map<String, CustomizedDetail> selectedcustomizedDetail;
   final Function addIntentAttributePrice;
   final PsValueHolder? psValueHolder;
@@ -625,7 +627,7 @@ class _CustomizeTileViewState extends State<CustomizeTileView> {
     setState(() {
       widget.selectedcustomizedDetail[headerId] = customizedDetail;
       widget.addAttributeFromRadioView(
-          widget.intentbasketSelectedAttributeList, customizedDetail);
+          widget.intentBasketSelectedAttributeList, customizedDetail);
     });
   }
 
@@ -688,10 +690,10 @@ class _CustomizeTileViewState extends State<CustomizeTileView> {
   Widget build(BuildContext context) {
     if (
       //widget.intentbasketSelectedAttributeList != null &&
-        widget.intentbasketSelectedAttributeList.isNotEmpty &&
+        widget.intentBasketSelectedAttributeList.isNotEmpty &&
         widget.selectedcustomizedDetail.isEmpty) {
       for (BasketSelectedAttribute basketSelectedAttribute
-          in widget.intentbasketSelectedAttributeList) {
+          in widget.intentBasketSelectedAttributeList) {
         widget.selectedcustomizedDetail[basketSelectedAttribute.headerId!] =
             CustomizedDetail(
                 id: basketSelectedAttribute.id,
@@ -970,12 +972,16 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                           ],
                                         ),
                                         Expanded(
-
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 8,
+                                              right: 8,
+                                            ),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
                                                   widget.productDetail
@@ -1036,6 +1042,7 @@ class _AddOnTileViewState extends State<AddOnTileView> {
                                               ],
                                             ),
                                           ),
+                                          )
                                         ),
                                       ],
                                     ),
@@ -2056,6 +2063,7 @@ class _AddToBasketAndBuyButtonWidget extends StatefulWidget {
     required this.basketSelectedAttribute,
     required this.holderBasketSelectedAddOnList,
     required this.basketSelectedAddOn,
+    required this.intentId,
   }) : super(key: key);
 
   final AnimationController controller;
@@ -2067,6 +2075,7 @@ class _AddToBasketAndBuyButtonWidget extends StatefulWidget {
   final String intentSelectedColorId;
   final String intentSelectedColorValue;
   final String intentbasketPrice;
+  final String? intentId;
   final List<BasketSelectedAttribute>? intentbasketSelectedAttributeList;
   final List<BasketSelectedAddOn>? intentbasketSelectedAddOnList;
   final Map<AddOn, bool>? selectedAddOnList;
@@ -2276,9 +2285,8 @@ class __AddToBasketAndBuyButtonWidgetState
           return;
         }
       }
-
       basket = Basket(
-          id: id,
+          id: widget.intentId,
           productId: widget.product.id,
           qty: qty ?? widget.product.minimumOrder,
           shopId: widget.psValueHolder.shopId,
@@ -2296,22 +2304,33 @@ class __AddToBasketAndBuyButtonWidgetState
           product: widget.product,
           basketSelectedAttributeList:
               widget.basketSelectedAttribute.getSelectedAttributeList(),
-          basketSelectedAddOnList:
-              widget.basketSelectedAddOn.getSelectedAddOnList());
-
+          basketSelectedAddOnList:  widget.basketSelectedAddOn.getSelectedAddOnList());
       Navigator.pop(context);
+      await widget.basketProvider.deleteBasketByProduct(basket!);
+      basket!.id = id;
+      final Basket? oldBasket = await widget.basketProvider.getBasketById(id!);
+      if (oldBasket != null)
+        {
+          basket!.qty = (int.parse(basket!.qty!) + int.parse(oldBasket.qty!)).toString();
+        }
       await widget.basketProvider.addBasket(basket!);
 
 
       Fluttertoast.showToast(
           msg:
-          Utils.getString(context, 'product_detail__success_add_to_basket'),
+          Utils.getString(context, widget.intentId == null
+              ? 'product_detail__success_add_to_basket'
+              : 'product_detail__success_update_to_basket'
+          ),
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           backgroundColor: PsColors.greenColor,
           textColor: PsColors.white);
-      if (isBuyButtonType) {
+      if(widget.intentId != null) {
+        dashboardViewKey.currentState?.onTapBack();
+      }
+      else if (isBuyButtonType) {
         dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
             Utils.getString(context, 'home__bottom_app_bar_basket_list'),
         PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
@@ -2456,6 +2475,7 @@ class __AddToBasketAndBuyButtonWidgetState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
+                      if(widget.intentId == null)
                       Expanded(
                         child: PSButtonWithIconWidget(
                           hasShadow: true,
@@ -2505,9 +2525,11 @@ class __AddToBasketAndBuyButtonWidgetState
                           },
                         ),
                       ),
+                      if(widget.intentId == null)
                       const SizedBox(
                         width: PsDimens.space10,
                       ),
+                      if(widget.intentId == null)
                       Expanded(
                         child: PSButtonWithIconWidget(
                           hasShadow: true,
@@ -2554,7 +2576,55 @@ class __AddToBasketAndBuyButtonWidgetState
                             }
                           },
                         ),
-                      ),
+                      )
+                      else
+                        Expanded(
+                          child: PSButtonWithIconWidget(
+                            hasShadow: true,
+                            icon: Icons.update,
+                            width: double.infinity,
+                            titleText:
+                            Utils.getString(context, 'product_detail__update'),
+                            onPressed: () async {
+                              if (widget.product.isAvailable == '1') {
+                                if (widget.product.customizedHeaderList != null &&
+                                    widget.product.customizedHeaderList![0].id !=
+                                        '' &&
+                                    widget.product.customizedHeaderList![0]
+                                        .customizedDetail !=
+                                        null &&
+                                    widget.product.customizedHeaderList![0]
+                                        .customizedDetail![0].id !=
+                                        '' &&
+                                    !widget.basketSelectedAttribute
+                                        .isAllAttributeSelected(widget.product
+                                        .customizedHeaderList!.length)) {
+                                  await showDialog<dynamic>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return WarningDialog(
+                                          message: Utils.getString(context,
+                                              'product_detail__please_choose_customize'),
+                                          onPressed: () {},
+                                        );
+                                      });
+                                } else {
+                                  _showDrawer(true);
+                                }
+                              } else {
+                                showDialog<dynamic>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return WarningDialog(
+                                        message: Utils.getString(context,
+                                            'product_detail__is_not_available'),
+                                        onPressed: () {},
+                                      );
+                                    });
+                              }
+                            },
+                          ),
+                        )
                     ],
                   ),
                 ),
@@ -2603,85 +2673,95 @@ class __ImageAndTextForBottomSheetWidgetState
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Container(
-            width: PsDimens.space160,
-            height: PsDimens.space160,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0), // Adjust the border radius as desired
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: PsColors.mainColor, // Adjust the border color as desired
-                    width: 1.0, // Adjust the border width as desired
-                  ),
-                ),
-                child: PsNetworkImage(
-                  photoKey: '',
-                  defaultPhoto: widget.product.defaultPhoto!,
-                ),
-              ),
-            ),
+          Expanded(
+              flex: 1,
+              child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: PsDimens.space160,
+                    height: PsDimens.space160,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0), // Adjust the border radius as desired
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: PsColors.mainColor, // Adjust the border color as desired
+                            width: 1.0, // Adjust the border width as desired
+                          ),
+                        ),
+                        child: PsNetworkImage(
+                          photoKey: '',
+                          defaultPhoto: widget.product.defaultPhoto!,
+                        ),
+                      ),
+                    ),
+                  )
+              )
           ),
           const SizedBox(
             width: PsDimens.space20,
           ),
-          Flexible(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center, // Align content in the center
-              children: <Widget>[
-                Text(
-                  widget.product.name!,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: Theme.of(context).textTheme.headlineSmall!,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: PsDimens.space4),
-                  child: (widget.product.isDiscount == PsConst.ONE)
-                      ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // Align row content in the center
-                    children: <Widget>[
-                      Text(
+          Expanded(
+              flex: 2,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center, // Align content in the center
+                  children: <Widget>[
+                    Text(
+                      widget.product.name!,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: Theme.of(context).textTheme.headlineSmall!,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: PsDimens.space4),
+                      child: (widget.product.isDiscount == PsConst.ONE)
+                          ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center, // Align row content in the center
+                        children: <Widget>[
+                          Text(
+                            widget.price != null
+                                ? '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.price.toString(), widget.valueHolder)}'
+                                : '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.unitPrice!, widget.valueHolder)}',
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleLarge!,
+                          ),
+                          const SizedBox(
+                            width: PsDimens.space10,
+                          ),
+                          Text(
+                            '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.originalPrice!, widget.valueHolder)}',
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              decoration: TextDecoration.lineThrough,
+                              color: PsColors.discountColor,
+                            ),
+                          )
+                        ],
+                      )
+                          : Text(
                         widget.price != null
                             ? '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.price.toString(), widget.valueHolder)}'
                             : '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.unitPrice!, widget.valueHolder)}',
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleLarge!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium!
+                            .copyWith(color: PsColors.mainColor),
                       ),
-                      const SizedBox(
-                        width: PsDimens.space10,
-                      ),
-                      Text(
-                        '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.originalPrice!, widget.valueHolder)}',
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          decoration: TextDecoration.lineThrough,
-                          color: PsColors.discountColor,
-                        ),
-                      )
-                    ],
-                  )
-                      : Text(
-                    widget.price != null
-                        ? '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.price.toString(), widget.valueHolder)}'
-                        : '${widget.product.currencySymbol} ${Utils.getPriceFormat(widget.product.unitPrice!, widget.valueHolder)}',
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: PsColors.mainColor),
-                  ),
-                ),
-                _IconAndTextWidget(
+                    ),
+                    _IconAndTextWidget(
                   product: widget.product,
                   updateQty: widget.updateQty,
                   qty: widget.qty,
                 ),
-              ],
-            ),
-
+                  ],
+                ),
+              )
           ),
 
         ],
@@ -3030,8 +3110,6 @@ class __AddToBasketAndBuyForBottomSheetWidgetState
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(
-            right: PsDimens.space16,
-            left: PsDimens.space16,
             bottom: PsDimens.space16),
         child: PSButtonWithIconWidget(
             hasShadow: true,
@@ -3046,8 +3124,6 @@ class __AddToBasketAndBuyForBottomSheetWidgetState
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(
-            right: PsDimens.space16,
-            left: PsDimens.space16,
             bottom: PsDimens.space16),
         child: PSButtonWithIconWidget(
             hasShadow: true,

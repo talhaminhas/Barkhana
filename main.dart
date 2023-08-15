@@ -192,6 +192,7 @@ class _PSAppState extends State<PSApp> {
                 debugShowCheckedModeBanner: false,
                 title: 'Panacea-Soft',
                 theme: theme,
+                themeMode: ThemeMode.system,
                 initialRoute: '/',
                 onGenerateRoute: router.generateRoute,
                 localizationsDelegates: context.localizationDelegates,

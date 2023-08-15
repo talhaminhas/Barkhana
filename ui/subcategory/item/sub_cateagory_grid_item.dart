@@ -33,41 +33,51 @@ class SubCategoryGridItem extends StatelessWidget {
                         color: PsColors.mainColor, // Set the desired border color here
                         width: 2, // Set the border width
                       ),
-                      borderRadius: BorderRadius.circular(10), // Set the desired border radius
+                      borderRadius: BorderRadius.circular(5), // Set the desired border radius
                     ),
-                    child: Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Column(
-                          children: <Widget>[
-                            PsNetworkImage(
-                              photoKey: '',
-                              defaultPhoto: subCategory.defaultPhoto!,
-                              width: PsDimens.space200,
-                              height: PsDimens.space100,
-                              boxfit: BoxFit.cover,
-                            ),
-                            const SizedBox(
-                              height: PsDimens.space4,
-                            ),
-                            Text(
-                              subCategory.name!,
-                              textAlign: TextAlign.start,
-                              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                                  color: PsColors.white, fontWeight: FontWeight.bold),
-                            ),
-                            /*Container(
-                              width: 200,
-                              height: double.infinity,
-                              color: PsColors.black.withAlpha(110),
-                            )*/
-                          ],
-                        )),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            children: <Widget>[
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: PsNetworkImage(
+                                    photoKey: '',
+                                    defaultPhoto: subCategory.defaultPhoto!,
+                                    width: double.infinity,
+                                    height: double.infinity, // Expand to available height
+                                    boxfit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: PsDimens.space4,
+                              ),
+                              Container(
+                                  height: 30,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      subCategory.name!,
+                                      textAlign: TextAlign.start,
+                                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                                          color: PsColors.white, fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                              ),
+                              const SizedBox(
+                                height: PsDimens.space4,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
 
-                  ],
-                )))),
+                ))),
         builder: (BuildContext context, Widget? child) {
           return FadeTransition(
             opacity: animation!,

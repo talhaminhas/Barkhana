@@ -117,8 +117,8 @@ class _Checkout3ViewState extends State<Checkout3View> {
   }
   Future<String> _getIpAddress() async {
     // Get the IP address of the first non-loopback network interface
-    for (var interface in await NetworkInterface.list()) {
-      for (var addr in interface.addresses) {
+    for (NetworkInterface interface in await NetworkInterface.list()) {
+      for (InternetAddress addr in interface.addresses) {
         if (!addr.isLoopback) {
           return addr.address;
         }
@@ -228,8 +228,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 '',
                 couponDiscountProvider!.couponDiscount.toString(),
                 basketProvider.checkoutCalculationHelper.tax.toString(),
-                basketProvider.checkoutCalculationHelper.totalDiscount
-                    .toString(),
+                basketProvider.checkoutCalculationHelper.totalDiscount.toString(),
                 basketProvider.checkoutCalculationHelper.subTotalPrice
                     .toString(),
                 basketProvider.checkoutCalculationHelper.shippingCost
@@ -1048,47 +1047,48 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
             //return SingleChildScrollView(
               child:
-            return  WebView(
-                    initialUrl: PsUrl.ps_global_payment_hpp_url,
-                    javascriptMode: JavascriptMode.unrestricted,
-                    onWebViewCreated: (WebViewController webViewController) {
-                      webController = webViewController;
-                    },
-                    onPageFinished: (String url) async{
-                      if (webController != null) {
-                          tokenPostRequest = GlobalTokenPost(
-                          userEmail: userProvider?.user.data!.userEmail,
-                          userPhone: userProvider?.user.data!.userPhone,
-                          userAddress1: userProvider?.user.data!.address,
-                          userAddress2: '',
-                          userCity: userProvider?.user.data!.userCity,
-                          userPostcode: userProvider?.user.data!.userPostcode,
-                          userTotal: basketProvider?.checkoutCalculationHelper.totalPrice.toString(),
-                          jsonResponse: '0',// zero means posting to get token, if it is assigned with a response then server will return transaction result
-                        );
-                        token = await widget.tokenRepository?.postGlobalToken(tokenPostRequest,context);
-                        if (token != null) {
-                          print(token!);
-                          webController!.runJavascript('''
+            return Column(
+                children: [
+                  Expanded(
+                      child:
+                      WebView(
+                        initialUrl: PsUrl.ps_global_payment_hpp_url,
+                        javascriptMode: JavascriptMode.unrestricted,
+                        onWebViewCreated: (WebViewController webViewController) {
+                          webController = webViewController;
+                        },
+                        onPageFinished: (String url) async{
+                          if (webController != null) {
+                            tokenPostRequest = GlobalTokenPost(
+                              userEmail: userProvider?.user.data!.userEmail,
+                              userPhone: userProvider?.user.data!.userPhone,
+                              userAddress1: userProvider?.user.data!.address,
+                              userAddress2: '',
+                              userCity: userProvider?.user.data!.userCity,
+                              userPostcode: userProvider?.user.data!.userPostcode,
+                              userTotal: basketProvider?.checkoutCalculationHelper.totalPrice.toString(),
+                              jsonResponse: '0',// zero means posting to get token, if it is assigned with a response then server will return transaction result
+                            );
+                            token = await widget.tokenRepository?.postGlobalToken(tokenPostRequest,context);
+                            if (token != null) {
+                              print(token!);
+                              webController!.runJavascript('''
                                     \$(document).ready(function() {
                                 RealexHpp.setHppUrl("${PsUrl
-                              .ps_global_payment_url}");
+                                  .ps_global_payment_url}");
                                 var jsonObject = JSON.parse($token);
                                 RealexHpp.embedded.init("payButtonId", "iframeId", "http://$deviceIp:8080/", jsonObject );
                                 \$("#payButtonId").click();
                             });
                         ''');
-                        }
-                      }
-                    },
-                    onPageStarted: (String url) {
-                    },
-                 // ),
+                            }
+                          }
+                        },
+                        onPageStarted: (String url) {
+                        },
+                        // ),
 
-
-
-
-              /*Container(
+                        /*Container(
                 color: PsColors.backgroundColor,
                 padding: const EdgeInsets.only(
                   left: PsDimens.space12,
@@ -1097,7 +1097,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    *//*const SizedBox(
+                    const SizedBox(
                       height: PsDimens.space16,
                     ),
                     Container(
@@ -1116,8 +1116,8 @@ class _Checkout3ViewState extends State<Checkout3View> {
                     ),
                     const SizedBox(
                       height: PsDimens.space8,
-                    ),*//*
-                    *//*Consumer<ShopInfoProvider>(builder: (BuildContext context,
+                    ),
+                    Consumer<ShopInfoProvider>(builder: (BuildContext context,
                         ShopInfoProvider shopInfoProvider, Widget? child) {
                       if (shopInfoProvider.shopInfo.data == null) {
                         return Container();
@@ -1428,8 +1428,8 @@ class _Checkout3ViewState extends State<Checkout3View> {
                         textAboutMe: true,
                         hintText: Utils.getString(context, 'checkout3__delivery_notes'),
                         keyboardType: TextInputType.multiline,
-                        textEditingController: memoController),*//*
-                    *//*Row(
+                        textEditingController: memoController),
+                        Row(
                       children: <Widget>[
                         Checkbox(
                           activeColor: PsColors.mainColor,
@@ -1456,12 +1456,31 @@ class _Checkout3ViewState extends State<Checkout3View> {
                           ),
                         ),
                       ],
-                    ),*//*
-
+                    ),
                   ],
                 ),
               ),*/
-            );
+                      )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: TextField(
+                      controller: TextEditingController(text: '4000120000001154'),
+                      decoration: const InputDecoration(
+                        labelText: 'Declined',
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: TextField(
+                      controller: TextEditingController(text: '4263970000005262'),
+                      decoration: const InputDecoration(
+                        labelText: 'Successful',
+                      ),
+                    ),
+                  ),
+                ]);
             // } else {
             //   return Container();
             // }

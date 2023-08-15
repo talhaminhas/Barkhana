@@ -126,13 +126,15 @@ class _Checkout2ViewState extends State<Checkout2View> {
         final PsValueHolder valueHolder =
         Provider.of<PsValueHolder>(context, listen: false);
 
+
+        print(basketProvider.checkoutCalculationHelper.tax.toString());
         final PsResource<TransactionHeader> _apiStatus =
         await transactionSubmitProvider.postTransactionSubmit(
             userLoginProvider.user.data!,
             widget.basketList,
             '',
             couponDiscountProvider!.couponDiscount.toString(),
-            basketProvider.checkoutCalculationHelper.tax.toString(),
+            '',//basketProvider.checkoutCalculationHelper.tax.toString(),
             basketProvider.checkoutCalculationHelper.totalDiscount
                 .toString(),
             basketProvider.checkoutCalculationHelper.subTotalPrice
@@ -603,32 +605,32 @@ class _OrderSummaryWidget extends StatelessWidget {
                   .toString(),
               title: '${Utils.getString(context, 'checkout__sub_total')} :',
             ),
-            _OrderSummeryTextWidget(
+            /*_OrderSummeryTextWidget(
               transationInfoText:
                   '$currencySymbol ${basketProvider.checkoutCalculationHelper.taxFormattedString}',
               title:
                   '${Utils.getString(context, 'checkout__tax')} (${psValueHolder.overAllTaxLabel} %) :',
-            ),
+            ),*/
             if (provider.deliveryCost.data == null || 
                 provider.deliveryCost.data!.totalCost == '0.0' || 
                 shopInfoProvider.shopInfo.data!.isArea == PsConst.ONE)
               _OrderSummeryTextWidget(
                 transationInfoText:
                     '$currencySymbol ${double.parse(userProvider.selectedArea!.price! == '' ? '0.0' : userProvider.selectedArea!.price!)}',
-                title: '${Utils.getString(context, 'checkout__shipping_cost')} :',
+                title: '${Utils.getString(context, 'checkout__delivery_cost')} :',
               )
             else 
               _OrderSummeryTextWidget(
                 transationInfoText:
                     '$currencySymbol ${double.parse(provider.deliveryCost.data!.totalCost!)}',
-                title: '${Utils.getString(context, 'checkout__shipping_cost')} :',
+                title: '${Utils.getString(context, 'checkout__delivery_cost')} :',
               ),
-            _OrderSummeryTextWidget(
+            /*_OrderSummeryTextWidget(
             transationInfoText:
                 '$currencySymbol ${basketProvider.checkoutCalculationHelper.shippingTaxFormattedString}',
             title:
                 '${Utils.getString(context, 'checkout__shipping_tax')} (${psValueHolder.shippingTaxLabel} %) :',
-            ),
+            ),*/
             _spacingWidget,
             _dividerWidget,
             _OrderSummeryTextWidget(
