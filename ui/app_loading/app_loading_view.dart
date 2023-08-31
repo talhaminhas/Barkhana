@@ -29,14 +29,22 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../../api/api_token_refresher.dart';
+import '../../api/ps_api_service.dart';
+import '../../main.dart';
 import '../../viewobject/common/language.dart';
 
 class AppLoadingView extends StatelessWidget {
+
   Future<dynamic> callDateFunction(
       AppInfoProvider provider,
       LanguageProvider languageProvider,
       ClearAllDataProvider clearAllDataProvider,
       BuildContext context) async {
+
+    PSApp.apiTokenRefresher.context = context;
+    PSApp.apiTokenRefresher.provider = provider;
+
     String realStartDate = '0';
     String realEndDate = '0';
     AppInfoParameterHolder appInfoParameterHolder;
@@ -212,7 +220,7 @@ class AppLoadingView extends StatelessWidget {
     await appInfoProvider.replaceLoginUserId('');
     await appInfoProvider.replaceLoginUserName('');
     // await deleteTaskProvider.deleteTask();
-    await FacebookAuth.instance.logOut();
+    //await FacebookAuth.instance.logOut();
     await GoogleSignIn().signOut();
     await FirebaseAuth.instance.signOut();
   }

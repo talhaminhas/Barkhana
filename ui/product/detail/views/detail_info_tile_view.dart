@@ -26,6 +26,7 @@ class DetailInfoTileView extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium);
     final List<String> nutrientList =
         productDetail.productDetail.data!.nutrient!.split(',');
+
     if (
       //productDetail != null &&
         //productDetail.productDetail != null &&
@@ -111,52 +112,60 @@ class _NutrientWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: PsDimens.space40,
-      child: CustomScrollView(
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          slivers: <Widget>[
-            SliverList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                if (nutrientList != null) {
-                  return NutrientHorizontalListItem(
-                    nutrientName: nutrientList![index],
-                    onTap: () async {
-                      final ProductParameterHolder productParameterHolder =
-                          ProductParameterHolder().resetParameterHolder();
+      //height: PsDimens.space40,
+      child: Wrap(
+        spacing: 8.0, // Set the spacing between items
+        runSpacing: 8.0, // Set the spacing between rows
+        children: List.generate(
+          nutrientList != null ? nutrientList!.length : 0,
+              (int index) {
+            if (nutrientList != null) {
+              return NutrientHorizontalListItem(
+                nutrientName: nutrientList![index],
+                onTap: () async {
+                  final ProductParameterHolder productParameterHolder =
+                  ProductParameterHolder().resetParameterHolder();
 
-                      if (index == 0) {
-                        productParameterHolder.catId =
-                            productDetailProvider.productDetail.data!.catId;
-                      } else if (index == 1) {
-                        productParameterHolder.catId =
-                            productDetailProvider.productDetail.data!.catId;
-                        productParameterHolder.subCatId =
-                            productDetailProvider.productDetail.data!.subCatId;
-                      } else {
-                        productParameterHolder.searchTerm = nutrientList![index];
-                      }
-                      print('productParameterHolder.catId ' +
-                          productParameterHolder.catId! +
-                          'productParameterHolder.subCatId ' +
-                          productParameterHolder.subCatId! +
-                          'productParameterHolder.searchTerm ' +
-                          productParameterHolder.searchTerm!);
-                      Navigator.pushNamed(context, RoutePaths.filterProductList,
-                          arguments: ProductListIntentHolder(
-                            appBarTitle: nutrientList![index],
-                            productParameterHolder: productParameterHolder,
-                          ));
-                    },
+                  if (index == 0) {
+                    productParameterHolder.catId =
+                        productDetailProvider.productDetail.data!.catId;
+                  } else if (index == 1) {
+                    productParameterHolder.catId =
+                        productDetailProvider.productDetail.data!.catId;
+                    productParameterHolder.subCatId =
+                        productDetailProvider.productDetail.data!.subCatId;
+                  } else {
+                    productParameterHolder.searchTerm = nutrientList![index];
+                  }
+                  print('productParameterHolder.catId ' +
+                      productParameterHolder.catId! +
+                      'productParameterHolder.subCatId ' +
+                      productParameterHolder.subCatId! +
+                      'productParameterHolder.searchTerm ' +
+                      productParameterHolder.searchTerm!);
+                  Navigator.pushNamed(
+                    context,
+                    RoutePaths.filterProductList,
+                    arguments: ProductListIntentHolder(
+                      appBarTitle: nutrientList![index],
+                      productParameterHolder: productParameterHolder,
+                    ),
                   );
-                } else {
-                  return null;
-                }
-              }, childCount: nutrientList!.length),
-            ),
-          ]),
+                },
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
+      ),
     );
+
+
+
+
+
+
   }
 }
 

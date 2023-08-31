@@ -389,7 +389,8 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget> {
     return Container(
       /*margin: const EdgeInsets.only(
           top: PsDimens.space8, bottom: PsDimens.space8, left: PsDimens.space8),*/
-          decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2),
+
+          decoration: BoxDecoration( border: Border.all(color: PsColors.mainColor, width: 2,),
         borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space8))
     ),
       child: Row(

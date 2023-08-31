@@ -6,14 +6,21 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutterrestaurant/api/api_token_refresher.dart';
+import 'package:flutterrestaurant/api/ps_api_service.dart';
 import 'package:flutterrestaurant/config/ps_theme_data.dart';
 import 'package:flutterrestaurant/config/router.dart' as router;
 import 'package:flutterrestaurant/provider/common/ps_theme_provider.dart';
+import 'package:flutterrestaurant/provider/delete_task/delete_task_provider.dart';
 import 'package:flutterrestaurant/provider/ps_provider_dependencies.dart';
+import 'package:flutterrestaurant/provider/user/user_provider.dart';
+import 'package:flutterrestaurant/repository/delete_task_repository.dart';
 import 'package:flutterrestaurant/repository/ps_theme_repository.dart';
+import 'package:flutterrestaurant/repository/user_repository.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/language.dart';
+import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -38,7 +45,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   //MobileAds.instance.initialize();
 
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  //FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
   if (Platform.isIOS) {
     FirebaseMessaging.instance.requestPermission(
@@ -83,9 +90,8 @@ Future<void> main() async {
         ?.createNotificationChannel(androidNotificationChannel);
   }
   _createNotificationChannel('Channel ID', 'name', 'description');*/
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  print('fcmToken:');
-  print(fcmToken);
+  final String? fcmToken = await FirebaseMessaging.instance.getToken();
+  print('fcmToken: $fcmToken');
   //GoogleApiAvailability.makeGooglePlayServicesAvailable();
   //check is apple signin is available
   await Utils.checkAppleSignInAvailable();
@@ -108,6 +114,7 @@ List<Locale> getSupportedLanguages() {
 }
 
 class PSApp extends StatefulWidget {
+  static final ApiTokenRefresher apiTokenRefresher = ApiTokenRefresher(psApiService: PsApiService());
   @override
   _PSAppState createState() => _PSAppState();
 }
@@ -124,8 +131,15 @@ class _PSAppState extends State<PSApp> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(PSApp.apiTokenRefresher);
     super.initState();
     
+  }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(PSApp.apiTokenRefresher);
+    print('disposed called');
+    super.dispose();
   }
 
   Future<ThemeData> getSharePerference(
@@ -137,7 +151,7 @@ class _PSAppState extends State<PSApp> {
     }
 
     if (psSharedPreferences == null) {
-      Utils.psPrint('init ps shareperferences');
+      Utils.psPrint('init ps shared preferences');
       psSharedPreferences = PsSharedPreferences.instance;
       Utils.psPrint('get shared');
       //SharedPreferences sh = await
@@ -152,10 +166,9 @@ class _PSAppState extends State<PSApp> {
         final ThemeData themeData = psThemeProvider.getTheme();
 
         themeDataCompleter!.complete(themeData);
-        Utils.psPrint('themedata loading completed');
+        Utils.psPrint('theme data loading completed');
       });
     }
-
     return themeDataCompleter!.future;
   }
 
@@ -170,37 +183,38 @@ class _PSAppState extends State<PSApp> {
 
   @override
   Widget build(BuildContext context) {
-    // init Color
-    PsColors.loadColor(context);
 
+
+    PsColors.loadColor(context);
     return MultiProvider(
         providers: <SingleChildWidget>[
           ...providers,
+
         ],
         child: ThemeManager(
-            defaultBrightnessPreference: BrightnessPreference.light,
-            data: (Brightness brightness) {
-              if (brightness == Brightness.light) {
-                return themeData(ThemeData.light());
-              } else {
-                return themeData(ThemeData.dark());
+              defaultBrightnessPreference: BrightnessPreference.light,
+              data: (Brightness brightness) {
+                if (brightness == Brightness.light) {
+                  return themeData(ThemeData.light());
+                } else {
+                  return themeData(ThemeData.dark());
+                }
+              },
+              loadBrightnessOnStart: true,
+              themedWidgetBuilder: (BuildContext context, ThemeData theme) {
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Panacea-Soft',
+                  theme: theme,
+                  themeMode: ThemeMode.system,
+                  initialRoute: '/',
+                  onGenerateRoute: router.generateRoute,
+                  localizationsDelegates: context.localizationDelegates,
+                  supportedLocales: EasyLocalization.of(context)!.supportedLocales,
+                  locale: EasyLocalization.of(context)!.locale,
+                );
               }
-            },
-            loadBrightnessOnStart: true,
-            themedWidgetBuilder: (BuildContext context, ThemeData theme) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'Panacea-Soft',
-                theme: theme,
-                themeMode: ThemeMode.system,
-                initialRoute: '/',
-                onGenerateRoute: router.generateRoute,
-                localizationsDelegates: context.localizationDelegates,
-                supportedLocales: EasyLocalization.of(context)!.supportedLocales,
-                locale: EasyLocalization.of(context)!.locale,
-            );
-          }
-        ),
+          )
       );
   }
 }

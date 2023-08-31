@@ -9,21 +9,22 @@ class CategoryVerticalListItem extends StatelessWidget {
       {Key? key,
       required this.category,
       this.onTap,
-      this.animationController,
-      this.animation})
+      //this.animationController,
+      //this.animation
+      })
       : super(key: key);
 
   final Category category;
 
   final Function? onTap;
-  final AnimationController? animationController;
-  final Animation<double>? animation;
+  //final AnimationController? animationController;
+  //final Animation<double>? animation;
 
   @override
   Widget build(BuildContext context) {
-    animationController!.forward();
-    return AnimatedBuilder(
-        animation: animationController!,
+    //animationController!.forward();
+    return /*AnimatedBuilder*/Container(
+        //animation: animationController!,
         child: GestureDetector(
             onTap: onTap as void Function()?,
             child: Card(
@@ -84,7 +85,7 @@ class CategoryVerticalListItem extends StatelessWidget {
                     )
 
                 ))),
-        builder: (BuildContext context, Widget? child) {
+        /*builder: (BuildContext context, Widget? child) {
           return FadeTransition(
               opacity: animation!,
               child: Transform(
@@ -92,6 +93,6 @@ class CategoryVerticalListItem extends StatelessWidget {
                     0.0, 100 * (1.0 - animation!.value), 0.0),
                 child: child,
               ));
-        });
+        }*/);
   }
 }

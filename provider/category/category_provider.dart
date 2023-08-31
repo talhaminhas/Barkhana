@@ -66,7 +66,7 @@ class CategoryProvider extends PsProvider {
     super.dispose();
   }
 
-  Future<dynamic> loadCategoryList(Map<dynamic, dynamic> jsonMap) async {
+  Future<dynamic> loadCategoryList(/*Map<dynamic, dynamic> jsonMap*/) async {
     isLoading = true;
 
     isConnectedToInternet = await Utils.checkInternetConnectivity();

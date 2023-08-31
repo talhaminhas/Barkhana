@@ -5,10 +5,16 @@ import 'package:flutterrestaurant/api/common/ps_api_reponse.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
+import 'package:flutterrestaurant/db/common/ps_shared_preferences.dart';
+import 'package:flutterrestaurant/main.dart';
+import 'package:flutterrestaurant/ui/app_loading/app_loading_view.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:path/path.dart';
+
+import '../../constant/ps_constants.dart';
+import '../ps_url.dart';
 
 abstract class PsApi {
   PsResource<T> psObjectConvert<T>(dynamic dataList, T data) {
@@ -16,10 +22,20 @@ abstract class PsApi {
   }
 
   Future<List<dynamic>> getList(String url) async {
+    if (PSApp.apiTokenRefresher.isExpired) {
+      print('getList');
+      await PSApp.apiTokenRefresher.updateToken();
+    }
     final Client client = http.Client();
     try {
+      final Map<String, String> headers = {
+        'content-type': 'application/json',
+        'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
+      };
       final Response response =
-          await client.get(Uri.parse('${PsConfig.ps_app_url}$url'));
+          await client.get(Uri.parse('${PsConfig.ps_app_url}$url'),
+            headers: headers
+          );
 
       if (response.statusCode == 200 &&
          // response.body != null &&
@@ -38,10 +54,20 @@ abstract class PsApi {
 
   Future<PsResource<R>> getServerCall<T extends PsObject<dynamic>, R>(
       T obj, String url) async {
+    if (PSApp.apiTokenRefresher.isExpired) {
+      print('getServerCall');
+      await PSApp.apiTokenRefresher.updateToken();
+    }
     final Client client = http.Client();
     try {
+      final Map<String, String> headers = {
+        'content-type': 'application/json',
+        'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
+      };
       final Response response =
-          await client.get(Uri.parse('${PsConfig.ps_app_url}$url'));
+          await client.get(Uri.parse('${PsConfig.ps_app_url}$url'),
+            headers: headers
+          );
       print('${PsConfig.ps_app_url}$url');
       final PsApiResponse psApiResponse = PsApiResponse(response);
 
@@ -58,6 +84,8 @@ abstract class PsApi {
           return PsResource<R>(PsStatus.SUCCESS, '', obj.fromMap(hashMap));
         }
       } else {
+        if(psApiResponse.isUnauthorized())
+          PSApp.apiTokenRefresher.isExpired = true;
         return PsResource<R>(PsStatus.ERROR, psApiResponse.errorMessage, null);
       }
     } catch (e) {
@@ -68,15 +96,27 @@ abstract class PsApi {
     }
   }
 
+
   Future<PsResource<R>> postData<T extends PsObject<dynamic>, R>(
       T obj, String url, Map<dynamic, dynamic> jsonMap) async {
+    if (PSApp.apiTokenRefresher.isExpired
+        && url != PsUrl.ps_api_request_token_post_url
+        && url != PsUrl.ps_api_update_token_post_url) {
+      print('postData');
+      await PSApp.apiTokenRefresher.updateToken();
+    }
+
     final Client client = http.Client();
     try {
+      final Map<String, String> headers = {
+        'content-type': 'application/json',
+        'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
+      };
+
       final Response response = await client
           .post(Uri.parse('${PsConfig.ps_app_url}$url'),
-              headers: <String, String>{'content-type': 'application/json'},
-              body: const JsonEncoder().convert(jsonMap))
-          // ignore: body_might_complete_normally_catch_error
+          headers: headers,
+          body: const JsonEncoder().convert(jsonMap))
           .catchError((dynamic e) {
         print('** Error Post Data');
         print(e.error);
@@ -96,7 +136,11 @@ abstract class PsApi {
         } else {
           return PsResource<R>(PsStatus.SUCCESS, '', obj.fromMap(hashMap));
         }
-      } else {
+      }
+      else {
+        if(psApiResponse.isUnauthorized())
+          print('401');
+          PSApp.apiTokenRefresher.isExpired = true;
         return PsResource<R>(PsStatus.ERROR, psApiResponse.errorMessage, null);
       }
     } catch (e) {
@@ -108,28 +152,35 @@ abstract class PsApi {
     }
   }
 
-  Future<PsResource<R>> postUploadImage<T extends PsObject<dynamic>, R>(T obj,
-      String url, String userId, String platformName, File imageFile) async {
+
+  Future<PsResource<R>> postUploadImage<T extends PsObject<dynamic>, R>(
+      T obj, String url, String userId, String platformName, File imageFile) async {
+    if (PSApp.apiTokenRefresher.isExpired) {
+      print('postUploadImage');
+      await PSApp.apiTokenRefresher.updateToken();
+    }
     final Client client = http.Client();
     try {
-      final ByteStream stream =
-          http.ByteStream(Stream.castFrom(imageFile.openRead()));
-      final int length = await imageFile.length();
-
       final Uri uri = Uri.parse('${PsConfig.ps_app_url}$url');
 
       final MultipartRequest request = http.MultipartRequest('POST', uri);
+      request.headers['authorization'] = PsSharedPreferences.instance.getApiToken() ?? ''; // Adding the authorization token
+
+      final ByteStream stream = http.ByteStream(Stream.castFrom(imageFile.openRead()));
+      final int length = await imageFile.length();
+
       final MultipartFile multipartFile = http.MultipartFile(
-          'file', stream, length,
-          filename: basename(imageFile.path));
+        'file', stream, length,
+        filename: basename(imageFile.path),
+      );
 
       request.fields['user_id'] = userId;
       request.fields['platform_name'] = platformName;
       request.files.add(multipartFile);
+
       final StreamedResponse response = await request.send();
 
-      final PsApiResponse psApiResponse =
-          PsApiResponse(await http.Response.fromStream(response));
+      final PsApiResponse psApiResponse = PsApiResponse(await http.Response.fromStream(response));
 
       if (psApiResponse.isSuccessful()) {
         final dynamic hashMap = json.decode(psApiResponse.body!);
@@ -143,11 +194,15 @@ abstract class PsApi {
         } else {
           return PsResource<R>(PsStatus.SUCCESS, '', obj.fromMap(hashMap));
         }
-      } else {
+      }
+      else {
+        if(psApiResponse.isUnauthorized())
+          PSApp.apiTokenRefresher.isExpired = true;
         return PsResource<R>(PsStatus.ERROR, psApiResponse.errorMessage, null);
       }
     } finally {
       client.close();
     }
   }
+
 }

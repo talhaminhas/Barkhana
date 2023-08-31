@@ -26,9 +26,9 @@ class HomeTabbarProductListView extends StatefulWidget {
   const HomeTabbarProductListView({
     Key? key,
     required this.shopInfo,
-    required this.animationController,
+    //required this.animationController,
     required this.categoryList,
-    required this.userInputItemNameTextEditingController,
+    //required this.userInputItemNameTextEditingController,
     required this.valueHolder,
     required this.categoryProvider,
     required this.onTapCategory
@@ -36,9 +36,9 @@ class HomeTabbarProductListView extends StatefulWidget {
 
   final ShopInfo shopInfo;
   final CategoryProvider categoryProvider;
-  final AnimationController animationController;
+  //final AnimationController animationController;
   final List<Category> categoryList;
-  final TextEditingController userInputItemNameTextEditingController;
+  //final TextEditingController userInputItemNameTextEditingController;
   final PsValueHolder valueHolder;
   final Function (Category category) onTapCategory;
   @override
@@ -54,10 +54,10 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
   TabController? _controller;
 
   // this will control the animation when a labelLarge changes from an off state to an on state
-  AnimationController? _animationControllerOn;
+  //AnimationController? _animationControllerOn;
 
   // this will control the animation when a labelLarge changes from an on state to an off state
-  AnimationController? _animationControllerOff;
+  //AnimationController? _animationControllerOff;
 
   AnimationController? _animationControllerShopInfo;
   AnimationController? animationController;
@@ -115,13 +115,13 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
 
     // this creates the controller with 6 tabs (in our case)
     _controller =
-        TabController(vsync: this, length: widget.categoryList.length);
+        TabController(vsync: this, length: 1/*widget.categoryList.length*/);
     // this will execute the function every time there's a swipe animation
-    _controller!.animation!.addListener(_handleTabAnimation);
+    //_controller!.animation!.addListener(_handleTabAnimation);
     // this will execute the function every time the _controller.index value changes
-    _controller!.addListener(_handleTabChange);
+    //_controller!.addListener(_handleTabChange);
 
-    _animationControllerOff = AnimationController(
+   /* _animationControllerOff = AnimationController(
         vsync: this,
         duration:
             const Duration(microseconds: 140)); //PsConfig.animation_duration);
@@ -139,7 +139,7 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
     _animationControllerOn!.value = 1.0;
     _colorTweenBackgroundOn =
         ColorTween(begin: _backgroundOff, end: _backgroundOn)
-            .animate(_animationControllerOn!);
+            .animate(_animationControllerOn!);*/
 
     _animationControllerShopInfo = AnimationController(
         vsync: this, duration: const Duration(microseconds: 140));
@@ -152,8 +152,8 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
   void dispose() {
     animationController!.dispose();
     _controller!.dispose();
-    _animationControllerOff!.dispose();
-    _animationControllerOn!.dispose();
+    //_animationControllerOff!.dispose();
+    //_animationControllerOn!.dispose();
     _animationControllerShopInfo!.dispose();
     super.dispose();
   }
@@ -162,7 +162,7 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
   Widget build(BuildContext context) {
     // _controller =
     //     TabController(vsync: this, length: widget.categoryList.length);
-    print('widget.categoryList.length' + widget.categoryList.length.toString());
+    //print('widget.categoryList.length' + widget.categoryList.length.toString());
 
     for (int index = 0; index < widget.categoryList.length; index++) {
       // create a GlobalKey for each Tab
@@ -196,8 +196,8 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
                     context, 'home__menu_drawer_create_reservation'),
                 Utils.getString(context, 'home__menu_drawer_create_reservation')*/
               ];
-    final List<int> fixedList =
-        Iterable<int>.generate(widget.categoryList.length).toList();
+    /*final List<int> fixedList =
+        Iterable<int>.generate(widget.categoryList.length).toList();*/
     return Scaffold(
       backgroundColor: PsColors.baseColor,
       body: Stack(
@@ -298,8 +298,7 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
                                     final int count =
                                         widget.categoryProvider.categoryList.data!.length;
                                     return CategoryVerticalListItem(
-                                      animationController:
-                                      animationController,
+                                     /* animationController: animationController,
                                       animation: Tween<double>(
                                           begin: 0.0, end: 1.0)
                                           .animate(
@@ -307,9 +306,9 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
                                           parent: animationController!,
                                           curve: Interval(
                                               (1 / count) * index, 1.0,
-                                              curve: Curves.fastOutSlowIn),
+                                              curve: Curves.bounceIn),
                                         ),
-                                      ),
+                                      ),*/
                                       category:
                                       widget.categoryProvider.categoryList.data![index],
                                       onTap: () {
@@ -609,12 +608,12 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
 
   dynamic _triggerAnimation() {
     // reset the animations so they're ready to go
-    _animationControllerOn!.reset();
+    /*_animationControllerOn!.reset();
     _animationControllerOff!.reset();
 
     // run the animations!
     _animationControllerOn!.forward();
-    _animationControllerOff!.forward();
+    _animationControllerOff!.forward();*/
   }
 
   dynamic _scrollTo(int index) {

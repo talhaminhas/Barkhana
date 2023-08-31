@@ -6,6 +6,7 @@ import 'package:flutterrestaurant/utils/utils.dart';
 class ErrorDialog extends StatefulWidget {
   const ErrorDialog({this.message});
   final String? message;
+  static bool isVisible = false;
   @override
   _ErrorDialogState createState() => _ErrorDialogState();
 }
@@ -13,6 +14,7 @@ class ErrorDialog extends StatefulWidget {
 class _ErrorDialogState extends State<ErrorDialog> {
   @override
   Widget build(BuildContext context) {
+    ErrorDialog.isVisible = true;
     return _NewDialog(widget: widget);
   }
 }
@@ -88,6 +90,7 @@ class _NewDialog extends StatelessWidget {
               minWidth: double.infinity,
               onPressed: () {
                 Navigator.of(context).pop();
+                ErrorDialog.isVisible = false;
               },
               child: Text(
                 Utils.getString(context, 'dialog__ok'),

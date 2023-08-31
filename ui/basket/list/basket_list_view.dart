@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
+import 'package:flutterrestaurant/main.dart';
 import 'package:flutterrestaurant/provider/basket/basket_provider.dart';
 import 'package:flutterrestaurant/provider/shop_info/shop_info_provider.dart';
 import 'package:flutterrestaurant/repository/basket_repository.dart';
@@ -337,6 +338,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                   // Basket Item Count Check
                   // Need to have at least 1 item in basket
                   if (await Utils.checkInternetConnectivity()) {
+
                     if (
                         provider.basketList.data!.isEmpty) {
                       // Show Error Dialog
@@ -349,7 +351,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                             );
                           });
                     }
-
+                    PSApp.apiTokenRefresher.updateToken();
                     // Get Currency Symbol
                     final String currencySymbol =
                         provider.basketList.data![0].product!.currencySymbol!;

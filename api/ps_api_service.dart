@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutterrestaurant/viewobject/api_token.dart';
 import 'package:flutterrestaurant/viewobject/global_token_header.dart';
 import 'package:flutterrestaurant/viewobject/postal_address.dart';
 import 'package:http/http.dart' as http;
@@ -220,7 +221,7 @@ class PsApiService extends PsApi {
       String postcode) async {
     final String url =
         '${PsUrl.ps_validate_postcode_url}$postcode';
-    final response = await http.get(Uri.parse(url));
+    final http.Response response = await http.get(Uri.parse(url));
     return response.statusCode == 200;
   }
   ///
@@ -491,6 +492,7 @@ class PsApiService extends PsApi {
     return await postData<Rating, Rating>(Rating(), url, jsonMap);
   }
 
+
   Future<PsResource<List<Rating>>> getRatingList(
       String productId, int limit, int offset) async {
     final String url =
@@ -506,6 +508,24 @@ class PsApiService extends PsApi {
     const String url = '${PsUrl.ps_postalAddressList_url}';
     return await postData<PostalAddress, PostalAddress>(
         PostalAddress(), url, jsonMap);
+  }
+  ///
+  /// get barer token
+  ///
+  Future<PsResource<ApiToken>> getApiToken(
+      Map<String, dynamic> jsonMap) async {
+    const String url = '${PsUrl.ps_api_request_token_post_url}';
+    return await postData<ApiToken, ApiToken>(
+        ApiToken(), url, jsonMap);
+  }
+  ///
+  /// update token
+  ///
+  Future<PsResource<ApiToken>> updateApiToken(
+      Map<String, dynamic> jsonMap) async {
+    const String url = '${PsUrl.ps_api_update_token_post_url}';
+    return await postData<ApiToken, ApiToken>(
+        ApiToken(), url, jsonMap);
   }
   ///
   /// Delivery Boy Rating

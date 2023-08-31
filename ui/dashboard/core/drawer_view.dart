@@ -15,6 +15,7 @@ import 'package:flutterrestaurant/config/ps_config.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
+import 'package:flutterrestaurant/main.dart';
 import 'package:flutterrestaurant/provider/common/notification_provider.dart';
 import 'package:flutterrestaurant/provider/delete_task/delete_task_provider.dart';
 import 'package:flutterrestaurant/provider/shop_info/shop_info_provider.dart';
@@ -65,10 +66,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:flutterrestaurant/viewobject/category.dart' as restaurant;
+import '../../../api/api_token_refresher.dart';
 import '../../../provider/basket/basket_provider.dart';
 import '../../../provider/product/product_provider.dart';
 import '../../../provider/transaction/transaction_header_provider.dart';
 import '../../../viewobject/transaction_header.dart';
+import '../../app_loading/app_loading_view.dart';
 import '../../gallery/grid/gallery_grid_view.dart';
 import '../../product/detail/product_detail_view.dart';
 import '../../product/list_with_filter/product_list_with_filter_container.dart';
@@ -109,6 +112,7 @@ class _HomeViewState extends State<DashboardView>
     if (state == AppLifecycleState.resumed) {
       isResumed = true;
       initDynamicLinks(context);
+
     }
   }
 
@@ -118,6 +122,7 @@ class _HomeViewState extends State<DashboardView>
         AnimationController(duration: PsConfig.animation_duration, vsync: this);
     initDynamicLinks(context);
     //dashboardStateController = Provider.of<DashboardStateController>(context);
+    PSApp.apiTokenRefresher.context = context;
     super.initState();
 
   }
@@ -129,7 +134,7 @@ class _HomeViewState extends State<DashboardView>
   }
 
   Future<void> initDynamicLinks(BuildContext context) async {
-    Future<dynamic>.delayed(const Duration(seconds: 3)); //recomme
+    Future<dynamic>.delayed(const Duration(seconds: 3));
     String itemId = '';
     if (!isResumed) {
       final PendingDynamicLinkData? data =
@@ -179,7 +184,7 @@ class _HomeViewState extends State<DashboardView>
     // });
   }
 
-  int getBottonNavigationIndex(int param) {
+  int getBottomNavigationIndex(int param) {
     int index = 0;
     switch (param) {
       case PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT:
@@ -343,8 +348,9 @@ class _HomeViewState extends State<DashboardView>
      }
      //print(dashboardViewKey.currentState);
      if(controllersStack.last[title] != index)
-      controllersStack.add({title:index});
+       controllersStack.add({title: index});
      print(controllersStack);
+     //print(controllers);
      setState(() {
        appBarTitle = title;
        _currentIndex = index;
@@ -353,102 +359,24 @@ class _HomeViewState extends State<DashboardView>
  }
  List<Map<String, int>> controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];// to keep track of controller before basket page.
  restaurant.Category? selectedCategory;
- List<StatefulWidget> controllers = [];
+ //List<Widget> controllers = [];
  ProductParameterHolder? selectedProductParameterHolder;
  ProductDetailIntentHolder? selectedProductDetailHolder;
  ProductDetailProvider? selectedProductDetailProvider;
  TransactionHeader? selectedTransactionHeader;
  void onTapBack(){
-   /*if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT) {
-        //show fav screen
-        if(previousControllerProductDetail == Utils.getString(context, 'profile__favourite')){
-          updateSelectedIndexWithAnimation(
-              previousControllerProductDetail!,
-              PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT
-          );
-        }
-        //show basket screen
-        else if (previousControllerProductDetail == Utils.getString(context, 'home__bottom_app_bar_basket_list')){
-          updateSelectedIndexWithAnimation(
-              previousControllerProductDetail!,
-              PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT
-          );
-        }
-        //show search history screen
-        else if (previousControllerProductDetail == Utils.getString(context, 'home__bottom_app_bar_search')){
-          updateSelectedIndexWithAnimation(
-              previousControllerProductDetail!,
-              PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
-          );
-        }
-        //show discount screen
-        else if (previousControllerProductDetail == Utils.getString(context, 'home__drawer_menu_discount_product')){
-          updateSelectedIndexWithAnimation(
-              previousControllerProductDetail!,
-              PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT
-          );
-        }
-        //show featured screen
-        else if (previousControllerProductDetail == Utils.getString(context, 'home__menu_drawer_featured_product')){
-          updateSelectedIndexWithAnimation(
-              previousControllerProductDetail!,
-              PsConst.REQUEST_CODE__MENU_FEATURED_PRODUCT_FRAGMENT
-          );
-        }
-        //show subcategory screen
-        else {
-          updateSelectedIndexWithAnimation(
-              previousControllerProductDetail!,
-              PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT
-          );
-        }
-      }
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            previousControllerBasketList[0],
-            previousControllerBasketList[1]
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            Utils.getString(context, 'home__drawer_menu_home'),
-            PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            selectedCategory!.name!,
-            PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            '',
-            PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT)
-        updateSelectedIndexWithAnimation(
-            Utils.getString(
-                context, 'profile__order'),
-            PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT
-        );
-      else if (_currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT) {
-        updateSelectedIndexWithAnimation(Utils.getString(
-            context, 'home__bottom_app_bar_search'),
-            PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT);
-      }
-
-*/
    controllersStack.removeLast();
-   Map<String, int>? lastRemovedController = controllersStack.last;
-   print(lastRemovedController);
+   //controllers.removeLast();
+   final Map<String, int>? lastRemovedController = controllersStack.last;
+   //final Widget lastController = controllers.last;
+   //print(lastRemovedController);
+   //print(lastController) ;
    if (lastRemovedController != null) {
      final String key = lastRemovedController.keys.first;
      updateSelectedIndexWithAnimation(key, lastRemovedController[key]!);
      // Do something with the key and value...
    }
    else{
-     /*Navigator.pushReplacementNamed(
-          context,
-          RoutePaths.home,
-        );*/
      updateSelectedIndexWithAnimation(
          Utils.getString(context, 'home__drawer_menu_menu'),
          PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT);
@@ -535,24 +463,25 @@ class _HomeViewState extends State<DashboardView>
                   create: (BuildContext context) {
                     return UserProvider(
                         repo: userRepository!,
-                        psValueHolder: valueHolder!);
+                        psValueHolder: valueHolder!
+                    );
                   }),
-              ChangeNotifierProvider<DeleteTaskProvider?>(
+              /*ChangeNotifierProvider<DeleteTaskProvider?>(
                   lazy: false,
                   create: (BuildContext context) {
                     deleteTaskProvider = DeleteTaskProvider(
                         repo: deleteTaskRepository,
                         psValueHolder: valueHolder);
                     return deleteTaskProvider;
-              }),
-          ChangeNotifierProvider<BasketProvider>(
+              }),*/
+          /*ChangeNotifierProvider<BasketProvider>(
               lazy: false,
               create: (BuildContext context) {
                 final BasketProvider provider =
                 BasketProvider(repo: basketRepository!);
                 provider.loadBasketList();
                 return provider;
-              }),
+              }),*/
             ],
             child: Consumer<UserProvider>(
               builder:
@@ -1136,7 +1065,7 @@ class _HomeViewState extends State<DashboardView>
                 visible: true,
                 child: BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
-                  currentIndex: getBottonNavigationIndex(_currentIndex),
+                  currentIndex: getBottomNavigationIndex(_currentIndex),
                   showUnselectedLabels: true,
                   backgroundColor: PsColors.backgroundColor,
                   selectedItemColor: PsColors.mainColor,
@@ -1369,6 +1298,7 @@ class _HomeViewState extends State<DashboardView>
                             callLogoutCallBack: (String userId) {
                               callLogout(provider, deleteTaskProvider!,
                                   PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT);
+
                             },
                           );
                         }
@@ -1393,7 +1323,9 @@ class _HomeViewState extends State<DashboardView>
                               });
                             });
                       }
-                    }));
+                    }
+                    )
+                );
               }
               if (_currentIndex ==
                   PsConst.REQUEST_CODE__DASHBOARD_SEARCH_FRAGMENT) {
@@ -1410,7 +1342,8 @@ class _HomeViewState extends State<DashboardView>
                             ProductParameterHolder().getLatestParameterHolder())
                   ],
                 );
-              } else if (_currentIndex ==
+              }
+              else if (_currentIndex ==
                       PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
                   _currentIndex ==
                       PsConst.REQUEST_CODE__MENU_PHONE_SIGNIN_FRAGMENT) {
@@ -1988,8 +1921,17 @@ class _HomeViewState extends State<DashboardView>
               //   );
               } else {
                 animationController.forward();
+                /*if(controllers.isEmpty)
+                  controllers.add(HomeDashboardViewWidget(animationController, context,
+                          (restaurant.Category category){
+                        Navigator.pushNamed(
+                            context, RoutePaths.subCategoryGrid,
+                            arguments: category);
+                      })
+                  );
+                return controllers.last;*/
                 return HomeDashboardViewWidget(animationController, context,
-                    (restaurant.Category category){
+                        (restaurant.Category category){
                       Navigator.pushNamed(
                           context, RoutePaths.subCategoryGrid,
                           arguments: category);
@@ -2095,7 +2037,7 @@ class _CallLoginWidget extends StatelessWidget {
               }
             },
             onForgotPasswordSelected: () {
-              if (currentIndex == PsConst.REQUEST_CODE__MENU_LOGIN_FRAGMENT) {
+              if(currentIndex == PsConst.REQUEST_CODE__MENU_LOGIN_FRAGMENT) {
                 updateCurrentIndex(
                     Utils.getString(context, 'home__forgot_password'),
                     PsConst.REQUEST_CODE__MENU_FORGOT_PASSWORD_FRAGMENT);
@@ -2357,30 +2299,30 @@ class __DrawerHeaderWidgetWithUserProfileState extends State<_DrawerHeaderWidget
                           style: Theme.of(context).textTheme.bodyMedium!
                             .copyWith(color: PsColors.white),
                         )),
-                        if(widget.provider.user.data!.address != '')
-                        Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: PsDimens.space6,
-                                top: PsDimens.space4),
-                                child: Icon(
-                                  Icons.location_on,
-                                  color: PsColors.white,
-                                  size: 14,
-                                ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: PsDimens.space4),  
-                              child: Text(
-                                widget.provider.user.data!.address!,
-                                style: Theme.of(context).textTheme.bodySmall!
-                                    .copyWith(color: PsColors.white),
-                              ),
-                            ),
-                          ],
+                  if(widget.provider.user.data!.address != '')
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: PsDimens.space6,
+                              top: PsDimens.space4),
+                          child: Icon(
+                            Icons.location_on,
+                            color: PsColors.white,
+                            size: 14,
+                          ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: PsDimens.space4),
+                          child: Text(
+                            widget.provider.user.data!.address!,
+                            style: Theme.of(context).textTheme.bodySmall!
+                                .copyWith(color: PsColors.white),
+                          ),
+                        ),
+                      ],
+                    ),
                         Padding(
                           padding: const EdgeInsets.only(
                             top: PsDimens.space16,

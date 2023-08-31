@@ -222,24 +222,24 @@ class _CheckoutStatusViewState extends State<CheckoutStatusView> {
                                 title:
                                     '${Utils.getString(context, 'transaction_detail__sub_total')} :',
                               ),
-                              _TransactionNoTextWidget(
+                              /*_TransactionNoTextWidget(
                                 transationInfoText:
                                     '${widget.transactionHeader.currencySymbol} ${Utils.getPriceFormat(widget.transactionHeader.taxAmount!,valueHolder!)}',
                                 title:
                                     '${Utils.getString(context, 'transaction_detail__tax')}(${provider.psValueHolder.overAllTaxLabel} %) :',
-                              ),
+                              ),*/
                               _TransactionNoTextWidget(
                                 transationInfoText:
                                     '${widget.transactionHeader.currencySymbol} ${Utils.getPriceFormat(widget.transactionHeader.shippingAmount!,valueHolder!)}',
                                 title:
-                                    '${Utils.getString(context, 'transaction_detail__shipping_cost')} :',
+                                    '${Utils.getString(context, 'checkout__delivery_cost')} :',
                               ),
-                              _TransactionNoTextWidget(
+                              /*_TransactionNoTextWidget(
                                 transationInfoText:
                                     '${widget.transactionHeader.currencySymbol} ${Utils.calculateShippingTax(widget.transactionHeader.shippingAmount!, provider.psValueHolder.shippingTaxValue!,valueHolder!)}',
                                 title:
                                     '${Utils.getString(context, 'transaction_detail__shipping_tax')}(${provider.psValueHolder.shippingTaxLabel} %) :',
-                              ),
+                              ),*/
                               const SizedBox(
                                 height: PsDimens.space12,
                               ),

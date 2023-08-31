@@ -7,7 +7,7 @@ class PsToast {
                   {Color? backgroundColor, 
                   Color? textColor, 
                   ToastGravity gravity = ToastGravity.BOTTOM, 
-                  Toast length = Toast.LENGTH_SHORT }) {
+                  Toast length = Toast.LENGTH_LONG }) {
     
     backgroundColor ??= PsColors.mainColor;
     textColor ??= PsColors.white;

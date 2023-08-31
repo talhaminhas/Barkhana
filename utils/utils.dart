@@ -253,6 +253,30 @@ class Utils {
     LaunchReview.launch(writeReview: writeReview, iOSAppId: iOSAppId);
   }
 
+  static bool isUserLoggedIn(
+      BuildContext context, ) {
+    final PsValueHolder? psValueHolder =
+    Provider.of<PsValueHolder?>(context, listen: false);
+
+    if (psValueHolder == null ||
+        psValueHolder.userIdToVerify == null ||
+        psValueHolder.userIdToVerify == '') {
+      if (psValueHolder == null ||
+          // psValueHolder == null ||
+          psValueHolder.loginUserId == null ||
+          psValueHolder.loginUserId == '') {
+        return false;
+      }
+      else {
+        return true;
+      }
+    } else {
+      Navigator.pushNamed(context, RoutePaths.user_verify_email_container,
+          arguments: psValueHolder.userIdToVerify);
+      return false;
+    }
+  }
+
   static dynamic navigateOnUserVerificationView(
       BuildContext context, Function onLoginSuccess) async {
     PsValueHolder? psValueHolder =

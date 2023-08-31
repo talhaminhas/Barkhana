@@ -269,11 +269,10 @@ class ImageAndTextWidget extends StatelessWidget {
                         child: Text(data.email!,
                             style: Theme.of(context).textTheme.bodyMedium),
                         onTap: () async {
-                          if (await canLaunchUrl(Uri.parse(
-                              'mailto:teamps.is.cool@gmail.com'))) {
-                            await launchUrl(Uri.parse('mailto:teamps.is.cool@gmail.com'));
+                          if (await canLaunchUrl(Uri.parse('mailto:${data.email}'))) {
+                            await launchUrl(Uri.parse('mailto:${data.email}'));
                           } else {
-                            throw 'Could not launchUrl teamps.is.cool@gmail.com';
+                            throw 'Could not launchUrl ${data.email}';
                           }
                         },
                       ),

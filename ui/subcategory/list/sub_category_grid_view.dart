@@ -55,8 +55,8 @@ class _ModelGridViewState extends State<SubCategoryGridView>
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        final String categId = widget.category!.id!;
-        Utils.psPrint('CategoryId number is $categId');
+        final String categoryId = widget.category!.id!;
+        Utils.psPrint('CategoryId number is $categoryId');
 
         _subCategoryProvider!.nextSubCategoryList(widget.category!.id!,
        );
@@ -85,7 +85,7 @@ class _ModelGridViewState extends State<SubCategoryGridView>
     //     child:
     return Scaffold(
         appBar: PreferredSize(
-        preferredSize: Size.fromHeight(0),
+        preferredSize: const Size.fromHeight(0),
             child: AppBar(
           backgroundColor: PsColors.mainColor,
           systemOverlayStyle: SystemUiOverlayStyle(

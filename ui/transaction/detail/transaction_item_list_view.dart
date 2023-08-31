@@ -713,24 +713,24 @@ class _TransactionNoWidget extends StatelessWidget {
               title:
                   '${Utils.getString(context, 'transaction_detail__sub_total')} :',
             ),
-            _TransactionNoTextWidget(
+            /*_TransactionNoTextWidget(
               transationInfoText:
                   '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.taxAmount!,valueHolder)}',
               title:
                   '${Utils.getString(context, 'transaction_detail__tax')}(${transaction.taxPercent} %) :',
-            ),
+            ),*/
             _TransactionNoTextWidget(
               transationInfoText:
                   '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.shippingAmount!,valueHolder)}',
               title:
-                  '${Utils.getString(context, 'transaction_detail__shipping_cost')} :',
+                  '${Utils.getString(context, 'checkout__delivery_cost')} :',
             ),
-            _TransactionNoTextWidget(
+            /*_TransactionNoTextWidget(
               transationInfoText:
                   '${transaction.currencySymbol} ${Utils.calculateShippingTax(transaction.shippingAmount!, transaction.shippingTaxPercent!,valueHolder)}',
               title:
                   '${Utils.getString(context, 'transaction_detail__shipping_tax')}(${transaction.shippingTaxPercent} %) :',
-            ),
+            ),*/
             const SizedBox(
               height: PsDimens.space12,
             ),

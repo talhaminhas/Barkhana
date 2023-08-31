@@ -372,6 +372,7 @@ class __CardWidgetState extends State<_TextFieldAndSignInButtonWidget> {
                     Utils.getString(context, 'warning_dialog__input_password'));
               } else {
                 if (Utils.checkEmailFormat(emailController.text.trim())!) {
+                  print('login called');
                   await widget.provider.loginWithEmailId(
                       context,
                       emailController.text.trim(),

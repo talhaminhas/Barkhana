@@ -55,20 +55,19 @@ class HomeDashboardViewWidget extends StatefulWidget {
 class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
   PsValueHolder? valueHolder;
   CategoryRepository? repo1;
-  ProductRepository? repo2;
-  ProductCollectionRepository? repo3;
+  //ProductRepository? repo2;
+  //ProductCollectionRepository? repo3;
   ShopInfoRepository? shopInfoRepository;
   static int t = 1;
   static ShopInfoProvider? shopInfoProvider;
   CategoryProvider? _categoryProvider;
-  TrendingCategoryProvider? _trendingCategoryProvider;
+  //TrendingCategoryProvider? _trendingCategoryProvider;
   BasketRepository? basketRepository;
   BasketProvider? basketProvider;
   final int count = 8;
-  final CategoryParameterHolder trendingCategory = CategoryParameterHolder();
-  final CategoryParameterHolder categoryIconList = CategoryParameterHolder();
-  final TextEditingController userInputItemNameTextEditingController =
-      TextEditingController();
+  //final CategoryParameterHolder trendingCategory = CategoryParameterHolder();
+  //final CategoryParameterHolder categoryIconList = CategoryParameterHolder();
+  //final TextEditingController userInputItemNameTextEditingController = TextEditingController();
 
   final RateMyApp _rateMyApp = RateMyApp(
       preferencesPrefix: 'rateMyApp_',
@@ -80,7 +79,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
   void initState() {
     super.initState();
     if (_categoryProvider != null) {
-      _categoryProvider!.loadCategoryList(categoryIconList.toMap());
+      _categoryProvider!.loadCategoryList(/*categoryIconList.toMap()*/);
     }
 
     if (Platform.isAndroid) {
@@ -161,8 +160,8 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
   @override
   Widget build(BuildContext context) {
     repo1 = Provider.of<CategoryRepository>(context);
-    repo2 = Provider.of<ProductRepository>(context);
-    repo3 = Provider.of<ProductCollectionRepository>(context);
+    //repo2 = Provider.of<ProductRepository>(context);
+    //repo3 = Provider.of<ProductCollectionRepository>(context);
     shopInfoRepository = Provider.of<ShopInfoRepository>(context);
     basketRepository = Provider.of<BasketRepository>(context);
     valueHolder = Provider.of<PsValueHolder>(context);
@@ -186,10 +185,10 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
                     repo: repo1!,
                     psValueHolder: valueHolder,
                     limit: int.parse(valueHolder!.categoryLoadingLimit!));
-                _categoryProvider!.loadCategoryList(categoryIconList.toMap());
+                _categoryProvider!.loadCategoryList(/*categoryIconList.toMap()*/);
                 return _categoryProvider!;
               }),
-          ChangeNotifierProvider<TrendingCategoryProvider>(
+          /*ChangeNotifierProvider<TrendingCategoryProvider>(
               lazy: false,
               create: (BuildContext context) {
                 final TrendingCategoryProvider provider =
@@ -204,7 +203,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
                   final bool isConnectedToIntenet = value ?? bool;
                   if (!isConnectedToIntenet) {
                     Fluttertoast.showToast(
-                        msg: 'No Internet Connectiion. Please try again !',
+                        msg: 'No Internet Connection. Please try again !',
                         toastLength: Toast.LENGTH_LONG,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,
@@ -214,7 +213,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
                 });
                 return provider;
               }),
-          ChangeNotifierProvider<ProductCollectionProvider>(
+              ChangeNotifierProvider<ProductCollectionProvider>(
               lazy: false,
               create: (BuildContext context) {
                 final ProductCollectionProvider provider =
@@ -231,7 +230,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
                     repo: basketRepository!, psValueHolder: valueHolder);
                 basketProvider!.loadBasketList();
                 return basketProvider!;
-              }),
+              }),*/
         ],
         child: Container(
           // color: PsColors.white,
@@ -260,17 +259,16 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
             child: _HomeCategoryHorizontalListWidget(categoryProvider: _categoryProvider,
               shopInfoProvider: shopInfoProvider,
               psValueHolder: valueHolder!,
-              animationController: widget.animationController,
-              userInputItemNameTextEditingController:
-                  userInputItemNameTextEditingController,
-              animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+              //animationController: widget.animationController,
+              //userInputItemNameTextEditingController: userInputItemNameTextEditingController,
+              /*animation: Tween<double>(begin: 0.0, end: 1.0).animate(
                   CurvedAnimation(
                       parent: widget.animationController,
                       curve: Interval((1 / count) * 2, 1.0,
-                          curve: Curves.fastOutSlowIn))),
+                          curve: Curves.bounceIn))),*/
               onTapCategory: (Category category) {
                   widget.onTapCategory(category);
-              }, //animation
+              },
             //),
           ),
         ));
@@ -641,35 +639,35 @@ class _HomeCategoryHorizontalListWidget extends StatefulWidget {
   const _HomeCategoryHorizontalListWidget(
       {Key? key,
       required this.shopInfoProvider,
-      required this.animationController,
-      required this.animation,
+      //required this.animationController,
+      //required this.animation,
       required this.psValueHolder,
         required this.categoryProvider,
-      required this.userInputItemNameTextEditingController,
+      //required this.userInputItemNameTextEditingController,
       required this.onTapCategory})
       : super(key: key);
 
   final CategoryProvider? categoryProvider;
   final ShopInfoProvider? shopInfoProvider;
-  final AnimationController animationController;
-  final Animation<double> animation;
+  //final AnimationController animationController;
+  //final Animation<double> animation;
   final PsValueHolder psValueHolder;
-  final TextEditingController userInputItemNameTextEditingController;
+  //final TextEditingController userInputItemNameTextEditingController;
   final Function (Category category) onTapCategory;
   @override
   __HomeCategoryHorizontalListWidgetState createState() =>
       __HomeCategoryHorizontalListWidgetState();
 }
 
-bool showMainMenu = true;
-bool showSpecialCollections = true;
-bool showFeatureItems = true;
+bool showMainMenu = false;
+bool showSpecialCollections = false;
+bool showFeatureItems = false;
 
 class __HomeCategoryHorizontalListWidgetState
     extends State<_HomeCategoryHorizontalListWidget> {
   @override
   Widget build(BuildContext context) {
-    if (widget.psValueHolder.showMainMenu != null &&
+    /*if (widget.psValueHolder.showMainMenu != null &&
         widget.psValueHolder.showMainMenu == PsConst.ONE) {
       showMainMenu = true;
     } else {
@@ -686,7 +684,7 @@ class __HomeCategoryHorizontalListWidgetState
       showFeatureItems = true;
     } else {
       showFeatureItems = false;
-    }
+    }*/
     return Consumer<CategoryProvider>(
       builder: (BuildContext context, CategoryProvider categoryProvider,
           Widget? child) {
@@ -701,7 +699,7 @@ class __HomeCategoryHorizontalListWidgetState
             List<Category>.from(categoryProvider.categoryList.data!);
         int i = 0;
 
-        if (showMainMenu) {
+        /*if (showMainMenu) {
           _tmpList.insert(
               i,
               Category(
@@ -725,29 +723,29 @@ class __HomeCategoryHorizontalListWidgetState
                   id: PsConst.specialCollection,
                   name: Utils.getString(
                       context, 'dashboard__special_collection')));
-        }
+        }*/
 
-        return AnimatedBuilder(
-            animation: widget.animationController,
+        return Container(
+            //animation: widget.animationController,
             child: HomeTabbarProductListView(categoryProvider: categoryProvider,
                 shopInfo: widget.shopInfoProvider!.shopInfo.data!,
-                animationController: widget.animationController,
-                categoryList: _tmpList, //categoryProvider.categoryList.data,
-                userInputItemNameTextEditingController:
-                    widget.userInputItemNameTextEditingController,
+                //animationController: widget.animationController,
+                categoryList: _tmpList,
+              //categoryProvider.categoryList.data,
+                //userInputItemNameTextEditingController: widget.userInputItemNameTextEditingController,
                 valueHolder: widget.psValueHolder,
                 key: Key('${_tmpList.length}'),
               onTapCategory: (Category category) {
                 widget.onTapCategory(category);
               },),
-            builder: (BuildContext context, Widget? child) {
+            /*builder: (BuildContext context, Widget? child) {
               return FadeTransition(
                   opacity: widget.animation,
                   child: Transform(
                       transform: Matrix4.translationValues(
                           0.0, 30 * (1.0 - widget.animation.value), 0.0),
                       child: child));
-            });
+            }*/);
       },
     );
   }

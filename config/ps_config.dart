@@ -17,7 +17,7 @@ class PsConfig {
   /// API Key
   /// If you change here, you need to update in server.
   ///
-  static const String ps_api_key = 'teampsisthebest';
+  static const String ps_api_key = 'ozzpsclpegdraahmeznhvxoyqpakmkypuskyetlanvwznwlbauctmxofyibozjsthpuwapcbnaolexvkhlzjjooxwarvourhxjpsjvnegresxwntjiywxaxbxucqihhaztplaiuohnxonzuheqhoswszduqfmbeftjyuxeubonwerzfolmakbmzhbutnhmnumnyifbmedlikqmivnykbiwzhvsmpolmghedvypiuslkcinxvq';
 
   /// Demo Url
   static bool isDemo = true;
@@ -60,7 +60,7 @@ class PsConfig {
   ///
   /// Animation Duration
   ///
-  static const Duration animation_duration = Duration(milliseconds: 500);
+  static const Duration animation_duration = Duration(milliseconds: 0);
 
   static const List<String> admobKeywords = <String>[
     'restaurant',

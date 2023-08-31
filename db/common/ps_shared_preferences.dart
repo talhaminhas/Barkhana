@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PsSharedPreferences {
   PsSharedPreferences._() {
-    Utils.psPrint('init PsSharePerference $hashCode');
+    Utils.psPrint('init PsSharePreference $hashCode');
     futureShared = SharedPreferences.getInstance();
     futureShared.then((SharedPreferences shared) {
       this.shared = shared;
@@ -277,6 +277,14 @@ class PsSharedPreferences {
 
   String? getNotiMessage() {
     return shared.getString(PsConst.VALUE_HOLDER__NOTI_MESSAGE);
+  }
+
+  Future<dynamic> replaceApiToken(String token) async {
+    await shared.setString(PsConst.VALUE_HOLDER__API_TOKEN, token);
+  }
+
+  String? getApiToken() {
+    return shared.getString(PsConst.VALUE_HOLDER__API_TOKEN);
   }
 
   Future<dynamic> replaceNotiSetting(bool notiSetting) async {

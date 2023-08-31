@@ -9,8 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
+import 'package:flutterrestaurant/api/ps_api_service.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
+import 'package:flutterrestaurant/main.dart';
 import 'package:flutterrestaurant/provider/common/ps_provider.dart';
 import 'package:flutterrestaurant/repository/user_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
@@ -1090,6 +1092,9 @@ late  StreamController<PsResource<User>> userListStream;
       result = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       user = result.user;
+      if(user != null) {
+        PSApp.apiTokenRefresher.getApiToken(email, password);
+      }
     } on Exception catch (e1) {
       print(e1);
 

@@ -9,8 +9,17 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:intl/intl.dart';
 
+import '../viewobject/api_token.dart';
+
 class PsConst {
   PsConst._();
+
+
+  static const int API_TOKEN_UPDATE_DURATION = 50;// in minutes
+  static const int API_TOKEN_RETRY_DURATION = 30;// in seconds
+
+  static const String API_GUEST_EMAIL = 'guestbarkhana@itretail.co.uk';
+  static const String API_GUEST_PASSWORD = 'Barkhana1234*';
 
   static const String THEME__IS_DARK_THEME = 'THEME__IS_DARK_THEME';
 
@@ -60,10 +69,12 @@ class PsConst {
 
   static const String FILTERING_PRICE = 'unit_price';
 
+  static const String VALUE_HOLDER__API_TOKEN = 'API_TOKEN';
+
   static const String VALUE_HOLDER__USER_ID = 'USERID';
   static const String VALUE_HOLDER__SHOW_INTRO_SLIDER = 'SHOW_INTRO_SLIDER';
   static const String VALUE_HOLDER__USER_ALREADY_CHOOSE = 'USER_ALREADY_CHOOSE';
-  
+
   static const String VALUE_HOLDER__USER_NAME = 'USER_NAME';
   static const String VALUE_HOLDER__NOTI_TOKEN = 'NOTI_TOKEN';
   static const String VALUE_HOLDER__NOTI_MESSAGE = 'NOTI_MESSAGE';

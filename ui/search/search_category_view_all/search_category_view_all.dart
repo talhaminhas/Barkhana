@@ -116,12 +116,11 @@ class _SearchCategoryViewAllState extends State<SearchCategoryViewAll>
                                         if (searchCategoryProvider
                                                     .categoryList.data !=
                                                 null) {
-                                          final int count =
+                                          /*final int count =
                                               searchCategoryProvider
-                                                  .categoryList.data!.length;
+                                                  .categoryList.data!.length;*/
                                           return CategoryVerticalListItem(
-                                            animationController:
-                                                animationController,
+                                            /*animationController: animationController,
                                             animation: Tween<double>(
                                                     begin: 0.0, end: 1.0)
                                                 .animate(
@@ -132,7 +131,7 @@ class _SearchCategoryViewAllState extends State<SearchCategoryViewAll>
                                                     curve:
                                                         Curves.fastOutSlowIn),
                                               ),
-                                            ),
+                                            ),*/
                                             category: searchCategoryProvider
                                                 .categoryList.data![index],
                                             onTap: () {

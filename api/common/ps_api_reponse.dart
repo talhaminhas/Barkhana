@@ -22,4 +22,8 @@ class PsApiResponse {
   bool isSuccessful() {
     return code >= 200 && code < 300;
   }
+
+  bool isUnauthorized() {
+    return code == 401;
+  }
 }

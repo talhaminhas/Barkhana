@@ -89,7 +89,7 @@ class _CategoryFilterListViewState extends State<CategoryFilterListView>
                 psValueHolder: Provider.of<PsValueHolder>(context));
           },
           onProviderReady: (CategoryProvider provider) {
-            provider.loadCategoryList(categoryIconList.toMap());
+            provider.loadCategoryList(/*categoryIconList.toMap()*/);
             _categoryProvider = provider;
           },
           builder:

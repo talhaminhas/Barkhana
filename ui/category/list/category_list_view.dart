@@ -126,7 +126,7 @@ class _CategoryListViewState extends State<CategoryListView>
             create: (BuildContext context) {
               final CategoryProvider provider =
                   CategoryProvider(repo: repo1!, psValueHolder: psValueHolder);
-              provider.loadCategoryList(categoryIconList.toMap());
+              provider.loadCategoryList(/*categoryIconList.toMap()*/);
               _categoryProvider = provider;
               return _categoryProvider!;
 

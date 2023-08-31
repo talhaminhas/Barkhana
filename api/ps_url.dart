@@ -140,6 +140,12 @@ class PsUrl {
   static const String ps_ratingPost_url =
       'rest/rates/add_rating/api_key/${PsConfig.ps_api_key}';
 
+  static const String ps_api_request_token_post_url =
+      'rest/TokenFunc/token/api_key/${PsConfig.ps_api_key}';
+
+  static const String ps_api_update_token_post_url =
+      'rest/TokenFunc/refresh_token/api_key/${PsConfig.ps_api_key}';
+
   static const String ps_delivery_boy_ratingPost_url = 
       'rest/deliboy_rates/add_rating_deliboy/api_key/${PsConfig.ps_api_key}';
 
