@@ -25,7 +25,7 @@ import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dar
 import 'package:flutterrestaurant/viewobject/product.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 //import 'package:flutterwave_standard/utils.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 

@@ -58,13 +58,13 @@ class ApiTokenRefresher  extends WidgetsBindingObserver{
       }
       PsSharedPreferences.instance.replaceApiToken(responseToken.token!);
       isExpired = false;
-      _resetTimer(PsConst.API_TOKEN_UPDATE_DURATION);
+      _resetTimer(const Duration(minutes: PsConst.API_TOKEN_UPDATE_DURATION));
       print('token updated');
       //print('api token new: ${PsSharedPreferences.instance.getApiToken()}');
     }
     else{
       print('failed to update retrying');
-      _resetTimer(10);
+      _resetTimer(const Duration(seconds: PsConst.API_TOKEN_RETRY_DURATION));
     }
 
   }
@@ -114,9 +114,9 @@ class ApiTokenRefresher  extends WidgetsBindingObserver{
 
   }
 
-  void _resetTimer(int duration) {
+  void _resetTimer(Duration duration) {
     timer?.cancel();
-    timer = Timer(Duration(seconds: duration), (){
+    timer = Timer(duration, (){
       print('timer expired');
       isExpired = true;
       updateToken();

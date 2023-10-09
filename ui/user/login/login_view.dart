@@ -97,25 +97,26 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               children: <Widget>[
                 _HeaderIconAndTextWidget(),
+                Container(
+                  height: PsDimens.space40,
+                ),
                 _TextFieldAndSignInButtonWidget(
                   provider: provider,
                   text: Utils.getString(context, 'login__submit'),
                   onProfileSelected: widget.onProfileSelected,
                 ),
                 _spacingWidget,
-                _DividerORWidget(),
-                const SizedBox(
-                  height: PsDimens.space12,
-                ),
-                _TermsAndConCheckbox(
+                //_DividerORWidget(),
+
+                /*_TermsAndConCheckbox(
                   provider: provider,
                   onCheckBoxClick: () {
                     setState(() {
                       updateCheckBox(context, provider);
                     });
                   },
-                ),
-                const SizedBox(
+                ),*/
+                /*const SizedBox(
                   height: PsDimens.space8,
                 ),
                 if (showPhoneLogin)
@@ -135,7 +136,7 @@ class _LoginViewState extends State<LoginView> {
                   _LoginWithAppleIdWidget(
                       onAppleIdSignInSelected: widget.onGoogleSignInSelected),
                 _spacingWidget,
-                _spacingWidget,
+                _spacingWidget,*/
                 _ForgotPasswordAndRegisterWidget(
                   provider: provider,
                   animationController: widget.animationController!,
@@ -235,16 +236,16 @@ class _HeaderIconAndTextWidget extends StatelessWidget {
     return Column(
       children: <Widget>[
         const SizedBox(
-          height: PsDimens.space32,
+          height: PsDimens.space10,
         ),
         _imageWidget,
         const SizedBox(
-          height: PsDimens.space8,
+          height: PsDimens.space4,
         ),
         _textWidget,
-        const SizedBox(
-          height: PsDimens.space52,
-        ),
+        /*const SizedBox(
+          height: PsDimens.space10,
+        ),*/
       ],
     );
   }
@@ -268,7 +269,7 @@ class _TextFieldAndSignInButtonWidget extends StatefulWidget {
 class __CardWidgetState extends State<_TextFieldAndSignInButtonWidget> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  bool _isPasswordHidden = true;
   // final FirebaseAuth auth = FirebaseAuth.instance;
   // Future<FirebaseUser> handleSignInEmail(String email, String password) async {
   //   AuthResult result =
@@ -334,27 +335,42 @@ class __CardWidgetState extends State<_TextFieldAndSignInButtonWidget> {
               ),
               Container(
                 margin: _marginEdgeInsetsforCard,
-                child: TextField(
+                child: TextFormField(
                   controller: passwordController,
-                  obscureText: true,
+                  obscureText: _isPasswordHidden,
                   style: Theme.of(context).textTheme.labelLarge!.copyWith(),
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: Utils.getString(context, 'login__password'),
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: PsColors.textPrimaryLightColor),
-                      icon: Icon(Icons.lock,
-                          color: Theme.of(context).iconTheme.color)),
+                    border: InputBorder.none,
+                    hintText: Utils.getString(context, 'login__password'),
+                    hintStyle: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(color: PsColors.textPrimaryLightColor),
+                    icon: Icon(
+                      Icons.lock,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isPasswordHidden = !_isPasswordHidden;
+                        });
+                      },
+                      child: Icon(
+                        _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    ),
+                  ),
                   // keyboardType: TextInputType.number,
                 ),
+
               ),
             ],
           ),
         ),
         const SizedBox(
-          height: PsDimens.space8,
+          height: PsDimens.space20,
         ),
         Container(
           margin: const EdgeInsets.only(

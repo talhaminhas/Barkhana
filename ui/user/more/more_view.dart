@@ -13,7 +13,7 @@ import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/api_status.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/delete_user_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class MoreView extends StatefulWidget {

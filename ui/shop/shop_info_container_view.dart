@@ -13,7 +13,7 @@ import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/shop/shop_info_view.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class ShopInfoContainerView extends StatefulWidget {

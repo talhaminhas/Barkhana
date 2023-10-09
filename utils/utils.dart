@@ -386,7 +386,7 @@ class Utils {
   static Future<void> checkAppleSignInAvailable() async {
     final bool _isAvailable = await TheAppleSignIn.isAvailable();
 
-    isAppleSignInAvailable = _isAvailable ? 1 : 2;
+    //isAppleSignInAvailable = _isAvailable ? 1 : 2;
   }
 
   static Future<void> _onSelectNotification(

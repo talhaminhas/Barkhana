@@ -10,7 +10,7 @@ import 'package:flutterrestaurant/ui/create_reservation/item/reservation_list_it
 import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/viewobject/holder/create_reservation_status_holder.dart';
 import 'package:flutterrestaurant/viewobject/reservation.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import '../../../constant/ps_dimens.dart';

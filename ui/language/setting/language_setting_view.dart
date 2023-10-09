@@ -9,7 +9,7 @@ import 'package:flutterrestaurant/ui/common/ps_dropdown_base_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/language.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSettingView extends StatefulWidget {

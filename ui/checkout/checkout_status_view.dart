@@ -11,6 +11,9 @@ import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:provider/provider.dart';
 
+import '../../constant/ps_constants.dart';
+import '../dashboard/core/drawer_view.dart';
+
 class CheckoutStatusView extends StatefulWidget {
   const CheckoutStatusView({
     Key? key,
@@ -68,6 +71,9 @@ class _CheckoutStatusViewState extends State<CheckoutStatusView> {
         onTap: () {
           // Navigator.pop(context);
           Navigator.of(context).popUntil(ModalRoute.withName(RoutePaths.home));
+          dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+              Utils.getString(context, 'home__drawer_menu_menu'),
+              PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT);
         },
         child: Container(
           height: 60,
@@ -183,7 +189,7 @@ class _CheckoutStatusViewState extends State<CheckoutStatusView> {
                                         ],
                                       ),
                                     ),
-                                    _contentCopyIconWidget,
+                                    //_contentCopyIconWidget,
                                   ],
                                 ),
                               ),
@@ -258,7 +264,7 @@ class _CheckoutStatusViewState extends State<CheckoutStatusView> {
                       const SizedBox(
                         height: PsDimens.space16,
                       ),
-                      Padding(
+                      /*Padding(
                         padding: const EdgeInsets.all(PsDimens.space16),
                         child: PSButtonWidget(
                           hasShadow: true,
@@ -271,7 +277,7 @@ class _CheckoutStatusViewState extends State<CheckoutStatusView> {
                                 arguments: widget.transactionHeader);
                           },
                         ),
-                      ),
+                      ),*/
                       const SizedBox(
                         height: PsDimens.space100,
                       ),

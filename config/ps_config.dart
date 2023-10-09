@@ -26,14 +26,13 @@ class PsConfig {
   /// Change your backend url
   ///
   static const String ps_core_url = //'https://5ccc-81-150-185-121.ngrok-free.app/Barkhana';
-  'http://62.31.67.208:88/Barkhana';
-
+  'http://62.30.84.56:88/Barkhana';
+  //'http://192.168.1.153:8080/Barkhana';
   static const String ps_app_url = ps_core_url + '/index.php/';
 
   static const String ps_app_image_url = ps_core_url + '/uploads/';
 
   static const String ps_app_image_thumbs_url = ps_core_url + '/uploads/thumbnail/';
-
 
    static const String GOOGLE_PLAY_STORE_URL = 'https://play.google.com/store/apps';
 
@@ -95,7 +94,7 @@ class PsConfig {
   /// "Arabic"             | "ar"              | "DZ"
   /// "India (Hindi)"      | "hi"              | "IN"
   /// "German"             | "de"              | "DE"
-  /// "Spainish"           | "es"              | "ES"
+  /// "Spanish"           | "es"              | "ES"
   /// "French"             | "fr"              | "FR"
   /// "Indonesian"         | "id"              | "ID"
   /// "Italian"            | "it"              | "IT"
@@ -172,7 +171,7 @@ class PsConfig {
   /// - If you set "false", it will load full image directly and for the
   ///   placeholder image it will use default placeholder Image.
   ///
-  // static const bool USE_THUMBNAIL_AS_PLACEHOLDER = false;
+  // static const bool USE_THUMBNAIL_AS_PLACEHOLDER = true;
 
   ///
   /// Token Id

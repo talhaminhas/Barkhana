@@ -1,6 +1,8 @@
 import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
 import 'package:quiver/core.dart';
 
+import 'common/ps_object.dart';
+
 class ApiStatus extends PsObject<ApiStatus> {
   ApiStatus({
     this.status,

@@ -8,7 +8,7 @@ import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/transaction/item/transaction_list_item.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/number_symbols_data.dart';
 import 'package:provider/provider.dart';
 

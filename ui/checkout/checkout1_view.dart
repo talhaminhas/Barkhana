@@ -260,15 +260,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                     hintText: Utils.getString(context, 'edit_profile__phone'),
                     textEditingController: userPhoneController,
                     isMandatory: true),
-                RadioWidget(
-                  userProvider: userProvider,
-                  updateOrderByData: updateOrderByData,
-                  orderTimeTextEditingController:
-                      orderTimeTextEditingController,
-                  updatDateAndTime: updateDateAndTime,
-                  // scheduleOrder: scheduleOrder!,
-                  latestDate: latestDate!, isWeeklySchedule: isWeeklyScheduleOrder,
-                ),
+
                 /*_EditAndDeleteButtonWidget(
                     userProvider: userProvider,
                     shopInfoProvider: shopInfoProvider!,
@@ -342,6 +334,15 @@ class _Checkout1ViewState extends State<Checkout1View> {
                           hintText: Utils.getString(context, 'edit_profile__country'),
                           textEditingController: userCountryController,
                           isMandatory: true),
+                      RadioWidget(
+                        userProvider: userProvider,
+                        updateOrderByData: updateOrderByData,
+                        orderTimeTextEditingController:
+                        orderTimeTextEditingController,
+                        updatDateAndTime: updateDateAndTime,
+                        // scheduleOrder: scheduleOrder!,
+                        latestDate: latestDate!, isWeeklySchedule: isWeeklyScheduleOrder,
+                      ),
         /*CurrentLocationWidget(
                           provider: provider!,
                           shopInfoProvider: shopInfoProvider!,
@@ -572,6 +573,8 @@ class RadioWidget extends StatefulWidget {
 }
 
 class _RadioWidgetState extends State<RadioWidget> {
+
+  bool _showCalender = false;
   @override
   Widget build(BuildContext context) {
     final PsValueHolder psValueHolder =
@@ -609,6 +612,9 @@ class _RadioWidgetState extends State<RadioWidget> {
                 groupValue: PsConst.ORDER_TIME_ASAP,
                 onChanged: (_) {
                   widget.updateOrderByData(PsConst.ORDER_TIME_ASAP);
+                  setState(() {
+                    _showCalender = false;
+                  });
                   final DateTime dateTime = DateTime.now().add(Duration(
                       minutes: int.parse(psValueHolder.defaultOrderTime!)));
                   widget.updatDateAndTime(dateTime);
@@ -636,7 +642,9 @@ class _RadioWidgetState extends State<RadioWidget> {
                 groupValue: PsConst.ORDER_TIME_SCHEDULE,
                 onChanged: (_) async {
                   widget.updateOrderByData(PsConst.ORDER_TIME_SCHEDULE);
-
+                  setState(() {
+                    _showCalender = true;
+                  });
                   DatePicker.showDateTimePicker(context,
                       showTitleActions: true, onChanged: (DateTime date) {},
                       onConfirm: (DateTime date) {
@@ -736,6 +744,7 @@ class _RadioWidgetState extends State<RadioWidget> {
           )
         else
         */
+        if(_showCalender)
           Container(
               width: double.infinity,
               height: PsDimens.space44,
@@ -811,7 +820,9 @@ class _RadioWidgetState extends State<RadioWidget> {
                         .textTheme
                         .bodyMedium
                         !.copyWith(color: PsColors.textPrimaryLightColor),
-                  ))),
+                  )
+              )
+          ),
       ],
     );
   }

@@ -14,7 +14,7 @@ import 'package:flutterrestaurant/viewobject/holder/category_parameter_holder.da
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_list_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/touch_count_parameter_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:flutterrestaurant/ui/dashboard/home/home_dashboard_view.dart';
 import '../../../config/ps_colors.dart';

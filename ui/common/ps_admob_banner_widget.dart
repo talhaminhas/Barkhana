@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class PsAdMobBannerWidget extends StatefulWidget {
-  const PsAdMobBannerWidget({required this.admobSize});
+  //const PsAdMobBannerWidget({required this.admobSize});
 
-  final AdSize admobSize;
+  //final AdSize admobSize;
 
   @override
   _PsAdMobBannerWidgetState createState() => _PsAdMobBannerWidgetState();
@@ -19,12 +19,12 @@ class _PsAdMobBannerWidgetState extends State<PsAdMobBannerWidget> {
   bool isConnectedToInternet = false;
   int currentRetry = 0;
   int retryLimit = 1;
-  late BannerAd _bannerAd;
+  //late BannerAd _bannerAd;
   double height = 0;
 
   @override
   void initState() {
-    _bannerAd = BannerAd(
+    /*_bannerAd = BannerAd(
       adUnitId: Utils.getBannerAdUnitId(),
       request: const AdRequest(),
       size: widget.admobSize,
@@ -51,7 +51,7 @@ class _PsAdMobBannerWidgetState extends State<PsAdMobBannerWidget> {
         },
       ),
     );
-    _bannerAd.load();
+    _bannerAd.load();*/
     super.initState();
   }
 
@@ -84,10 +84,10 @@ class _PsAdMobBannerWidgetState extends State<PsAdMobBannerWidget> {
     }
 
     return Container(
-      alignment: Alignment.center,
+      /*alignment: Alignment.center,
       child: showAds ? AdWidget(ad: _bannerAd) : const SizedBox(),
       width: _bannerAd.size.width.toDouble(),
-      height: _bannerAd.size.height.toDouble(),
+      height: _bannerAd.size.height.toDouble(),*/
     );
   }
 }

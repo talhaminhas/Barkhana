@@ -37,7 +37,8 @@ class Basket extends PsObject<Basket> {
   List<BasketSelectedAddOn>?  basketSelectedAddOnList;
 
   @override
-  bool operator ==(dynamic other) => other is Basket && id == other.id;
+  bool operator ==(dynamic other) => other is Basket &&
+      id == other.id;
 
   @override
   int get hashCode {
@@ -74,6 +75,7 @@ class Basket extends PsObject<Basket> {
       return null;
     }
   }
+
 
   @override
   Map<String, dynamic>?  toMap(dynamic  object) {

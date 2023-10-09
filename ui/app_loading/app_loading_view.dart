@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+//import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';

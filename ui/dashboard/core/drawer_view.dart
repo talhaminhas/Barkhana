@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+//import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
@@ -349,7 +349,7 @@ class _HomeViewState extends State<DashboardView>
      //print(dashboardViewKey.currentState);
      if(controllersStack.last[title] != index)
        controllersStack.add({title: index});
-     print(controllersStack);
+     print('Navigator Stack: $controllersStack');
      //print(controllers);
      setState(() {
        appBarTitle = title;
@@ -421,7 +421,7 @@ class _HomeViewState extends State<DashboardView>
       await provider.replaceLoginUserId('');
       await provider.replaceLoginUserName('');
       await deleteTaskProvider.deleteTask();
-      await FacebookAuth.instance.logOut();
+      //await FacebookAuth.instance.logOut();
       await GoogleSignIn().signOut();
       await fb_auth.FirebaseAuth.instance.signOut();
     }
@@ -748,7 +748,7 @@ class _HomeViewState extends State<DashboardView>
                                         });
                                         await provider.replaceLoginUserId('');
                                         await deleteTaskProvider!.deleteTask();
-                                        await FacebookAuth.instance.logOut();
+                                        //await FacebookAuth.instance.logOut();
                                         await GoogleSignIn().signOut();
                                         await fb_auth.FirebaseAuth.instance
                                             .signOut();
@@ -2359,7 +2359,7 @@ class __DrawerHeaderWidgetWithUserProfileState extends State<_DrawerHeaderWidget
                                         );
                                         await widget.provider.replaceLoginUserId('');
                                         await widget.deleteTaskProvider.deleteTask();
-                                        await FacebookAuth.instance.logOut();
+                                        //await FacebookAuth.instance.logOut();
                                         await GoogleSignIn().signOut();
                                         await fb_auth.FirebaseAuth.instance
                                             .signOut();

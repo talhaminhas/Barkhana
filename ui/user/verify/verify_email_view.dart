@@ -148,19 +148,21 @@ class __TextFieldAndButtonWidgetState extends State<_TextFieldAndButtonWidget> {
         const SizedBox(
           height: PsDimens.space40,
         ),
-        TextField(
-          textAlign: TextAlign.center,
-          controller: codeController,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: Utils.getString(
-                context, 'email_verify__enter_verification_code'),
-            hintStyle: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: PsColors.textPrimaryLightColor),
-          ),
-          style: Theme.of(context).textTheme.headlineMedium,
+        Container(
+            margin: const EdgeInsets.only(
+                left: PsDimens.space32, right: PsDimens.space32),
+            child:TextField(
+              controller: codeController,
+              decoration: InputDecoration(
+                hintText: Utils.getString(
+                    context, 'email_verify__enter_verification_code'),
+                hintStyle: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: PsColors.textPrimaryLightColor),
+              ),
+              style: Theme.of(context).textTheme.headlineMedium,
+            )
         ),
         const SizedBox(
           height: PsDimens.space16,

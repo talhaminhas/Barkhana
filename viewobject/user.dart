@@ -23,6 +23,9 @@ class User extends PsObject<User> {
       this.address,
       this.userLat,
       this.userLng,
+        this.userPostcode,
+        this.userCity,
+        this.userCountry,
       this.deviceToken,
       this.code,
       this.verifyTypes,
@@ -47,6 +50,9 @@ class User extends PsObject<User> {
   String? address;
   String? userLat;
   String? userLng;
+  String? userPostcode;
+  String? userCity;
+  String? userCountry;
   String? deviceToken;
   String? code;
   String? verifyTypes;
@@ -89,6 +95,9 @@ class User extends PsObject<User> {
         address: dynamicData['user_address'],
         userLat: dynamicData['user_lat'],
         userLng: dynamicData['user_lng'],
+        userPostcode: dynamicData['user_postcode'],
+        userCountry: dynamicData['user_country'],
+        userCity: dynamicData['user_city'],
         deviceToken: dynamicData['device_token'],
         code: dynamicData['code'],
         verifyTypes: dynamicData['verify_types'],
@@ -123,6 +132,9 @@ class User extends PsObject<User> {
       data['user_address'] = object.address;
       data['user_lat'] = object.userLat;
       data['user_lng'] = object.userLng;
+      data['user_postcode'] = object.userPostcode;
+      data['user_city'] = object.userCity;
+      data['user_country'] = object.userCountry;
       data['device_token'] = object.deviceToken;
       data['code'] = object.code;
       data['verify_types'] = object.verifyTypes;

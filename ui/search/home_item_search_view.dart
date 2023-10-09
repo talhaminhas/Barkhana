@@ -19,7 +19,7 @@ import 'package:flutterrestaurant/viewobject/category.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_list_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';
 import 'package:flutterrestaurant/viewobject/sub_category.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import '../../viewobject/common/ps_value_holder.dart';

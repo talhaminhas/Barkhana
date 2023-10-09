@@ -1,4 +1,6 @@
-import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
+
+
+import 'common/ps_object.dart';
 
 class Address extends PsObject<Address> {
   Address({
@@ -11,6 +13,8 @@ class Address extends PsObject<Address> {
     this.county,
     this.district,
     this.country,
+    this.latitude,
+    this.longitude
   });
   //String? id;
   String? line_1;
@@ -21,6 +25,8 @@ class Address extends PsObject<Address> {
   String? county;
   String? district;
   String? country;
+  String? latitude;
+  String? longitude;
 
   @override
   String? getPrimaryKey() {
@@ -40,6 +46,8 @@ class Address extends PsObject<Address> {
         county: dynamicData['county'],
         district: dynamicData['district'],
         country: dynamicData['country'],
+        longitude: dynamicData['longitude'],
+        latitude: dynamicData['latitude']
       );
     } else {
       return null;
@@ -59,6 +67,8 @@ class Address extends PsObject<Address> {
       data['county'] = object.county;
       data['district'] = object.district;
       data['country'] = object.country;
+      data['latitude'] = object.latitude;
+      data['longitude'] = object.longitude;
       return data;
     } else {
       return null;

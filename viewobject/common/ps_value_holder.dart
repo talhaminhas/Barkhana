@@ -24,6 +24,9 @@ class PsValueHolder {
       required this.endDate,
       required this.lat,
       required this.lng,
+        required this.postcode,
+        required this.city,
+        required this.country,
       required this.googlePlayStoreUrl,
       required this.appleAppStoreUrl,
       required this.defaultLanguageCode,
@@ -94,6 +97,9 @@ class PsValueHolder {
   String? endDate;
   String? lat;
   String? lng;
+  String? postcode;
+  String? city;
+  String? country;
   String? googlePlayStoreUrl;
   String? appleAppStoreUrl;
   String? defaultLanguageCode;

@@ -78,18 +78,21 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           _HeaderIconAndTextWidget(),
+                          Container(
+                            height: PsDimens.space20,
+                          ),
                           _CardWidget(
                             userEmailController: userEmailController,
                           ),
                           const SizedBox(
-                            height: PsDimens.space8,
+                            height: PsDimens.space20,
                           ),
                           _SendButtonWidget(
                             provider: provider,
                             userEmailController: userEmailController,
                           ),
                           const SizedBox(
-                            height: PsDimens.space16,
+                            height: PsDimens.space32,
                           ),
                           _TextWidget(
                               goToLoginSelected: widget.goToLoginSelected),
@@ -164,15 +167,15 @@ class _HeaderIconAndTextWidget extends StatelessWidget {
     return Column(
       children: <Widget>[
         const SizedBox(
-          height: PsDimens.space32,
+          height: PsDimens.space10,
         ),
         _imageWidget,
         const SizedBox(
-          height: PsDimens.space8,
+          height: PsDimens.space4,
         ),
         _textWidget,
         const SizedBox(
-          height: PsDimens.space52,
+          height: PsDimens.space10,
         ),
       ],
     );

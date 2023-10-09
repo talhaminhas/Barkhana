@@ -17,7 +17,7 @@ import 'package:flutterrestaurant/viewobject/comment_header.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/comment_header_holder.dart';
 import 'package:flutterrestaurant/viewobject/product.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import '../item/comment_list_item.dart';

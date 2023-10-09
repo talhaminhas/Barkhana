@@ -7,7 +7,7 @@ import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/product/collection_product/product_list_by_collection_id_view.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class CollectionHeaderListView extends StatefulWidget {

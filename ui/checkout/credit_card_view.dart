@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+//import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
@@ -153,11 +153,11 @@ class CreditCardViewState extends State<CreditCardView> {
   String cardHolderName = '';
   String cvvCode = '';
   bool isCvvFocused = false;
- CardFieldInputDetails? cardData;
+ //CardFieldInputDetails? cardData;
 
   @override
   void initState() {
-   Stripe.publishableKey = widget.publishKey;
+   //Stripe.publishableKey = widget.publishKey;
     super.initState();
   }
 
@@ -210,7 +210,7 @@ class CreditCardViewState extends State<CreditCardView> {
       appBarTitle: 'Credit Card',
       child: Column(
         children: <Widget>[
-          Container(
+         /* Container(
             padding: const EdgeInsets.all(PsDimens.space16),
             child: CardField(
               autofocus: true,
@@ -220,8 +220,8 @@ class CreditCardViewState extends State<CreditCardView> {
                 });
               },
             ),
-          ),
-          Container(
+          ),*/
+         /* Container(
             margin: const EdgeInsets.only(
                 left: PsDimens.space12, right: PsDimens.space12),
             child: PSButtonWidget(
@@ -245,7 +245,7 @@ class CreditCardViewState extends State<CreditCardView> {
                 }
               },
             ),
-          ),
+          ),*/
         ],
       ),
     );

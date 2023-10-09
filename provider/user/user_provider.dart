@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+//import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/api/ps_api_service.dart';
@@ -931,7 +931,7 @@ late  StreamController<PsResource<User>> userListStream;
 
   Future<FacebookLoginUserHolder?> _getFirebaseUserWithFacebookId(
       BuildContext context) async {
-    final LoginResult result = await FacebookAuth.instance.login();
+    /*final LoginResult result = await FacebookAuth.instance.login();
     final String token = result.accessToken!.token;
     // Get User Info Based on the Access Token
     final dynamic graphResponse = await http.get(Uri.parse(
@@ -959,9 +959,9 @@ late  StreamController<PsResource<User>> userListStream;
 
         return null;
       }
-    } else {
+    } else {*/
       return null;
-    }
+    //}
   }
 
   Future<PsResource<User>?> _submitLoginWithFacebookId(

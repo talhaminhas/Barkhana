@@ -1,12 +1,6 @@
 
-import 'package:flutterrestaurant/viewobject/rating_detail.dart';
-import 'package:flutterrestaurant/viewobject/shop_branch.dart';
-import 'package:flutterrestaurant/viewobject/shop_schedules.dart';
-
 import 'address.dart';
 import 'common/ps_object.dart';
-import 'default_icon.dart';
-import 'default_photo.dart';
 
 class PostalAddress extends PsObject<PostalAddress> {
   PostalAddress(

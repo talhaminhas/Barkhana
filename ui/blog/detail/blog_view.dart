@@ -9,7 +9,7 @@ import 'package:flutterrestaurant/ui/common/ps_back_button_with_circle_bg_widget
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/blog.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class BlogView extends StatefulWidget {
   const BlogView({Key? key, required this.blog, required this.heroTagImage})

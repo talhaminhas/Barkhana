@@ -28,6 +28,9 @@ import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:flutterrestaurant/viewobject/transaction_status.dart';
 import 'package:provider/provider.dart';
 
+import '../../../viewobject/holder/intent_holder/product_detail_intent_holder.dart';
+import '../../dashboard/core/drawer_view.dart';
+
 class TransactionItemListView extends StatefulWidget {
    TransactionItemListView({
     Key? key,
@@ -123,7 +126,7 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                 }
             return Scaffold(
               key: scaffoldKey,
-              appBar: AppBar(
+              /*appBar: AppBar(
                 systemOverlayStyle: SystemUiOverlayStyle(
                   statusBarIconBrightness:
                       Utils.getBrightnessForAppBar(context),
@@ -138,7 +141,7 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                       fontWeight: FontWeight.bold, color: PsColors.mainColor),
                 ),
                 elevation: 0,
-              ),
+              ),*/
               body: Stack(children: <Widget>[
                 RefreshIndicator(
 
@@ -173,18 +176,50 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                                       .transactionDetailList.data!.isNotEmpty) {
                                 final int count =
                                     provider.transactionDetailList.data!.length;
-                                return TransactionItemView(
-                                  animationController: animationController!,
-                                  animation: Tween<double>(begin: 0.0, end: 1.0)
-                                      .animate(
-                                    CurvedAnimation(
-                                      parent: animationController!,
-                                      curve: Interval((1 / count) * index, 1.0,
-                                          curve: Curves.fastOutSlowIn),
+                                return GestureDetector(
+                                  onTap: () {
+                                    final ProductDetailIntentHolder
+                                    holder =
+                                    ProductDetailIntentHolder(
+                                      productId: provider.transactionDetailList.data![index].productId,
+                                      heroTagImage: provider.hashCode
+                                          .toString() +
+                                          provider.transactionDetailList.data![index].productId! +
+                                          PsConst.HERO_TAG__IMAGE,
+                                      heroTagTitle: provider.hashCode
+                                          .toString() +
+                                          provider.transactionDetailList.data![index].productId! +
+                                          PsConst.HERO_TAG__TITLE,
+                                      heroTagOriginalPrice: provider
+                                          .hashCode
+                                          .toString() +
+                                          provider.transactionDetailList.data![index].productId! +
+                                          PsConst
+                                              .HERO_TAG__ORIGINAL_PRICE,
+                                      heroTagUnitPrice: provider
+                                          .hashCode
+                                          .toString() +
+                                          provider.transactionDetailList.data![index].productId! +
+                                          PsConst
+                                              .HERO_TAG__UNIT_PRICE,
+                                    );
+                                    dashboardViewKey.currentState?.selectedProductDetailHolder = holder;
+                                    dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                                        Utils.getString(context, 'product_detail__title'),//Utils.getString(context, 'profile__favourite'),
+                                        PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
+
+                                  },
+                                  child: TransactionItemView(
+                                    animationController: animationController!,
+                                    animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+                                      CurvedAnimation(
+                                        parent: animationController!,
+                                        curve: Interval((1 / count) * index, 1.0,
+                                            curve: Curves.fastOutSlowIn),
+                                      ),
                                     ),
+                                    transaction: provider.transactionDetailList.data![index],
                                   ),
-                                  transaction: provider
-                                      .transactionDetailList.data![index],
                                 );
                               } else {
                                 return null;
@@ -734,16 +769,41 @@ class _TransactionNoWidget extends StatelessWidget {
             const SizedBox(
               height: PsDimens.space12,
             ),
-            _dividerWidget,
-            _TransactionNoTextWidget(
-              transationInfoText:
-                  '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.balanceAmount!,valueHolder)}',
-              title:
-                  '${Utils.getString(context, 'transaction_detail__total')} :',
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: PsColors.discountColor, // Border color
+                  width: 2.0,          // Border width
+                ),
+                borderRadius: BorderRadius.circular(10.0), // Rounded corners
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(PsDimens.space12),
+                child:Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '${Utils.getString(context, 'transaction_detail__total')} :',
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          fontWeight: FontWeight.normal,
+                          color: PsColors.discountColor
+                      ),
+                    ),
+                    Text(
+                      '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.balanceAmount!, valueHolder)}' ,
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          fontWeight: FontWeight.normal,
+                          color: PsColors.discountColor
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(
+            /*const SizedBox(
               height: PsDimens.space12,
-            ),
+            ),*/
           ],
         ));
   }

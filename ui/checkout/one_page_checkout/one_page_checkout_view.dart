@@ -5,7 +5,7 @@ import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+//import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../../api/common/ps_resource.dart';
 import '../../../api/common/ps_status.dart';
@@ -868,7 +868,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
     }
   }
 
-  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+  /*Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     // Do something when payment succeeds
     print('success');
 
@@ -981,7 +981,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
                 Utils.getString(context, 'checkout3__payment_not_supported'),
           );
         });
-  }
+  }*/
 
   dynamic payRazorNow() async {
     if (valueHolder.standardShippingEnable == PsConst.ONE) {
@@ -999,10 +999,10 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
     }
 
     // Start Razor Payment
-    final Razorpay _razorpay = Razorpay();
+    /*final Razorpay _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);*/
 
     if (valueHolder.isRazorSupportMultiCurrency != null &&
         valueHolder.isRazorSupportMultiCurrency == PsConst.ONE) {
@@ -1032,7 +1032,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
     };
 
     if (await Utils.checkInternetConnectivity()) {
-      _razorpay.open(options);
+      //_razorpay.open(options);
     } else {
       showDialog<dynamic>(
           context: context,

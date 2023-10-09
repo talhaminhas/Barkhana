@@ -108,7 +108,7 @@ class _TransactionNoWidget extends StatelessWidget {
               _textWidget,
             ],
           ),
-          IconButton(
+          /*IconButton(
             icon: const Icon(Icons.content_copy),
             iconSize: 24,
             onPressed: () {
@@ -128,7 +128,7 @@ class _TransactionNoWidget extends StatelessWidget {
                 ),
               ));
             },
-          ),
+          ),*/
         ],
       ),
     );

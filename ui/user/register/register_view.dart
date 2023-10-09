@@ -34,7 +34,7 @@ class _RegisterViewState extends State<RegisterView>
   TextEditingController? nameController;
   TextEditingController? emailController;
   TextEditingController? passwordController;
-
+  TextEditingController? confirmPasswordController;
   @override
   void initState() {
     animationController =
@@ -78,6 +78,9 @@ class _RegisterViewState extends State<RegisterView>
               text: provider.psValueHolder.userEmailToVerify);
           passwordController = TextEditingController(
               text: provider.psValueHolder.userPasswordToVerify);
+          confirmPasswordController = TextEditingController(
+              text: provider.psValueHolder.userPasswordToVerify
+          );
 
           return Stack(
             children: <Widget>[
@@ -87,21 +90,25 @@ class _RegisterViewState extends State<RegisterView>
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          _HeaderIconAndTextWidget(),
+                          //_HeaderIconAndTextWidget(),
+                          Container(
+                            height: PsDimens.space32,
+                          ),
                           _TextFieldWidget(
                             nameText: nameController!,
                             emailText: emailController!,
                             passwordText: passwordController!,
+                            confirmPasswordText: confirmPasswordController!,
                           ),
                           const SizedBox(
                             height: PsDimens.space8,
                           ),
-                          _TermsAndConCheckbox(
+                          /*_TermsAndConCheckbox(
                             provider: provider,
                             nameTextEditingController: nameController!,
                             emailTextEditingController: emailController!,
                             passwordTextEditingController: passwordController!,
-                          ),
+                          ),*/
                           const SizedBox(
                             height: PsDimens.space8,
                           ),
@@ -110,16 +117,17 @@ class _RegisterViewState extends State<RegisterView>
                             nameTextEditingController: nameController!,
                             emailTextEditingController: emailController!,
                             passwordTextEditingController: passwordController!,
+                            confirmPasswordEditingController: confirmPasswordController!,
                             onRegisterSelected: widget.onRegisterSelected,
                           ),
                           const SizedBox(
-                            height: PsDimens.space16,
+                            height: PsDimens.space32,
                           ),
                           _TextWidget(
                             goToLoginSelected: widget.goToLoginSelected,
                           ),
                           const SizedBox(
-                            height: PsDimens.space64,
+                            height: PsDimens.space20,
                           ),
                         ],
                       ),
@@ -238,7 +246,7 @@ class __TextWidgetState extends State<_TextWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Text(
-        Utils.getString(context, 'register__login'),
+        Utils.getString(context, 'forgot_psw__login'),
         style: Theme.of(context)
             .textTheme
             .bodyMedium!
@@ -263,14 +271,16 @@ class _TextFieldWidget extends StatefulWidget {
     required this.nameText,
     required this.emailText,
     required this.passwordText,
+    required this.confirmPasswordText,
   });
 
-  final TextEditingController nameText, emailText, passwordText;
+  final TextEditingController nameText, emailText, passwordText, confirmPasswordText;
   @override
   __TextFieldWidgetState createState() => __TextFieldWidgetState();
 }
 
 class __TextFieldWidgetState extends State<_TextFieldWidget> {
+  bool _showPassword = false;
   @override
   Widget build(BuildContext context) {
     const EdgeInsets _marginEdgeInsetWidget = EdgeInsets.only(
@@ -326,18 +336,51 @@ class __TextFieldWidgetState extends State<_TextFieldWidget> {
             margin: _marginEdgeInsetWidget,
             child: TextField(
               controller: widget.passwordText,
-              obscureText: true,
+              obscureText: !_showPassword,
               style: Theme.of(context).textTheme.labelLarge!.copyWith(),
               decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: Utils.getString(context, 'register__password'),
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: PsColors.textPrimaryLightColor),
-                  icon: Icon(Icons.lock,
-                      color: Theme.of(context).iconTheme.color)),
+                border: InputBorder.none,
+                hintText: Utils.getString(context, 'register__password'),
+                hintStyle: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: PsColors.textPrimaryLightColor),
+                icon: Icon(Icons.lock, color: Theme.of(context).iconTheme.color),
+              ),
             ),
+          ),
+          _dividerWidget,
+          Container(
+            margin: _marginEdgeInsetWidget,
+            child: TextField(
+              controller: widget.confirmPasswordText,
+              obscureText: !_showPassword,
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: Utils.getString(context, 'register__confirm__password'),
+                hintStyle: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: PsColors.textPrimaryLightColor),
+                icon: Icon(Icons.lock, color: Theme.of(context).iconTheme.color),
+              ),
+            ),
+          ),
+          _dividerWidget,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(Utils.getString(context, 'register__show__password')),
+              Checkbox(
+                value: _showPassword,
+                onChanged: (value) {
+                  setState(() {
+                    _showPassword = value ?? false;
+                  });
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -351,7 +394,7 @@ class _HeaderIconAndTextWidget extends StatelessWidget {
     return Column(
       children: <Widget>[
         const SizedBox(
-          height: PsDimens.space32,
+          height: PsDimens.space10,
         ),
         Container(
           width: 90,
@@ -361,7 +404,7 @@ class _HeaderIconAndTextWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: PsDimens.space8,
+          height: PsDimens.space4,
         ),
         Text(Utils.getString(context, 'app_name'),
             style: Theme.of(context)
@@ -369,7 +412,7 @@ class _HeaderIconAndTextWidget extends StatelessWidget {
                 .titleMedium!
                 .copyWith(color: PsColors.mainColor)),
         const SizedBox(
-          height: PsDimens.space52,
+          height: PsDimens.space10,
         ),
       ],
     );
@@ -382,12 +425,15 @@ class _SignInButtonWidget extends StatefulWidget {
       required this.nameTextEditingController,
       required this.emailTextEditingController,
       required this.passwordTextEditingController,
+        required this.confirmPasswordEditingController,
       this.onRegisterSelected});
   final UserProvider provider;
   final Function? onRegisterSelected;
   final TextEditingController nameTextEditingController,
       emailTextEditingController,
-      passwordTextEditingController;
+      passwordTextEditingController,
+      confirmPasswordEditingController
+  ;
 
   @override
   __SignInButtonWidgetState createState() => __SignInButtonWidgetState();
@@ -421,10 +467,19 @@ class __SignInButtonWidgetState extends State<_SignInButtonWidget> {
           } else if (widget.emailTextEditingController.text.isEmpty) {
             callWarningDialog(context,
                 Utils.getString(context, 'warning_dialog__input_email'));
-          } else if (widget.passwordTextEditingController.text.isEmpty) {
+          }else if (widget.passwordTextEditingController.text.isEmpty) {
             callWarningDialog(context,
                 Utils.getString(context, 'warning_dialog__input_password'));
-          } else {
+          } else if (widget.confirmPasswordEditingController.text.isEmpty) {
+            callWarningDialog(context,
+                Utils.getString(context, 'warning_dialog__input_confirm_password'));
+          } else if (widget.confirmPasswordEditingController.text !=
+              widget.passwordTextEditingController.text) {
+            callWarningDialog(context,
+                Utils.getString(context, 'warning_dialog__match_password'));
+          }
+
+          else {
             if (Utils.checkEmailFormat(
                 widget.emailTextEditingController.text.trim())!) {
               await widget.provider.signUpWithEmailId(

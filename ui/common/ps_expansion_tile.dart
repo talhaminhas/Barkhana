@@ -37,7 +37,6 @@ class PsExpansionTile extends StatefulWidget {
     this.trailing,
     this.initiallyExpanded = false,
   }) : super(key: key);
-
   /// A widget to display before the title.
   ///
   /// Typically a [CircleAvatar] widget.
@@ -90,6 +89,7 @@ class _PsExpansionTileState extends State<PsExpansionTile>
   final ColorTween _borderColorTween = ColorTween();
   final ColorTween _headerColorTween = ColorTween();
   final ColorTween _iconColorTween = ColorTween();
+
   final ColorTween _backgroundColorTween = ColorTween();
 
   late AnimationController _controller;
@@ -98,6 +98,7 @@ class _PsExpansionTileState extends State<PsExpansionTile>
   late Animation<Color?> _headerColor;
   late Animation<Color?> _iconColor;
   late Animation<Color?> _backgroundColor;
+
 
   bool _isExpanded = false;
 
@@ -130,6 +131,7 @@ class _PsExpansionTileState extends State<PsExpansionTile>
       _isExpanded = !_isExpanded;
       if (_isExpanded) {
         _controller.forward();
+
       } else {
         _controller.reverse().then<void>((void value) {
           // if (!mounted) return;
@@ -142,6 +144,7 @@ class _PsExpansionTileState extends State<PsExpansionTile>
     });
     if (widget.onExpansionChanged != null)
       widget.onExpansionChanged!(_isExpanded);
+
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) {

@@ -15,8 +15,8 @@ class PsConst {
   PsConst._();
 
 
-  static const int API_TOKEN_UPDATE_DURATION = 50;// in minutes
-  static const int API_TOKEN_RETRY_DURATION = 30;// in seconds
+  static const int API_TOKEN_UPDATE_DURATION = 25;// in minutes
+  static const int API_TOKEN_RETRY_DURATION = 10;// in seconds
 
   static const String API_GUEST_EMAIL = 'guestbarkhana@itretail.co.uk';
   static const String API_GUEST_PASSWORD = 'Barkhana1234*';
@@ -231,7 +231,7 @@ class PsConst {
   ///
   /// Default Limit
   ///
-  static const int DEFAULT_LOADING_LIMIT = 30;
+  static const int DEFAULT_LOADING_LIMIT = 10;
 
   ///
   /// Hero Tags

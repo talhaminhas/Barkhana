@@ -17,7 +17,7 @@ import 'package:flutterrestaurant/viewobject/basket.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/checkout_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_detail_intent_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 

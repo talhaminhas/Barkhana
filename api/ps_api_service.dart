@@ -34,6 +34,7 @@ import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:flutterrestaurant/viewobject/transaction_status.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 
+import '../db/common/ps_shared_preferences.dart';
 import '../utils/utils.dart';
 import '../viewobject/holder/globalTokenPost.dart';
 import '../viewobject/holder/global_transaction_status.dart';
@@ -639,6 +640,7 @@ class PsApiService extends PsApi {
         Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json',
+          'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
         },
         body: jsonEncode(dataToSend.toJson()),
       );
@@ -662,6 +664,7 @@ class PsApiService extends PsApi {
           Uri.parse(url),
           headers: <String, String>{
             'Content-Type': 'application/json',
+            'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
           },
           body: jsonEncode(dataToSend.toJson()),
         );

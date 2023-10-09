@@ -44,6 +44,7 @@ class ShopInfo extends PsObject<ShopInfo> {
       this.added,
       this.status,
       this.paypalEnabled,
+        this.globalEnabled,
       this.stripeEnabled,
       this.codEnabled,
       this.banktransferEnabled,
@@ -143,6 +144,7 @@ class ShopInfo extends PsObject<ShopInfo> {
   String? added;
   String? status;
   String? paypalEnabled;
+  String? globalEnabled;
   String? stripeEnabled;
   String? codEnabled;
   String? banktransferEnabled;
@@ -253,6 +255,7 @@ class ShopInfo extends PsObject<ShopInfo> {
           added: dynamicData['added'],
           status: dynamicData['status'],
           paypalEnabled: dynamicData['paypal_enabled'],
+        globalEnabled: dynamicData['global_enabled'],
           stripeEnabled: dynamicData['stripe_enabled'],
           codEnabled: dynamicData['cod_enabled'],
           banktransferEnabled: dynamicData['banktransfer_enabled'],
@@ -360,6 +363,7 @@ class ShopInfo extends PsObject<ShopInfo> {
       data['added'] = object.added;
       data['status'] = object.status;
       data['paypal_enabled'] = object.paypalEnabled;
+      data['global_enabled'] = object.globalEnabled;
       data['stripe_enabled'] = object.stripeEnabled;
       data['cod_enabled'] = object.codEnabled;
       data['banktransfer_enabled'] = object.banktransferEnabled;

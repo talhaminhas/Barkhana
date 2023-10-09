@@ -13,6 +13,9 @@ class ProfileUpdateParameterHolder
     required this.userAreaId,
     required this.userLat,
     required this.userLng,
+    required this.userPostcode,
+    required this.userCountry,
+    required this.userCity,
   });
 
   final String userId;
@@ -24,6 +27,9 @@ class ProfileUpdateParameterHolder
   final String userAreaId;
   final String userLat;
   final String userLng;
+  final String userPostcode;
+  final String userCity;
+  final String userCountry;
 
   @override
   Map<String, dynamic> toMap() {
@@ -38,7 +44,9 @@ class ProfileUpdateParameterHolder
     map['user_area_id'] = userAreaId;
     map['user_lat'] = userLat;
     map['user_lng'] = userLng;
-
+    map['user_postcode'] = userPostcode;
+    map['user_city'] = userCity;
+    map['user_country'] = userCountry;
     return map;
   }
 
@@ -54,6 +62,9 @@ class ProfileUpdateParameterHolder
       userAreaId: dynamicData['user_area_id'],
       userLat: dynamicData['user_lat'],
       userLng: dynamicData['user_lng'],
+      userPostcode: dynamicData['user_postcode'],
+      userCity: dynamicData['user_city'],
+      userCountry: dynamicData['user_country'],
     );
   }
 
@@ -90,6 +101,15 @@ class ProfileUpdateParameterHolder
     }
     if (userLng != '') {
       key += userLng;
+    }
+    if (userPostcode != '') {
+      key += userPostcode;
+    }
+    if (userCity != '') {
+      key += userCity;
+    }
+    if (userCountry != '') {
+      key += userCountry;
     }
     return key;
   }

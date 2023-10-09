@@ -6,7 +6,7 @@ import 'package:flutterrestaurant/viewobject/holder/global_transaction_status.da
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+//import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'dart:convert';
 import 'dart:io';
 import '../../api/common/ps_resource.dart';
@@ -114,6 +114,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
         });
       });
     });
+    //callCardNow(widget.basketProvider!, widget.userProvider!, widget.transactionSubmitProvider!);
   }
   Future<String> _getIpAddress() async {
     // Get the IP address of the first non-loopback network interface
@@ -544,10 +545,10 @@ class _Checkout3ViewState extends State<Checkout3View> {
     final ShopInfoProvider _shopInfoProvider =
         Provider.of<ShopInfoProvider>(context, listen: false);
     // Start Razor Payment
-    final Razorpay _razorpay = Razorpay();
+    /*final Razorpay _razorpay = Razorpay();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);*/
 
     if (valueHolder.isRazorSupportMultiCurrency != null &&
         valueHolder.isRazorSupportMultiCurrency == PsConst.ONE) {
@@ -575,7 +576,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     };
 
     if (await Utils.checkInternetConnectivity()) {
-      _razorpay.open(options);
+      //_razorpay.open(options);
     } else {
       showDialog<dynamic>(
           context: context,
@@ -587,7 +588,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     }
   }
 
-  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
+  /*Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     // Do something when payment succeeds
 
     print(response);
@@ -692,7 +693,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 Utils.getString(context, 'checkout3__payment_not_supported'),
           );
         });
-  }
+  }*/
 
   dynamic payFlutterWave(
       UserProvider userProvider,

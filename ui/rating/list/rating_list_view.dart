@@ -14,7 +14,7 @@ import 'package:flutterrestaurant/ui/common/smooth_star_rating_widget.dart';
 import 'package:flutterrestaurant/ui/rating/entry/rating_input_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import '../item/rating_list_item.dart';

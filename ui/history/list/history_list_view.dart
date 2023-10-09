@@ -8,7 +8,7 @@ import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/history/item/history_list_item.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_detail_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/product.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class HistoryListView extends StatefulWidget {

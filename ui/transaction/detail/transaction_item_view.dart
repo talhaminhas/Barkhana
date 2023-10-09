@@ -76,11 +76,19 @@ class _ItemWidget extends StatelessWidget {
           double.parse(transaction.qty!);
     }
     return Container(
-        color: PsColors.backgroundColor,
-        margin: const EdgeInsets.only(top: PsDimens.space8),
-        padding: const EdgeInsets.only(
-          left: PsDimens.space12,
-          right: PsDimens.space12,
+        //color: PsColors.backgroundColor,
+        margin: const EdgeInsets.only(
+            top: PsDimens.space8,
+            left: PsDimens.space12,
+            right: PsDimens.space12,
+        ),
+
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: PsColors.mainColor, // Border color
+            width: 2.0,          // Border width
+          ),
+          borderRadius: BorderRadius.circular(10.0), // Rounded corners
         ),
         child: Column(
           children: <Widget>[
@@ -89,73 +97,103 @@ class _ItemWidget extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   const Icon(
-                  FontAwesome.adjust,
+                    Icons.restaurant,
                   ),
                   const SizedBox(
                     width: PsDimens.space16,
                   ),
                   Expanded(
-                    child: Text(
-                      transaction.productName ?? '-',
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.titleMedium,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          transaction.productName ?? '-',
+                          textAlign: TextAlign.left,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                          decoration: BoxDecoration(
+                            color: PsColors.mainColor, // Button background color
+                            borderRadius: BorderRadius.circular(5.0), // Rounded corners
+                          ),
+                          child: GestureDetector(
+                            onTap: null,
+                            child: const Text(
+                              'View Product',
+                              style: TextStyle(
+                                color: Colors.white, // Button text color
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
+
                 ],
               ),
             ),
             _dividerWidget,
-            Row(
-              children: <Widget>[
-                if (transaction.productColorCode != null &&
-                    transaction.productColorCode != '')
-                  Container(
-                    margin: const EdgeInsets.all(PsDimens.space10),
-                    width: PsDimens.space32,
-                    height: PsDimens.space32,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Utils.hexToColor(transaction.productColorCode!),
-                      // border: Border.all(width: 1, color: PsColors.grey),
+
+              Row(
+                children: <Widget>[
+                  if (transaction.productColorCode != null &&
+                      transaction.productColorCode != '')
+                    Container(
+                      margin: const EdgeInsets.all(PsDimens.space10),
+                      width: PsDimens.space32,
+                      height: PsDimens.space32,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Utils.hexToColor(transaction.productColorCode!),
+                        // border: Border.all(width: 1, color: PsColors.grey),
+                      ),
+                    )
+                  else
+                    Container(),
+                  if (attributeName != null && attributeName != '')
+                    Flexible(
+                      child: Text(
+                        attributeName,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
-                  )
-                else
-                  Container(),
-                if (attributeName != null && attributeName != '')
-                  Flexible(
-                    child: Text(
-                      attributeName,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+                  const SizedBox(
+                    width: PsDimens.space16,
                   ),
-                const SizedBox(
-                  width: PsDimens.space16,
-                ),
-              ],
-            ),
+                ],
+              ),
             _TransactionNoTextWidget(
               transationInfoText:
                   '${transaction.currencySymbol}  ${Utils.getPriceFormat(transaction.originalPrice!,valueHolder)}',
               title:
                   '${Utils.getString(context, 'transaction_detail__price')} :',
             ),
-            _TransactionNoTextWidget(
-              transationInfoText: transaction.discountAmount != null
-                  ? ' ${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.discountAmount.toString(),valueHolder)}'
-                  : '${transaction.currencySymbol} 0.0',
-              title:
-                  '${Utils.getString(context, 'transaction_detail__discount_avaiable_amount')} :',
-            ),
-            _TransactionNoTextWidget(
-              transationInfoText:
-                  '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.price.toString(),valueHolder)}',
-              title:
-                  '${Utils.getString(context, 'transaction_detail__balance')} :',
-            ),
+            if (transaction.discountAmount != null && transaction.discountAmount != '0')
+              Column(
+                children: <Widget>[
+                  _TransactionNoTextWidget(
+                    transationInfoText:
+                    '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.discountAmount.toString(), valueHolder)}',
+                    title: '${Utils.getString(context, 'transaction_detail__discount_avaiable_amount')} :',
+                  ),
+                  _TransactionNoTextWidget(
+                    transationInfoText:
+                    '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.price.toString(), valueHolder)}',
+                    title: '${Utils.getString(context, 'transaction_detail__discounted_price')} :',
+                  ),
+                ],
+              ),
             _TransactionNoTextWidget(
               transationInfoText: '${transaction.qty}',
               title: '${Utils.getString(context, 'transaction_detail__qty')} :',
             ),
+
+            const SizedBox(
+              height: PsDimens.space12,
+            ),
+            _dividerWidget,
             _TransactionNoTextWidget(
               transationInfoText:
                   ' ${transaction.currencySymbol} ${Utils.getPriceFormat(balancePrice.toString(),valueHolder)}',
@@ -173,9 +211,6 @@ class _ItemWidget extends StatelessWidget {
               infoText: '${transaction.productAddonName!.replaceAll('#', ', ')}',
               title:
                   '${Utils.getString(context, 'transaction_detail__add_on')} :',
-            ),
-            const SizedBox(
-              height: PsDimens.space12,
             ),
           ],
         ));

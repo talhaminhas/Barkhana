@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+//import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
 import 'package:flutterrestaurant/provider/address/postal_address_provider.dart';
 import 'package:flutterrestaurant/repository/postal_address_repository.dart';

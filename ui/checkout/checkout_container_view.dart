@@ -165,6 +165,8 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               }),
         ],
         child: Scaffold(
+          bottomNavigationBar: checkHideOrShowBackArrowBar(
+              _closeCheckoutContainer, tokenProvider),
           body: Stack(
             children: <Widget>[
               Container(
@@ -178,10 +180,10 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                 ),
               ),
               checkForTopImage(),
+
             ],
           ),
-          bottomNavigationBar: checkHideOrShowBackArrowBar(
-              _closeCheckoutContainer, tokenProvider),
+
         ));
   }
 

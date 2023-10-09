@@ -99,6 +99,10 @@ class _ProductDetailState extends State<ProductDetailView>
   List<BasketSelectedAttribute>? holderBasketSelectedAttributeList;
   List<BasketSelectedAddOn>? holderBasketSelectedAddOnList;
   Basket? oldBasket;
+  final ScrollController _scrollController = ScrollController();
+  double scrollerLength = 0.0;
+  Timer? periodicTimer;
+
   @override
   void initState() {
     super.initState();
@@ -106,11 +110,26 @@ class _ProductDetailState extends State<ProductDetailView>
       vsync: this,
       duration: const Duration(milliseconds: 140),
     );
+    periodicTimer = Timer.periodic(const Duration(milliseconds: 500), (Timer timer) {
+      if(scrollerLength < _scrollController.position.maxScrollExtent)
+        {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent < 300.0 ?
+            _scrollController.position.maxScrollExtent:
+            300.0,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+      scrollerLength = _scrollController.position.maxScrollExtent;
+    });
   }
 
   @override
   void dispose() {
     controller!.dispose();
+    _scrollController!.dispose();
+    periodicTimer?.cancel();
     super.dispose();
   }
 
@@ -253,6 +272,8 @@ class _ProductDetailState extends State<ProductDetailView>
     selectedAttributePrice += price;
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     print('****** Building *********');
@@ -285,6 +306,7 @@ class _ProductDetailState extends State<ProductDetailView>
         holderBasketSelectedAddOnList == null) {
       holderBasketSelectedAddOnList = widget.intentBasketSelectedAddOnList;
     }
+
 
     return PsWidgetWithMultiProvider(
         child: MultiProvider(
@@ -359,11 +381,12 @@ class _ProductDetailState extends State<ProductDetailView>
 
                   print(
                       'detail : latest${provider.productDetail.data!.defaultPhoto!.imgId}');
-
                   return Stack(
 
                     children: <Widget>[
-                      CustomScrollView(slivers: <Widget>[
+                      CustomScrollView(
+                          controller: _scrollController,
+                          slivers: <Widget>[
                         SliverAppBar(
                           automaticallyImplyLeading: true,
                           systemOverlayStyle: SystemUiOverlayStyle(
@@ -531,16 +554,15 @@ class _ProductDetailState extends State<ProductDetailView>
                                     addIntentAttributePrice:
                                         addIntentAttributePrice),*/
                                 AddOnTileView(
-                                  productDetail: provider.productDetail.data!,
-                                  selectedAddOnList: selectedAddOnList,
-                                  psValueHolder: psValueHolder!,
-                                  addAttributeAddOnFromView:
-                                      addAttributeAddOnFromView,
-                                  holderBasketSelectedAddOnList:
-                                      holderBasketSelectedAddOnList ??
-                                          <BasketSelectedAddOn>[],
-                                  addIntentAddOnPrice: addIntentAddOnPrice,
-                                ),
+                                    productDetail: provider.productDetail.data!,
+                                    selectedAddOnList: selectedAddOnList,
+                                    psValueHolder: psValueHolder!,
+                                    addAttributeAddOnFromView: addAttributeAddOnFromView,
+                                    holderBasketSelectedAddOnList: holderBasketSelectedAddOnList ??
+                                        <BasketSelectedAddOn>[],
+                                    addIntentAddOnPrice: addIntentAddOnPrice,
+                                  ),
+
                                 /*DetailInfoTileView(
                                   productDetail: provider,
                                 ),*/
@@ -815,7 +837,8 @@ class AddOnTileView extends StatefulWidget {
       required this.addAttributeAddOnFromView,
       required this.holderBasketSelectedAddOnList,
       required this.psValueHolder,
-      required this.addIntentAddOnPrice})
+      required this.addIntentAddOnPrice,
+      })
       : super(key: key);
 
   final Product productDetail;
@@ -824,7 +847,6 @@ class AddOnTileView extends StatefulWidget {
   final List<BasketSelectedAddOn> holderBasketSelectedAddOnList;
   final Function addIntentAddOnPrice;
   final PsValueHolder psValueHolder;
-
   @override
   _AddOnTileViewState createState() => _AddOnTileViewState();
 }
