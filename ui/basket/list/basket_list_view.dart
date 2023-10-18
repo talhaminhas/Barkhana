@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
@@ -81,24 +83,24 @@ class _BasketListViewState extends State<BasketListView>
               print('Basket Length  ${provider.basketList.data!.length}');
           if ( provider.basketList.data != null) {
             if (provider.basketList.data!.isNotEmpty) {
-              return Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              return Stack(
+                /*mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,*/
+                fit: StackFit.expand,
                 children: <Widget>[
                  /* const PsAdMobBannerWidget(
                     admobSize: AdSize.banner
-                  ),*/
-                  Expanded(
-                    child: Container(
+                  ),*/Container(
                         child: RefreshIndicator(
-                      child: ListView.builder(
+                      child:
+                        ListView.builder(
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: provider.basketList.data!.length,
+                        itemCount: provider.basketList.data!.length + 1,
                         itemBuilder: (BuildContext context, int index) {
                           final int count = provider.basketList.data!.length;
                           widget.animationController.forward();
-
+                          if(index < count)
                           return BasketListItemView(
                               animationController: widget.animationController,
                               animation:
@@ -164,6 +166,8 @@ class _BasketListViewState extends State<BasketListView>
                               onDeleteTap: () {
                                 showDialog<dynamic>(
                                     context: context,
+
+                                    barrierColor: PsColors.transparent,
                                     builder: (BuildContext context) {
                                       return ConfirmDialogView(
                                           description: Utils.getString(context,
@@ -182,17 +186,25 @@ class _BasketListViewState extends State<BasketListView>
                                           });
                                     });
                               });
+                          return const SizedBox(
+                            height: PsDimens.space120,
+                          );
                         },
                       ),
                       onRefresh: () {
                         return provider.resetBasketList();
                       },
                     )),
-                  ),
-                  _CheckoutButtonWidget(
-                    provider: provider,
-                    shopInfoProvider: shopInfoProvider,
-                  ),
+                  Positioned(
+                    bottom: 0, // Margin from the bottom
+                    right: 0,
+                    left: 0,// Margin from the right
+                    child:
+                    _CheckoutButtonWidget(
+                      provider: provider,
+                      shopInfoProvider: shopInfoProvider,
+                    ),
+                  )
                 ],
               );
             } else {
@@ -284,55 +296,122 @@ class _CheckoutButtonWidget extends StatelessWidget {
     final PsValueHolder psValueHolder = Provider.of<PsValueHolder>(context);
 
     double totalPrice = 0.0;
+    double totalOriginalPrice = 0.0;
     int qty = 0;
     String? currencySymbol;
 
     for (Basket basket in provider.basketList.data!) {
       totalPrice += double.parse(basket.basketPrice!) * double.parse(basket.qty!);
+      totalOriginalPrice += double.parse(basket.basketOriginalPrice!) * double.parse(basket.qty!);
       qty += int.parse(basket.qty!);
       currencySymbol = basket.product!.currencySymbol!;
     }
-    return Container(
+    return ClipRRect(
+       /* borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(PsDimens.space12),
+            topRight: Radius.circular(PsDimens.space12)
+        ),*/ // Adjust the border radius as needed
+        child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+            child:  Container(
         alignment: Alignment.bottomCenter,
         padding: const EdgeInsets.all(PsDimens.space8),
         decoration: BoxDecoration(
-          color: PsColors.backgroundColor,
-          border: Border.all(color: PsColors.mainLightShadowColor),
-          borderRadius: const BorderRadius.only(
+          gradient: LinearGradient(
+            begin: Alignment.center,
+            end: Alignment.topCenter,
+            colors: [
+
+              PsColors.backgroundColor.withOpacity(0.7),
+              PsColors.backgroundColor.withOpacity(0.7),
+            ],
+          ),
+          /*border: Border.all(
+              color: PsColors.mainColor,
+                  width: 2.0
+          ),*/
+          /*borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(PsDimens.space12),
-              topRight: Radius.circular(PsDimens.space12)),
-          boxShadow: <BoxShadow>[
+              topRight: Radius.circular(PsDimens.space12)
+          ),*/
+          /*boxShadow: <BoxShadow>[
             BoxShadow(
                 color: PsColors.mainShadowColor,
                 offset: const Offset(1.1, 1.1),
                 blurRadius: 7.0),
-          ],
+          ],*/
         ),
-        child: Column(
+        child:Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: PsDimens.space8),
+            const SizedBox(height: PsDimens.space4),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Text(
-                  '${Utils.getString(context, 'checkout__price')} $currencySymbol ${Utils.getPriceFormat(totalPrice.toString(),psValueHolder)}',
-                  style: Theme.of(context).textTheme.titleSmall,
+                Container(
+                  padding: const EdgeInsets.only(left: PsDimens.space10),
+                  /*decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space12)),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: PsColors.backgroundColor,
+                          blurRadius: 7.0
+                      ),
+                    ],
+                  ),*/
+                  child: Text(
+                    '$qty  ${Utils.getString(context, 'checkout__items')}',
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
-                Text(
-                  '$qty  ${Utils.getString(context, 'checkout__items')}',
-                  style: Theme.of(context).textTheme.titleSmall,
+                Container(
+                  padding: const EdgeInsets.only(right: PsDimens.space10),
+                  /*decoration: BoxDecoration(
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: PsColors.backgroundColor,
+                          blurRadius: 5.0
+                      ),
+                    ],
+                  ),*/
+                  child:Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${Utils.getString(context, 'checkout__price')} '
+                            '$currencySymbol ${Utils.getPriceFormat(totalPrice.toString(),psValueHolder)}',
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        height: PsDimens.space4,
+                      ),
+                      Text(
+                        '${Utils.getString(context, 'checkout__savings')} '
+                            '$currencySymbol ${(totalOriginalPrice - totalPrice).toStringAsFixed(2)}',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!.copyWith(
+                            color: PsColors.discountColor,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ]),
                 ),
               ],
             ),
-            const SizedBox(height: PsDimens.space8),
+            const SizedBox(height: PsDimens.space4),
             Card(
               elevation: 0,
-              color: PsColors.mainColor,
-              shape: const BeveledRectangleBorder(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(PsDimens.space8))),
+              color: PsColors.mainColor.withOpacity(0.7),
+              shape: RoundedRectangleBorder(
+                  borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space10)),
+                side: BorderSide(
+                  color: PsColors.mainColor,
+                  width: 2.0,
+                ),
+              ),
               child: InkWell(
                 onTap: () async {
                   // Basket Item Count Check
@@ -344,6 +423,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                       // Show Error Dialog
                       showDialog<dynamic>(
                           context: context,
+                          barrierColor: PsColors.transparent,
                           builder: (BuildContext context) {
                             return ErrorDialog(
                               message: Utils.getString(
@@ -398,6 +478,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                       } else {
                         showDialog<dynamic>(
                             context: context,
+                            barrierColor: PsColors.transparent,
                             builder: (BuildContext context) {
                               return ErrorDialog(
                                 message: Utils.getString(context,
@@ -411,6 +492,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                   } else {
                     showDialog<dynamic>(
                         context: context,
+                        barrierColor: PsColors.transparent,
                         builder: (BuildContext context) {
                           return ErrorDialog(
                             message: Utils.getString(
@@ -424,7 +506,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                     height: 40,
                     padding: const EdgeInsets.only(
                         left: PsDimens.space4, right: PsDimens.space4),
-                    decoration: BoxDecoration(
+                    /*decoration: BoxDecoration(
                       gradient: LinearGradient(colors: <Color>[
                         PsColors.mainColor,
                         PsColors.mainDarkColor,
@@ -438,7 +520,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                             blurRadius: 8.0,
                             spreadRadius: 3.0),
                       ],
-                    ),
+                    ),*/
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -453,7 +535,10 @@ class _CheckoutButtonWidget extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .labelLarge!
-                              .copyWith(color: PsColors.white),
+                              .copyWith(
+                              color: PsColors.white,
+                            fontWeight: FontWeight.bold
+                          ),
                         ),
                       ],
                     )),
@@ -461,6 +546,6 @@ class _CheckoutButtonWidget extends StatelessWidget {
             ),
             const SizedBox(height: PsDimens.space8),
           ],
-        ));
+        ))));
   }
 }

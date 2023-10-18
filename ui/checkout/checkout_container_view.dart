@@ -165,9 +165,9 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               }),
         ],
         child: Scaffold(
-          bottomNavigationBar: checkHideOrShowBackArrowBar(
-              _closeCheckoutContainer, tokenProvider),
-          body: Stack(
+          /*bottomNavigationBar: checkHideOrShowBackArrowBar(
+              _closeCheckoutContainer, tokenProvider),*/
+          body: Column(
             children: <Widget>[
               Container(
                 width: double.infinity,
@@ -179,11 +179,12 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                   },
                 ),
               ),
-              checkForTopImage(),
-
+              checkHideOrShowBackArrowBar(_closeCheckoutContainer, tokenProvider),
+              Expanded(
+                child: checkForTopImage(),
+              )
             ],
-          ),
-
+          )
         ));
   }
 
@@ -192,7 +193,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
       return Container(child: checkToShowView());
     } else {
       return Container(
-          margin: const EdgeInsets.only(top: PsDimens.space160),
+          //margin: const EdgeInsets.only(top: PsDimens.space220),
           child: checkToShowView());
     }
   }
@@ -262,8 +263,9 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
       );
     } else {
       return Container(
-          height: 60,
+          height: 50,
           color: PsColors.mainColor,
+          //margin: const EdgeInsets.only(top: PsDimens.space160),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -328,6 +330,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
         if (checkout2ViewState.isCheckBoxSelect) {
           showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return ConfirmDialogView(
                     description: Utils.getString(
@@ -671,6 +674,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
         } else {
           showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return WarningDialog(
                   message: Utils.getString(
@@ -680,16 +684,32 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               });
         }
       } else if (viewNo == 1) {
-        if (checkout1ViewState.userEmailController.text.isEmpty) {
+        if (checkout1ViewState.userEmailController.text.isEmpty ||
+            (!checkout1ViewState.userProvider.hasLatLng(valueHolder) &&
+                checkout1ViewState.addressController.text == '' &&
+                checkout1ViewState.userProvider.isClickDeliveryButton) ||
+            (checkout1ViewState.addressController.text.isEmpty &&
+                checkout1ViewState.userProvider.isClickDeliveryButton) ||
+            (checkout1ViewState.userPostcodeController.text.isEmpty &&
+                checkout1ViewState.userProvider.isClickDeliveryButton) ||
+            (checkout1ViewState.userCityController.text.isEmpty &&
+                checkout1ViewState.userProvider.isClickDeliveryButton) ||
+            (checkout1ViewState.userCountryController.text.isEmpty &&
+                checkout1ViewState.userProvider.isClickDeliveryButton) ||
+            checkout1ViewState.userPhoneController.text.isEmpty
+
+        ) {
+          print('field check failed');
+          checkout1ViewState.checkFields('');
           showDialog<dynamic>(
               context: context,
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message:
-                      Utils.getString(context, 'warning_dialog__input_email'),
+                      Utils.getString(context, 'warning_dialog__input_fields'),
                 );
               });
-        } else if (!checkout1ViewState.userProvider.hasLatLng(valueHolder) &&
+        } /*else if (!checkout1ViewState.userProvider.hasLatLng(valueHolder) &&
             checkout1ViewState.addressController.text == '' &&
             checkout1ViewState.userProvider.isClickDeliveryButton) {
           showDialog<dynamic>(
@@ -749,7 +769,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       Utils.getString(context, 'warning_dialog__input_phone'),
                 );
               });
-        } else if (shopInfoProvider!.shopInfo.data!.isArea == PsConst.ONE &&
+        } */else if (shopInfoProvider!.shopInfo.data!.isArea == PsConst.ONE &&
             (checkout1ViewState.userProvider.selectedArea == null ||
                 checkout1ViewState.userProvider.selectedArea.id == null ||
                 checkout1ViewState.userProvider.selectedArea.id == '') &&
@@ -1140,7 +1160,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       viewNo++;
                     } else {
                       //not chang checkout1 data
-                      viewNo++;
+                      //viewNo++;
                     }
                   }
                 } else {
@@ -1180,7 +1200,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       viewNo++;
                     } else {
                       //not chang checkout1 data
-                      viewNo++;
+                      //viewNo++;
                     }
                   }
                 } else {
@@ -1220,7 +1240,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       viewNo++;
                     } else {
                       //not chang checkout1 data
-                      viewNo++;
+                      //viewNo++;
                     }
                   }
                 } else {
@@ -1261,7 +1281,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       viewNo++;
                     } else {
                       //not chang checkout1 data
-                      viewNo++;
+                      //viewNo++;
                     }
                   }
                 } else {
@@ -1301,7 +1321,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       viewNo++;
                     } else {
                       //not chang checkout1 data
-                      viewNo++;
+                      //viewNo++;
                     }
                   }
                 } else {
@@ -1341,7 +1361,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       viewNo++;
                     } else {
                       //not chang checkout1 data
-                      viewNo++;
+                      //viewNo++;
                     }
                   }
                 } else {
@@ -1381,7 +1401,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       viewNo++;
                     } else {
                       //not chang checkout1 data
-                      viewNo++;
+                      //viewNo++;
                     }
                   }
                 } else {
@@ -1416,7 +1436,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             }
           } else {
             //not chang checkout1 data
-            viewNo++;
+            //viewNo++;
           }
         }
       } else {
@@ -1520,7 +1540,7 @@ class _TopImageForCheckout extends StatelessWidget {
     } else {
       return Container(
         color: PsColors.coreBackgroundColor,
-        child: Stack(
+        child:  Stack(
           children: <Widget>[
             Column(
               children: <Widget>[

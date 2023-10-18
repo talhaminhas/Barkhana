@@ -223,6 +223,7 @@ class PsConst {
   static const int REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT = 2018;
 
 
+
   // static final NumberFormat psFormat = NumberFormat(PsConfig.priceFormat);
   static const String priceTwoDecimalFormatString = '###.00';
   static final NumberFormat priceTwoDecimalFormat =

@@ -25,6 +25,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../../common/dialog/confirm_dialog_view.dart';
+
 class FavouriteProductListView extends StatefulWidget {
   const FavouriteProductListView({Key? key, required this.animationController})
       : super(key: key);
@@ -142,7 +144,15 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                             .favouriteProductList.data!.length;
                                         final Product product = provider
                                             .favouriteProductList.data![index];
-                                        return ProductVeticalListItem(
+                                        Basket? basket = basketProvider!.basketList.data!.firstWhere((item) => item.id == product.id, orElse: () => Basket());
+
+                                        return Container(
+                                          margin: const EdgeInsets.only(
+                                              bottom: PsDimens.space4,
+                                          ),
+                                            child:
+                                          ProductVerticalListItem(
+                                            basket: basket,
                                           coreTagKey:
                                               provider.hashCode.toString() +
                                                   provider.favouriteProductList
@@ -232,45 +242,15 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                             {
                                               basketProvider!.deleteBasketByProduct(
                                                   basket!);
-                                              /*showDialog<dynamic>(
-                                                      context: context,
-                                                      builder: (BuildContext context) {
-                                                        return ConfirmDialogView(
-                                                            description: Utils.getString(context,
-                                                                'basket_list__confirm_dialog_description'),
-                                                            leftButtonText: Utils.getString(
-                                                                context,
-                                                                'basket_list__comfirm_dialog_cancel_button'),
-                                                            rightButtonText: Utils.getString(
-                                                                context,
-                                                                'basket_list__comfirm_dialog_ok_button'),
-                                                            onAgreeTap: () async {
-                                                              Navigator.of(context).pop();
-                                                              basketProvider!.deleteBasketByProduct(
-                                                                  basketProvider!
-                                                                      .basketList.data![index]);
-                                                            });
-                                                      });*/
                                             }
                                             else
                                               await basketProvider!.updateBasket(basket!);
+
                                             //reloadGrid();
                                           },
                                           onBasketTap: () async {
                                             if (product.isAvailable == '1') {
-                                              /*if (product.addOnList!.isNotEmpty &&
-                                                  product.addOnList![0].id != '' ||
-                                                  product.customizedHeaderList!.isNotEmpty &&
-                                                  product.customizedHeaderList![0].id != '' &&
-                                                  product.customizedHeaderList![0].customizedDetail != null) {
-                                                  showDialog<dynamic>(
-                                                      context: context,
-                                                    builder: (BuildContext context) {
-                                                      return ChooseAttributeDialog(
-                                                        product: provider
-                                                              .favouriteProductList.data![index]);
-                                                    });
-                                              } else { */
+
                                                 id =
                                                     '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                                                 if (product.minimumOrder == '0') {
@@ -304,7 +284,7 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                                   msg:
                                                     Utils.getString(context, 'product_detail__success_add_to_basket'),
                                                   toastLength: Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
+                                                  gravity: ToastGravity.CENTER,
                                                   timeInSecForIosWeb: 1,
                                                   backgroundColor: PsColors.mainColor,
                                                   textColor: PsColors.white);
@@ -317,6 +297,7 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                             } else {
                                               showDialog<dynamic>(
                                                   context: context,
+                                                  barrierColor: PsColors.transparent,
                                                   builder: (BuildContext context) {
                                                     return WarningDialog(
                                                       message: Utils.getString(context,
@@ -326,6 +307,7 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                               });
                                             }
                                           }, valueHolder: psValueHolder!,
+                                        )
                                         );
                                       } else {
                                         return null;
@@ -342,7 +324,8 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                         )),
                     PSProgressIndicator(provider.favouriteProductList.status)
                   ]),
-                )
+                ),
+
               ],
             );
           } else {

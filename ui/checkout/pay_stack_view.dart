@@ -23,6 +23,7 @@ import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:provider/provider.dart';
 import 'package:theme_manager/theme_manager.dart';
 
+import '../../config/ps_colors.dart';
 import '../../config/ps_config.dart';
 
 class PayStackView extends StatefulWidget {
@@ -184,6 +185,7 @@ class PayStackViewState extends State<PayStackView> {
   dynamic callWarningDialog(BuildContext context, String text) {
     showDialog<dynamic>(
         context: context,
+        barrierColor: PsColors.transparent,
         builder: (BuildContext context) {
           return WarningDialog(
             message: Utils.getString(context, text),

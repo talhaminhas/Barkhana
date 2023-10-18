@@ -442,6 +442,7 @@ class _SignInButtonWidget extends StatefulWidget {
 dynamic callWarningDialog(BuildContext context, String text) {
   showDialog<dynamic>(
       context: context,
+      barrierColor: PsColors.transparent,
       builder: (BuildContext context) {
         return WarningDialog(
           message: Utils.getString(context, text),

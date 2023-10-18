@@ -708,7 +708,7 @@ class PsApiService extends PsApi {
   Future<PsResource<SearchResult>> getSearchResult(
       Map<String, dynamic> json) async {
     const String url =
-        '${PsUrl.ps_search_result_url}/api_key/${PsConfig.ps_api_key}/limit/4/offset/0/';
+        '${PsUrl.ps_search_result_url}/api_key/${PsConfig.ps_api_key}/limit/1/offset/0/';
     return await postData(SearchResult(), url, json);
   }
 

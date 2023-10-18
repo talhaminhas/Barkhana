@@ -1695,6 +1695,7 @@ class __FavouriteWidgetState extends State<_FavouriteWidget> {
                         } else {
                           showDialog<dynamic>(
                               context: context,
+                              barrierColor: PsColors.transparent,
                               builder: (BuildContext context) {
                                 return ErrorDialog(
                                   message: Utils.getString(
@@ -2274,6 +2275,7 @@ class __AddToBasketAndBuyButtonWidgetState
         if (colorId == null || colorId == '') {
           await showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return WarningDialog(
                   message: Utils.getString(
@@ -2297,6 +2299,7 @@ class __AddToBasketAndBuyButtonWidgetState
                 widget.product.customizedHeaderList!.length)) {
           await showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return WarningDialog(
                   message: Utils.getString(
@@ -2345,9 +2348,9 @@ class __AddToBasketAndBuyButtonWidgetState
               : 'product_detail__success_update_to_basket'
           ),
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
+          gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
-          backgroundColor: PsColors.greenColor,
+          backgroundColor: PsColors.mainColor,
           textColor: PsColors.white);
       if(widget.intentId != null) {
         dashboardViewKey.currentState?.onTapBack();
@@ -2493,15 +2496,18 @@ class __AddToBasketAndBuyButtonWidgetState
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(PsDimens.space8),
+                  padding: const EdgeInsets.only(
+                      left: PsDimens.space20,
+                    right: PsDimens.space20,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      if(widget.intentId == null)
+                      if(widget.intentId == null && widget.product.isAvailable == '1')
                       Expanded(
                         child: PSButtonWithIconWidget(
                           hasShadow: true,
-                          colorData: PsColors.grey,
+                          colorData: PsColors.mainColor,
                           icon: Icons.add_shopping_cart,
                           width: double.infinity,
                           titleText: Utils.getString(
@@ -2523,6 +2529,7 @@ class __AddToBasketAndBuyButtonWidgetState
                                             .customizedHeaderList!.length)) {
                                   await showDialog<dynamic>(
                                       context: context,
+                                      barrierColor: PsColors.transparent,
                                       builder: (BuildContext context) {
                                         return WarningDialog(
                                           message: Utils.getString(context,
@@ -2536,6 +2543,7 @@ class __AddToBasketAndBuyButtonWidgetState
                               } else {
                                 showDialog<dynamic>(
                                     context: context,
+                                    barrierColor: PsColors.transparent,
                                     builder: (BuildContext context) {
                                       return WarningDialog(
                                         message: Utils.getString(context,
@@ -2547,11 +2555,30 @@ class __AddToBasketAndBuyButtonWidgetState
                           },
                         ),
                       ),
-                      if(widget.intentId == null)
-                      const SizedBox(
-                        width: PsDimens.space10,
-                      ),
-                      if(widget.intentId == null)
+                      if (widget.intentId == null && widget.product.isAvailable == '0')
+                        Expanded(child:
+                        Container(
+                          decoration: BoxDecoration(
+                            color: PsColors.discountColor.withOpacity(0.8), // Adjust the background color and opacity
+                            border: Border.all(
+                              color: PsColors.white, // Adjust the border color
+                              width: 2.0, // Adjust the border width
+                            ),
+                            borderRadius: BorderRadius.circular(12.0), // Adjust the border radius
+                          ),
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'Out Of Stock!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: PsColors.white, // Text color
+                              fontWeight: FontWeight.bold,
+                              // Text fontWeight
+                            ),
+                          ),
+                        ),
+                        ),
+                      /*if(widget.intentId == null)
                       Expanded(
                         child: PSButtonWithIconWidget(
                           hasShadow: true,
@@ -2598,8 +2625,8 @@ class __AddToBasketAndBuyButtonWidgetState
                             }
                           },
                         ),
-                      )
-                      else
+                      )*/
+                      if(widget.intentId != null)
                         Expanded(
                           child: PSButtonWithIconWidget(
                             hasShadow: true,
@@ -2623,6 +2650,7 @@ class __AddToBasketAndBuyButtonWidgetState
                                         .customizedHeaderList!.length)) {
                                   await showDialog<dynamic>(
                                       context: context,
+                                      barrierColor: PsColors.transparent,
                                       builder: (BuildContext context) {
                                         return WarningDialog(
                                           message: Utils.getString(context,
@@ -2636,6 +2664,7 @@ class __AddToBasketAndBuyButtonWidgetState
                               } else {
                                 showDialog<dynamic>(
                                     context: context,
+                                    barrierColor: PsColors.transparent,
                                     builder: (BuildContext context) {
                                       return WarningDialog(
                                         message: Utils.getString(context,

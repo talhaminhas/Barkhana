@@ -362,6 +362,7 @@ class _Checkout2ViewState extends State<Checkout2View> {
                             } else {
                               showDialog<dynamic>(
                                   context: context,
+                                  barrierColor: PsColors.transparent,
                                   builder: (BuildContext context) {
                                     return WarningDialog(
                                       message: Utils.getString(context,
@@ -638,6 +639,7 @@ class _OrderSummaryWidget extends StatelessWidget {
                   '$currencySymbol ${basketProvider.checkoutCalculationHelper.totalPriceFormattedString}',
               title:
                   '${Utils.getString(context, 'transaction_detail__total')} :',
+              textColor: PsColors.discountColor,
             ),
             _spacingWidget,
           ],
@@ -650,10 +652,12 @@ class _OrderSummeryTextWidget extends StatelessWidget {
     Key? key,
     required this.transationInfoText,
     this.title,
+    this.textColor
   }) : super(key: key);
 
   final String transationInfoText;
   final String? title;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -671,14 +675,20 @@ class _OrderSummeryTextWidget extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
-                .copyWith(fontWeight: FontWeight.normal),
+                .copyWith(
+                color: textColor,
+                fontWeight: FontWeight.normal
+            ),
           ),
           Text(
             transationInfoText,
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium!
-                .copyWith(fontWeight: FontWeight.normal),
+                .copyWith(
+                color: textColor,
+                fontWeight: FontWeight.normal
+            ),
           )
         ],
       ),

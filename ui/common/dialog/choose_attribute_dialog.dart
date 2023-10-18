@@ -187,6 +187,7 @@ class _NewDialogState extends State<NewDialog> {
         if (colorId == null || colorId == '') {
           await showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return WarningDialog(
                   message: Utils.getString(
@@ -210,6 +211,7 @@ class _NewDialogState extends State<NewDialog> {
                 widget.product.customizedHeaderList!.length)) {
           await showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return WarningDialog(
                   message: Utils.getString(
@@ -249,7 +251,7 @@ class _NewDialogState extends State<NewDialog> {
           msg:
               Utils.getString(context, 'product_detail__success_add_to_basket'),
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
+          gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
           backgroundColor: PsColors.mainColor,
           textColor: PsColors.white);
@@ -432,6 +434,7 @@ class _NewDialogState extends State<NewDialog> {
                                           .customizedHeaderList!.length)) {
                                 await showDialog<dynamic>(
                                     context: context,
+                                    barrierColor: PsColors.transparent,
                                     builder: (BuildContext context) {
                                       return WarningDialog(
                                         message: Utils.getString(context,
@@ -445,6 +448,7 @@ class _NewDialogState extends State<NewDialog> {
                             } else {
                               showDialog<dynamic>(
                                   context: context,
+                                  barrierColor: PsColors.transparent,
                                   builder: (BuildContext context) {
                                     return WarningDialog(
                                       message: Utils.getString(context,
@@ -485,6 +489,7 @@ class _NewDialogState extends State<NewDialog> {
                                               .customizedHeaderList!.length)) {
                                     await showDialog<dynamic>(
                                         context: context,
+                                        barrierColor: PsColors.transparent,
                                         builder: (BuildContext context) {
                                           return WarningDialog(
                                             message: Utils.getString(context,
@@ -498,6 +503,7 @@ class _NewDialogState extends State<NewDialog> {
                                 } else {
                                   showDialog<dynamic>(
                                       context: context,
+                                      barrierColor: PsColors.transparent,
                                       builder: (BuildContext context) {
                                         return WarningDialog(
                                           message: Utils.getString(context,

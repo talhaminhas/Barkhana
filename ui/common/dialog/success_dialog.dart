@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
@@ -29,8 +31,33 @@ class _NewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-      child: SingleChildScrollView(
+      backgroundColor: PsColors.transparent,
+      shadowColor: PsColors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(PsDimens.space20),
+        side: BorderSide(
+          color: PsColors.greenColor,
+          width: 2.0,
+        ),
+      ),
+      child:Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.center,
+              colors: [
+                PsColors.greenColor.withOpacity(0.9),
+                PsColors.backgroundColor.withOpacity(0.6),
+              ],
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space20)),
+          ),
+          child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(PsDimens.space20)), // Adjust the border radius as needed
+    child: BackdropFilter(
+    filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+    child:
+      SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -38,11 +65,11 @@ class _NewDialog extends StatelessWidget {
                 height: 60,
                 width: double.infinity,
                 padding: const EdgeInsets.all(PsDimens.space8),
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(5),
                         topRight: Radius.circular(5)),
-                    color: PsColors.mainColor),
+                    ),
                 child: Row(
                   children: <Widget>[
                     const SizedBox(width: PsDimens.space4),
@@ -74,9 +101,9 @@ class _NewDialog extends StatelessWidget {
             ),
             const SizedBox(height: PsDimens.space20),
             Divider(
-              thickness: 0.5,
-              height: 1,
-              color: Theme.of(context).iconTheme.color,
+              thickness: 2,
+              height: 2,
+              color: PsColors.greenColor,
             ),
             MaterialButton(
               height: 50,
@@ -89,12 +116,13 @@ class _NewDialog extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge!
-                    .copyWith(color: PsColors.mainColor),
+                    .copyWith(color: PsColors.greenColor),
               ),
             )
           ],
         ),
       ),
-    );
+    )
+          )));
   }
 }

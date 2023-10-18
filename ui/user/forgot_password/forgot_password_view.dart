@@ -77,7 +77,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          _HeaderIconAndTextWidget(),
+                          //_HeaderIconAndTextWidget(),
                           Container(
                             height: PsDimens.space20,
                           ),
@@ -237,6 +237,7 @@ class _SendButtonWidget extends StatefulWidget {
 dynamic callWarningDialog(BuildContext context, String text) {
   showDialog<dynamic>(
       context: context,
+      barrierColor: PsColors.transparent,
       builder: (BuildContext context) {
         return WarningDialog(
           message: Utils.getString(context, text),
@@ -277,6 +278,7 @@ class __SendButtonWidgetState extends State<_SendButtonWidget> {
                   if (_apiStatus.data != null) {
                     showDialog<dynamic>(
                         context: context,
+                        barrierColor: PsColors.transparent,
                         builder: (BuildContext context) {
                           return SuccessDialog(
                             message: _apiStatus.data!.message,
@@ -285,6 +287,7 @@ class __SendButtonWidgetState extends State<_SendButtonWidget> {
                   } else {
                     showDialog<dynamic>(
                         context: context,
+                        barrierColor: PsColors.transparent,
                         builder: (BuildContext context) {
                           return ErrorDialog(
                             message: _apiStatus.message,
@@ -294,6 +297,7 @@ class __SendButtonWidgetState extends State<_SendButtonWidget> {
                 } else {
                   showDialog<dynamic>(
                       context: context,
+                      barrierColor: PsColors.transparent,
                       builder: (BuildContext context) {
                         return ErrorDialog(
                           message: Utils.getString(

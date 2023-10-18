@@ -42,6 +42,8 @@ class _EditProfileViewState extends State<EditProfileView>
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController aboutMeController = TextEditingController();
   final TextEditingController userAddressController = TextEditingController();
+  final TextEditingController userCityController = TextEditingController();
+  final TextEditingController userCountryController = TextEditingController();
   final TextEditingController shippingAreaController = TextEditingController();
 
   bool bindDataFirstTime = true;
@@ -101,8 +103,9 @@ class _EditProfileViewState extends State<EditProfileView>
                   aboutMeController.text = userProvider!.user.data!.userAboutMe!;
                   userAddressController.text = userProvider!.user.data!.address!;
                   userProvider!.selectedArea = userProvider!.user.data!.area!;
-                  shippingAreaController.text =
-                      userProvider!.user.data!.area!.areaName!;
+                  shippingAreaController.text = userProvider!.user.data!.area!.areaName!;
+                  userCityController.text = userProvider!.user.data!.userCity!;
+                  userCountryController.text = userProvider!.user.data!.userCountry!;
                   bindDataFirstTime = false;
                 }
 
@@ -127,6 +130,22 @@ class _EditProfileViewState extends State<EditProfileView>
                           hintText:
                               Utils.getString(context, 'edit_profile__address'),
                           textEditingController: userAddressController,
+                        ),
+                        PsTextFieldWidget(
+                          titleText:
+                          Utils.getString(context, 'City'),
+                          textAboutMe: false,
+                          hintText:
+                          Utils.getString(context, 'City'),
+                          textEditingController: userCityController,
+                        ),
+                        PsTextFieldWidget(
+                          titleText:
+                          Utils.getString(context, 'Country'),
+                          textAboutMe: false,
+                          hintText:
+                          Utils.getString(context, 'Country'),
+                          textEditingController: userCountryController,
                         ),
                         /*PsDropdownBaseWithControllerWidget(
                             title: Utils.getString(context, 'checkout1__area'),
@@ -153,6 +172,8 @@ class _EditProfileViewState extends State<EditProfileView>
                           aboutMeController: aboutMeController,
                           userAddressController: userAddressController,
                           shippingAreaController: shippingAreaController,
+                          userCityController: userCityController,
+                          userCountryController: userCountryController,
                         ),
                         const SizedBox(
                           height: PsDimens.space20,
@@ -181,7 +202,9 @@ class _TwoButtonWidget extends StatelessWidget {
       required this.phoneController,
       required this.aboutMeController,
       required this.userAddressController,
-      required this.shippingAreaController});
+      required this.shippingAreaController,
+        required this.userCityController,
+        required this.userCountryController});
 
   final TextEditingController userNameController;
   final TextEditingController emailController;
@@ -189,6 +212,8 @@ class _TwoButtonWidget extends StatelessWidget {
   final TextEditingController aboutMeController;
   final TextEditingController userAddressController;
   final TextEditingController shippingAreaController;
+  final TextEditingController userCityController;
+  final TextEditingController userCountryController;
   final UserProvider userProvider;
 
   @override
@@ -236,8 +261,8 @@ class _TwoButtonWidget extends StatelessWidget {
                           userLat: '',
                           userLng: '',
                           userCountry: '',
-                        userCity: '',
-                        userPostcode: '',
+                        userCity: userCityController.text,
+                        userPostcode: userCountryController.text,
                       );
                   await PsProgressDialog.showDialog(context);
                   final PsResource<User> _apiStatus = await userProvider

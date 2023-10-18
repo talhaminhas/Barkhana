@@ -239,6 +239,7 @@ class _ButtonWidget extends StatelessWidget {
 
                     showDialog<dynamic>(
                         context: context,
+                        barrierColor: PsColors.transparent,
                         builder: (BuildContext context) {
                           return WarningDialog(
                             message:

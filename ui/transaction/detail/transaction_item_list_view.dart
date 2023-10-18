@@ -425,7 +425,7 @@ class _OrderStatusWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              _contentCopyIconWidget,
+              //_contentCopyIconWidget,
             ],
           ),
         ),

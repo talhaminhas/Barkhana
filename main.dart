@@ -198,6 +198,7 @@ class _PSAppState extends State<PSApp> {
               defaultBrightnessPreference: BrightnessPreference.light,
               data: (Brightness brightness) {
                 if (brightness == Brightness.light) {
+
                   return themeData(ThemeData.light());
                 } else {
                   return themeData(ThemeData.dark());

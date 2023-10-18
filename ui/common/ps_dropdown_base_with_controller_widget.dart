@@ -11,7 +11,8 @@ class PsDropdownBaseWithControllerWidget extends StatelessWidget {
         required this.onTap,
         this.textEditingController,
         this.isMandatory = false,
-        this.isDisabled = false
+        this.isDisabled = false,
+        this.borderColor
       })
       : super(key: key);
 
@@ -20,6 +21,7 @@ class PsDropdownBaseWithControllerWidget extends StatelessWidget {
   final Function onTap;
   final bool isMandatory;
   final bool isDisabled;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class PsDropdownBaseWithControllerWidget extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge!
-                .copyWith(color: PsColors.mainColor))
+                .copyWith(color: PsColors.discountColor))
       ],
     );
 
@@ -57,9 +59,9 @@ class PsDropdownBaseWithControllerWidget extends StatelessWidget {
             height: PsDimens.space44,
             margin: const EdgeInsets.all(PsDimens.space12),
             decoration: BoxDecoration(
-              color: PsColors.backgroundColor,
+              color: textEditingController?.text == '' ? PsColors.discountColor.withOpacity(0.1) :PsColors.backgroundColor,
               borderRadius: BorderRadius.circular(PsDimens.space4),
-              border: Border.all(color: PsColors.mainDividerColor),
+              border: Border.all(color: borderColor ?? PsColors.mainColor),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

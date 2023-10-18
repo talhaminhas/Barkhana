@@ -181,7 +181,7 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                             Padding(
                                               padding: const EdgeInsets.only( bottom:PsDimens.space6), // Adjust this value for the spacing you want
                                               child:
-                                              ProductVeticalListItem(
+                                              ProductVerticalListItem(
                                                 qty: qty ?? product.minimumOrder,
                                                 basket: basket,
                                                 coreTagKey:
@@ -343,7 +343,7 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                         msg:
                                                         Utils.getString(context, 'product_detail__success_add_to_basket'),
                                                         toastLength: Toast.LENGTH_SHORT,
-                                                        gravity: ToastGravity.BOTTOM,
+                                                        gravity: ToastGravity.CENTER,
                                                         timeInSecForIosWeb: 1,
                                                         backgroundColor: PsColors.mainColor,
                                                         textColor: PsColors.white);
@@ -356,6 +356,7 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                   } else {
                                                     showDialog<dynamic>(
                                                         context: context,
+                                                        barrierColor: PsColors.transparent,
                                                         builder: (BuildContext context) {
                                                           return WarningDialog(
                                                             message: Utils.getString(context,

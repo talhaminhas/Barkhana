@@ -288,7 +288,7 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
                               gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
                                   maxCrossAxisExtent: 200.0,
-                                  childAspectRatio: 0.8
+                                  childAspectRatio: 1
                               ),
                               delegate: SliverChildBuilderDelegate(
                                     (BuildContext context, int index) {

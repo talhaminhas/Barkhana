@@ -21,6 +21,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../../../config/ps_colors.dart';
+
 class CreateReservationView extends StatefulWidget {
   const CreateReservationView({Key? key, required this.animationController})
       : super(key: key);
@@ -159,6 +161,7 @@ class _CreateReservationViewState extends State<CreateReservationView> {
                               reservationDateController.text == '') {
                             showDialog<dynamic>(
                                 context: context,
+                                barrierColor: PsColors.transparent,
                                 builder: (BuildContext context) {
                                   return WarningDialog(
                                     message: Utils.getString(context,
@@ -322,6 +325,7 @@ class PsButtonWidget extends StatelessWidget {
           if (provider.reservationDate == null) {
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   return WarningDialog(
                     message: Utils.getString(context,
@@ -334,6 +338,7 @@ class PsButtonWidget extends StatelessWidget {
               reservationTimeController.text == '') {
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   return WarningDialog(
                     message: Utils.getString(context,
@@ -347,6 +352,7 @@ class PsButtonWidget extends StatelessWidget {
               ) {
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   return WarningDialog(
                     message: Utils.getString(
@@ -360,6 +366,7 @@ class PsButtonWidget extends StatelessWidget {
               ) {
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   return WarningDialog(
                     message: Utils.getString(

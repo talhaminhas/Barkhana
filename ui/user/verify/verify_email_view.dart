@@ -127,6 +127,7 @@ class _TextFieldAndButtonWidget extends StatefulWidget {
 dynamic callWarningDialog(BuildContext context, String text) {
   showDialog<dynamic>(
       context: context,
+      barrierColor: PsColors.transparent,
       builder: (BuildContext context) {
         return WarningDialog(
           message: Utils.getString(context, text),
@@ -208,6 +209,7 @@ class __TextFieldAndButtonWidgetState extends State<_TextFieldAndButtonWidget> {
                   } else {
                     showDialog<dynamic>(
                         context: context,
+                        barrierColor: PsColors.transparent,
                         builder: (BuildContext context) {
                           return ErrorDialog(
                             message: _apiStatus.message,
@@ -217,6 +219,7 @@ class __TextFieldAndButtonWidgetState extends State<_TextFieldAndButtonWidget> {
                 } else {
                   showDialog<dynamic>(
                       context: context,
+                      barrierColor: PsColors.transparent,
                       builder: (BuildContext context) {
                         return ErrorDialog(
                           message: Utils.getString(
@@ -355,6 +358,7 @@ class __ChangeEmailAndRecentCodeWidgetState
               if (_apiStatus.data != null) {
                 showDialog<dynamic>(
                     context: context,
+                    barrierColor: PsColors.transparent,
                     builder: (BuildContext context) {
                       return SuccessDialog(
                         message: _apiStatus.data!.message,
@@ -363,6 +367,7 @@ class __ChangeEmailAndRecentCodeWidgetState
               } else {
                 showDialog<dynamic>(
                     context: context,
+                    barrierColor: PsColors.transparent,
                     builder: (BuildContext context) {
                       return ErrorDialog(
                         message: _apiStatus.message,
@@ -372,6 +377,7 @@ class __ChangeEmailAndRecentCodeWidgetState
             } else {
               showDialog<dynamic>(
                   context: context,
+                  barrierColor: PsColors.transparent,
                   builder: (BuildContext context) {
                     return ErrorDialog(
                       message:

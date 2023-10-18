@@ -11,6 +11,7 @@ import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/repository/search_history_repository.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
+import 'package:flutterrestaurant/ui/search/search_sub_category_view_all/search_sub_category_view_all.dart';
 import 'package:flutterrestaurant/ui/search_item/search_item_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
@@ -23,7 +24,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shimmer/shimmer.dart';
-
+import 'package:dio/dio.dart';
 import '../../api/common/ps_status.dart';
 import '../../provider/basket/basket_provider.dart';
 import '../../provider/product/search_result_provider.dart';
@@ -38,6 +39,7 @@ import '../../viewobject/sub_category.dart';
 import '../common/dialog/choose_attribute_dialog.dart';
 import '../common/dialog/warning_dialog_view.dart';
 import '../common/ps_frame_loading_widget.dart';
+import '../common/ps_search_textfield_widget.dart';
 import '../product/item/product_vertical_list_item.dart';
 
 class SearchItemListView extends StatefulWidget {
@@ -51,12 +53,14 @@ class SearchItemListView extends StatefulWidget {
   @override
   _SearchHistoryListViewState createState() => _SearchHistoryListViewState();
 }
-
+final GlobalKey _searchTextFieldKey = GlobalKey();
 class _SearchHistoryListViewState extends State<SearchItemListView>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   // final ScrollController _scrollController = ScrollController();
   late Animation<double> fadeAnimation;
+
+  final TextEditingController userInputItemNameTextEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -66,12 +70,14 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
       begin: 0.0,
       end: 1.0,
     ).animate(animationController);
+
     super.initState();
+
   }
 
   final TextEditingController inputSearchController = TextEditingController();
   PsValueHolder? psValueHolder;
-
+  final FocusNode _searchFocusNode = FocusNode();
   @override
   void dispose() {
     animationController.dispose();
@@ -85,7 +91,10 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
   ProductRepository? repo1;
   bool isCallFirstTime = true;
   SearchHistory? searchHistory;
-
+  SearchResultProvider? searchResultProvider ;
+  List<Product>? itemList;
+  final Dio dio = Dio();
+  CancelToken cancelToken = CancelToken();
   @override
   Widget build(BuildContext context) {
     repo1 = Provider.of<ProductRepository>(context);
@@ -93,6 +102,8 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
     searchResultRepository = Provider.of<SearchResultRepository>(context);
     basketRepository = Provider.of<BasketRepository>(context);
     psValueHolder = Provider.of<PsValueHolder>(context);
+
+    searchResultProvider = SearchResultProvider(searchResultRepository!);
 
     Future<bool> _requestPop() {
       animationController.reverse().then<dynamic>(
@@ -107,31 +118,33 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
       return Future<bool>.value(false);
     }
 
-    inputSearchController.text = widget.productParameterHolder.searchTerm!;
-    print(inputSearchController);
-    final Widget _searchTextFieldWidget = InkWell(
-      child: Container(
-        height: 40,
-        width: double.infinity,
-        margin: const EdgeInsets.all(PsDimens.space12),
-        decoration: BoxDecoration(
-          color: PsColors.mainDividerColor,
-          borderRadius: BorderRadius.circular(PsDimens.space4),
-          border: Border.all(color: PsColors.mainDividerColor),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(
-              left: PsDimens.space12, top: PsDimens.space10),
-          child: Text(inputSearchController.text,
-              style: Theme.of(context).textTheme.titleSmall),
-        ),
-      ),
-      onTap: () {
+
+    //inputSearchController.text = widget.productParameterHolder.searchTerm!;
+    final SearchResultParameterHolder holder = SearchResultParameterHolder(searchTerm: inputSearchController.text.trim());
+    /*final Widget _searchTextFieldWidget = InkWell(
+        key: _searchTextFieldKey,
+      child: PsSearchTextFieldWidget(
+            hintText:
+            Utils.getString(context, 'search_history__app_bar_search'),
+            textEditingController: inputSearchController,
+            psValueHolder: psValueHolder,
+            height: 40,
+            onTextChange: (text){
+              setState(() {
+                    holder.setSearchTerm(text);
+              });
+            },
+            //textInputAction: TextInputAction.search,
+          )
+      *//*onTap: () {
         dashboardViewKey.currentState?.onTapBack();
         //Navigator.pop(context);
         inputSearchController.clear();
-      },
-    );
+      },*//*
+    );*/
+
+
+
     return Scaffold(
       backgroundColor: PsColors.baseColor,
       appBar: AppBar(
@@ -141,34 +154,45 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
         iconTheme: Theme.of(context)
             .iconTheme
             .copyWith(color: PsColors.mainColorWithWhite),
-        title: _searchTextFieldWidget,
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: PsDimens.space8),
-            child: IconButton(
-              icon: Icon(Icons.search, color: PsColors.mainColor, size: 26),
-              onPressed: () {
-                dashboardViewKey.currentState?.onTapBack();
-                //Navigator.pop(context);
+        title: InkWell(
+            key: _searchTextFieldKey,
+            child: PsSearchTextFieldWidget(
+              hintText:
+              Utils.getString(context, 'search_history__app_bar_search'),
+              textEditingController: inputSearchController,
+              psValueHolder: psValueHolder,
+              height: 40,
+              focusNode: _searchFocusNode,
+              onTextChange: (String text){
+                //setState(() {
+                final SearchResultParameterHolder holder =
+                SearchResultParameterHolder(
+                    searchTerm: text);
+                  searchResultProvider!.loadSearchResult(holder.toMap());
+                // });
               },
-            ),
-          ),
-        ],
+              //textInputAction: TextInputAction.search,
+            )
+        ),
       ),
       body: WillPopScope(
-          onWillPop: _requestPop,
+          onWillPop: () async {
+            // To disable the back button, return false.
+            return false;
+          },
           child: MultiProvider(
               providers: <SingleChildWidget>[
+                // Use ValueListenableBuilder to listen to text changes
+
                 ChangeNotifierProvider<SearchResultProvider>(
                   lazy: false,
                   create: (BuildContext context) {
-                    final SearchResultProvider provider =
-                        SearchResultProvider(searchResultRepository!);
                     final SearchResultParameterHolder holder =
                         SearchResultParameterHolder(
-                            searchTerm: inputSearchController.text.trim());
-                    provider.loadSearchResult(holder.toMap());
-                    return provider;
+                            searchTerm: widget.productParameterHolder.searchTerm!);
+
+                    searchResultProvider!.loadSearchResult(holder.toMap());
+                    return searchResultProvider!;
                   },
                 ),
                 ChangeNotifierProvider<BasketProvider>(
@@ -188,6 +212,7 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                             repo: repo1!, valueHolder: psValueHolder);
                     provider
                         .loadProductListByKey(widget.productParameterHolder);
+                    //print(provider.productList.data?.first.name);
                     return provider;
                   },
                 ),
@@ -201,20 +226,21 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                 )
               ],
               child: Consumer<SearchResultProvider>(builder:
-                  (BuildContext context, SearchResultProvider provider,
+                  (BuildContext context, SearchResultProvider searchResultProvider,
                       Widget? child) {
+                //provider.loadSearchResult(holder.toMap());
                 if (
                     //provider != null &&
                     // provider.productList != null &&
-                    provider.searchResult.data != null) {
+                searchResultProvider.searchResult.data != null) {
                   final List<Category> categoriesList =
-                      provider.searchResult.data!.categories!;
+                  searchResultProvider.searchResult.data!.categories!;
                   final List<SubCategory> subCategoriesList =
-                      provider.searchResult.data!.subCategories!;
+                  searchResultProvider.searchResult.data!.subCategories!;
+                  itemList =
+                  searchResultProvider.searchResult.data!.products!;
 
-                  final List<Product> itemList =
-                      provider.searchResult.data!.products!;
-                  if (isCallFirstTime) {
+                  /*if (isCallFirstTime) {
                     ///
                     /// Add to Search History
                     ///
@@ -223,12 +249,22 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                     searchHistoryProvider!.addSearchHistoryList(searchHistory!);
 
                     isCallFirstTime = false;
-                  }
+                  }*/
+                  if(inputSearchController.text == searchResultProvider.searchResult.data!.id)
+                    print('match');
+                  print(inputSearchController.text);
+                  print(searchResultProvider.searchResult.data!.getPrimaryKey());
+                  print(searchResultProvider.searchResult.data!.products);
+                  print('yes');
+                  FocusScope.of(context).requestFocus(_searchFocusNode);
+                  print('-----------------------------------building ui------------------------------------------');
                   return SingleChildScrollView(
                     child: Container(
                       color: PsColors.baseColor,
                       child: Column(
                         children: <Widget>[
+                          /*_searchTextFieldWidget,*/
+
                           /*CustomResultListTileView(
                             fadeAnimation: fadeAnimation,
                             animationController: animationController,
@@ -266,8 +302,8 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                           CustomItemResultListView(
                             fadeAnimation: fadeAnimation,
                             animationController: animationController,
-                            productList: itemList,
-                            provider: provider,
+                            productList: itemList!,
+                            provider: searchResultProvider!,
                             keyword: inputSearchController.text.trim(),
                           ),
                         ],
@@ -275,9 +311,12 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                     ),
                   );
                 } else {
-                  return PSProgressIndicator(provider.searchResult.status);
+                  return PSProgressIndicator(searchResultProvider!.searchResult.status);
                 }
-              }))),
+              }
+              )
+          )
+      ),
     );
   }
 }
@@ -555,11 +594,11 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
     with SingleTickerProviderStateMixin {
   String? qty;
   String colorId = '';
-  late String colorValue;
-  late bool checkAttribute;
+  //late String colorValue;
+  //late bool checkAttribute;
   late Basket basket;
   late String id;
-  late double bottomSheetPrice;
+  //late double bottomSheetPrice;
   double totalOriginalPrice = 0.0;
   BasketSelectedAttribute basketSelectedAttribute = BasketSelectedAttribute();
   BasketSelectedAddOn basketSelectedAddOn = BasketSelectedAddOn();
@@ -568,7 +607,9 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
   Widget build(BuildContext context) {
     final BasketProvider basketProvider = Provider.of<BasketProvider>(context);
     final PsValueHolder psValueHolder = Provider.of<PsValueHolder>(context);
-    if (widget.productList.isNotEmpty) {
+    if (widget.productList.isNotEmpty
+        && widget.keyword != ''
+    ) {
       return Column(
         children: <Widget>[
           AnimatedBuilder(
@@ -618,7 +659,7 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
               padding: const EdgeInsets.symmetric(horizontal: 20),
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  childAspectRatio: 0.79, maxCrossAxisExtent: 220),
+                  childAspectRatio: 0.84, maxCrossAxisExtent: 220),
               itemCount: widget.productList.length,
               itemBuilder: (BuildContext context, int index) {
                 widget.animationController.forward();
@@ -633,7 +674,10 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                 } else {
                   final Product product =
                       widget.provider.searchResult.data!.products![index];
-                  return AnimatedBuilder(
+                  Basket? basketPrd = basketProvider!.basketList.data!.firstWhere((item) => item.id == product.id, orElse: () => Basket());
+                  return Container(
+                    margin: const EdgeInsets.all(PsDimens.space4),
+                      child:AnimatedBuilder(
                       animation: Tween<double>(begin: 0.0, end: 1.0).animate(
                         CurvedAnimation(
                           parent: widget.animationController,
@@ -659,26 +703,27 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                                     (1.0 -
                                         Tween<double>(begin: 0.0, end: 1.0)
                                             .animate(
-                                              CurvedAnimation(
-                                                parent:
-                                                    widget.animationController,
-                                                curve: Interval(
-                                                    (1 /
-                                                            widget.productList
-                                                                .length) *
-                                                        index,
-                                                    1.0,
-                                                    curve:
-                                                        Curves.fastOutSlowIn),
-                                              ),
-                                            )
+                                          CurvedAnimation(
+                                            parent:
+                                            widget.animationController,
+                                            curve: Interval(
+                                                (1 /
+                                                    widget.productList
+                                                        .length) *
+                                                    index,
+                                                1.0,
+                                                curve:
+                                                Curves.fastOutSlowIn),
+                                          ),
+                                        )
                                             .value),
                                 0.0),
                             child: child,
                           ),
                         );
                       },
-                      child: ProductVeticalListItem(
+                      child: ProductVerticalListItem(
+                        basket: basketPrd,
                         coreTagKey: widget.provider.hashCode.toString() +
                             widget.productList[index].id!,
                         animationController: widget.animationController,
@@ -716,25 +761,43 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                           dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
                               Utils.getString(context, 'product_detail__title'),
                               PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT);
-                          /*Navigator.pushNamed(context, RoutePaths.productDetail,
-                              arguments: holder);*/
+                        },
+                        onUpdateQuantityTap: (String? productQuantity) async{
+                          //print(productQuantity!);
+
+                          id =
+                          '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
+                          basket = Basket(
+                              id: id,
+                              productId: product!.id,
+                              qty: productQuantity,
+                              shopId: psValueHolder!.shopId,
+                              basketPrice: product.unitPrice,
+                              basketOriginalPrice: totalOriginalPrice == 0.0
+                                  ? product.originalPrice
+                                  : totalOriginalPrice.toString(),
+                              selectedAttributeTotalPrice:
+                              basketSelectedAttribute
+                                  .getTotalSelectedAttributePrice()
+                                  .toString(),
+                              product: product,
+                              basketSelectedAttributeList:
+                              basketSelectedAttribute.getSelectedAttributeList(),
+                              basketSelectedAddOnList:
+                              basketSelectedAddOn.getSelectedAddOnList());
+
+                          if(productQuantity == '0')
+                          {
+                            basketProvider!.deleteBasketByProduct(
+                                basket!);
+                          }
+                          else
+                            await basketProvider!.updateBasket(basket!);
+
+                          //reloadGrid();
                         },
                         onBasketTap: () async {
-                          if (product.isAvailable == '1') {
-                            if (product.addOnList!.isNotEmpty &&
-                                    product.addOnList![0].id != '' ||
-                                product.customizedHeaderList!.isNotEmpty &&
-                                    product.customizedHeaderList![0].id != '' &&
-                                    product.customizedHeaderList![0]
-                                            .customizedDetail !=
-                                        null) {
-                              showDialog<dynamic>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return ChooseAttributeDialog(
-                                        product: widget.productList[index]);
-                                  });
-                            } else {
+
                               id =
                                   '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                               if (product.minimumOrder == '0') {
@@ -746,11 +809,9 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                                   qty: qty ?? product.minimumOrder,
                                   shopId: psValueHolder.shopId,
                                   selectedColorId: colorId,
-                                  selectedColorValue: colorValue,
+                                  //selectedColorValue: colorValue,
                                   // ignore: unnecessary_null_comparison
-                                  basketPrice: bottomSheetPrice == null
-                                      ? product.unitPrice
-                                      : bottomSheetPrice.toString(),
+                                  basketPrice:product.unitPrice,
                                   basketOriginalPrice: totalOriginalPrice == 0.0
                                       ? product.originalPrice
                                       : totalOriginalPrice.toString(),
@@ -767,41 +828,80 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                                       .getSelectedAddOnList());
 
                               await basketProvider.addBasket(basket);
-
                               Fluttertoast.showToast(
                                   msg: Utils.getString(context,
                                       'product_detail__success_add_to_basket'),
                                   toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
+                                  gravity: ToastGravity.CENTER,
                                   timeInSecForIosWeb: 1,
                                   backgroundColor: PsColors.mainColor,
                                   textColor: PsColors.white);
 
-                              await Navigator.pushNamed(
-                                context,
-                                RoutePaths.basketList,
-                              );
-                            }
-                          } else {
-                            showDialog<dynamic>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return WarningDialog(
-                                    message: Utils.getString(context,
-                                        'product_detail__is_not_available'),
-                                    onPressed: () {},
-                                  );
-                                });
-                          }
                         },
                         valueHolder: psValueHolder,
-                      ));
+                      )));
                 }
               }),
         ],
       );
-    } else {
-      return const SizedBox();
+    }  else {
+      widget.animationController.forward();
+      final Animation<double> animation =
+      Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+          parent: widget.animationController,
+          curve: const Interval(0.5 * 1, 1.0,
+              curve: Curves.fastOutSlowIn)));
+      return AnimatedBuilder(
+        animation: widget.animationController,
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            padding: const EdgeInsets.only(bottom: PsDimens.space120),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const SizedBox(
+                  height: PsDimens.space32,
+                ),
+                Image.asset(
+                  'assets/images/demo_alert.png',
+                  height: 150,
+                  width: 200,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(
+                  height: PsDimens.space32,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                      PsDimens.space32, 0, PsDimens.space32, 0),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                        'Nothing Found',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(),
+                        textAlign: TextAlign.center),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        builder: (BuildContext context, Widget? child) {
+          return FadeTransition(
+              opacity: animation,
+              child: Transform(
+                transform: Matrix4.translationValues(
+                    0.0, 100 * (1.0 - animation.value), 0.0),
+                child: child,
+              ));
+        },
+      );
     }
   }
 }

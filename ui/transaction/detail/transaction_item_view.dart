@@ -106,13 +106,15 @@ class _ItemWidget extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          transaction.productName ?? '-',
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.titleMedium,
+                        Expanded(
+                          child: Text(
+                            transaction.productName ?? '-',
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                           decoration: BoxDecoration(
                             color: PsColors.mainColor, // Button background color
                             borderRadius: BorderRadius.circular(5.0), // Rounded corners

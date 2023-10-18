@@ -22,6 +22,8 @@ import 'package:flutterrestaurant/viewobject/holder/intent_holder/checkout_statu
 import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/ps_colors.dart';
+
 class CreditCardView extends StatefulWidget {
   const CreditCardView(
       {Key? key,
@@ -174,6 +176,7 @@ class CreditCardViewState extends State<CreditCardView> {
   dynamic callWarningDialog(BuildContext context, String text) {
     showDialog<dynamic>(
         context: context,
+        barrierColor: PsColors.transparent,
         builder: (BuildContext context) {
           return WarningDialog(
             message: Utils.getString(context, text),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
@@ -17,6 +19,9 @@ import 'package:flutterrestaurant/viewobject/search_history.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/ps_constants.dart';
+import '../common/ps_expansion_tile.dart';
+import '../history/list/history_list_container.dart';
+import '../history/list/history_list_view.dart';
 
 class SearchHistoryListView extends StatefulWidget {
 
@@ -32,12 +37,14 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
     animationController =
         AnimationController(duration: PsConfig.animation_duration, vsync: this);
     super.initState();
+
   }
     
   final TextEditingController userInputItemNameTextEditingController =
       TextEditingController();
   final ProductParameterHolder productParameterHolder =
       ProductParameterHolder().getLatestParameterHolder();
+  bool showRecentSearch = false;
   PsValueHolder? psValueHolder;
 
   @override
@@ -66,7 +73,7 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
       );
       return Future<bool>.value(false);
     }
-    final Widget _searchTextFieldWidget = PsSearchTextFieldWidget(
+    /*final Widget _searchTextFieldWidget = PsSearchTextFieldWidget(
        hintText:
             Utils.getString(context, 'search_history__app_bar_search'),
       textEditingController:
@@ -74,7 +81,7 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
       psValueHolder: psValueHolder,
       height: 40,
       textInputAction: TextInputAction.search,
-    );
+    );*/
     return WillPopScope(
       onWillPop: _requestPop,
       child: ChangeNotifierProvider<SearchHistoryProvider>(
@@ -97,15 +104,58 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
             iconTheme: Theme.of(context)
                 .iconTheme
                 .copyWith(color: PsColors.mainColorWithWhite),
-            title: _searchTextFieldWidget,
-            actions: <Widget>[
+            title: InkWell(
+              child: Container(
+              height: 40,
+                width: double.infinity,
+                margin: const EdgeInsets.all(PsDimens.space12),
+                decoration: BoxDecoration(
+                  color: PsColors.mainDividerColor,
+                  borderRadius: BorderRadius.circular(PsDimens.space4),
+                  border: Border.all(color: PsColors.mainDividerColor),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: PsDimens.space12, top: PsDimens.space10),
+                  child: Text(Utils.getString(context, 'search_history__app_bar_search'),
+                      style: Theme.of(context).textTheme.titleSmall),
+                ),
+              ),
+            onTap: () {
+              productParameterHolder.searchTerm = '';
+              dashboardViewKey.currentState
+                  ?.selectedProductParameterHolder =
+                  productParameterHolder;
+              dashboardViewKey.currentState
+                  ?.updateSelectedIndexWithAnimation(
+                  Utils.getString(
+                      context, 'home__bottom_app_bar_search'),
+                  PsConst
+                      .REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
+            },
+          ),/*
+                GestureDetector(
+                onTap: () {
+                  productParameterHolder.searchTerm = '';
+                    dashboardViewKey.currentState
+                        ?.selectedProductParameterHolder =
+                        productParameterHolder;
+                    dashboardViewKey.currentState
+                        ?.updateSelectedIndexWithAnimation(
+                        Utils.getString(
+                            context, 'home__bottom_app_bar_search'),
+                        PsConst
+                            .REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
+                },
+                child: _searchTextFieldWidget),*/
+            /*actions: <Widget>[
               Padding(padding: const EdgeInsets.only(right: PsDimens.space8),
                 child: IconButton(
                   icon: Icon(Icons.search,
                     color: PsColors.mainColor,
                     size: 26),
                     onPressed: () {
-                      productParameterHolder.searchTerm = 
+                      productParameterHolder.searchTerm =
                         userInputItemNameTextEditingController.text;
                       if(productParameterHolder.searchTerm != '') {
                         dashboardViewKey.currentState
@@ -117,95 +167,138 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
                                 context, 'home__bottom_app_bar_search'),
                             PsConst
                                 .REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
-                        /*Navigator.pushNamed(
+                        *//*Navigator.pushNamed(
                           context, RoutePaths.searchItemList,
-                          arguments: productParameterHolder);*/
+                          arguments: productParameterHolder);*//*
                       }
                     },
                   ),
                 ),
-              ],
+              ],*/
             ),
-            body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            if (psValueHolder!.loginUserId != null &&
+            body: psValueHolder!.loginUserId != null &&
                 psValueHolder!.loginUserId != '' &&
                 provider.historyList.data != null &&
-                provider.historyList.data!.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(
-                top: PsDimens.space16,
-                left: PsDimens.space16,
-                right: PsDimens.space16),
-              child: Text(
-                  Utils.getString(context, 'search__recent_search'),
-                style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RefreshIndicator(
-                child: CustomScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  slivers: <Widget>[
-                    SliverToBoxAdapter(
-                      child: Wrap(
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        children: List.generate(
-                          provider.historyList.data?.length ?? 0,
-                              (int index) {
-                            return SearchHistoryListItem(
-                              searchHistory: provider.historyList.data!.toList()[index],
-                              onTap: () {
-                                productParameterHolder.searchTerm = provider.historyList.data!.toList()[index].searchTeam;
-                                dashboardViewKey.currentState?.selectedProductParameterHolder = productParameterHolder;
-                                dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
-                                  Utils.getString(context, 'home__bottom_app_bar_search'),
-                                  PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT,
-                                );
-                                /*Navigator.pushNamed(
-                      context, RoutePaths.searchItemList,
-                      arguments: productParameterHolder);*/
-                              },
-                              onDeleteTap: () {
-                                showDialog<dynamic>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return ConfirmDialogView(
-                                      description: Utils.getString(context, 'search_history__confirm_dialog_description'),
-                                      leftButtonText: Utils.getString(context, 'app_info__cancel_button_name'),
-                                      rightButtonText: Utils.getString(context, 'dialog__ok'),
-                                      onAgreeTap: () async {
-                                        Navigator.of(context).pop();
-                                        productParameterHolder.searchTerm = provider.historyList.data!.toList()[index].searchTeam;
-                                        final SearchHistory searchHistory = SearchHistory(searchTeam: productParameterHolder.searchTerm);
-                                        provider.deleteSearchHistory(searchHistory);
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
+                provider.historyList.data!.isNotEmpty ?
+                Stack(
+                  children: <Widget>[
+                    /*Positioned(
+                      top: 0,
+                      left: 0,
+                      //right: 0,
+                      //bottom: 0,
+                      child:*/
+                      HistoryListContainerView(
                       ),
-                    ),
-                  ],
-                ),
-                onRefresh: () {
-                  return provider.resetSearchHistoryList();
-                },
-              ),
-            )
+                   // ),
+                    /*Container(
+                        margin: const EdgeInsets.all(PsDimens.space14),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.center,
+                            colors: [
+                              PsColors.mainColor.withOpacity(0.8),
+                              PsColors.backgroundColor.withOpacity(0.4),
+                            ],
+                          ),
+                          border: Border.all(
+                            color: PsColors.mainColor,  // Set the desired border color here
+                            width: 2,  // Set the border width
+                          ),
+                          borderRadius:
+                          const BorderRadius.all(Radius.circular(PsDimens.space8)),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(Radius.circular(5)),
+                          child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                              child:
+                              PsExpansionTile(
+                          initiallyExpanded: showRecentSearch,
+                          title: Text(
+                              Utils.getString(context, 'search__recent_search'),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                          ),
+                          children: <Widget>[
+                            Container(
+                                decoration: const BoxDecoration(
 
-          ])
-          ));
+                                  borderRadius: BorderRadius.all(Radius.circular(6)),
+                                ),
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RefreshIndicator(
+                                          child: CustomScrollView(
+                                            physics: const AlwaysScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            slivers: <Widget>[
+                                              SliverToBoxAdapter(
+                                                child: Wrap(
+                                                  spacing: 8.0,
+                                                  runSpacing: 8.0,
+                                                  children: List.generate(
+                                                    provider.historyList.data?.length ?? 0,
+                                                        (int index) {
+                                                      return SearchHistoryListItem(
+                                                        searchHistory: provider.historyList.data!.toList()[index],
+                                                        onTap: () {
+                                                          productParameterHolder.searchTerm = provider.historyList.data!.toList()[index].searchTeam;
+                                                          dashboardViewKey.currentState?.selectedProductParameterHolder = productParameterHolder;
+                                                          dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                                                            Utils.getString(context, 'home__bottom_app_bar_search'),
+                                                            PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT,
+                                                          );
+                                                        },
+                                                        onDeleteTap: () {
+                                                          showDialog<dynamic>(
+                                                            context: context,
+                                                            builder: (BuildContext context) {
+                                                              return ConfirmDialogView(
+                                                                description: Utils.getString(context, 'search_history__confirm_dialog_description'),
+                                                                leftButtonText: Utils.getString(context, 'app_info__cancel_button_name'),
+                                                                rightButtonText: Utils.getString(context, 'dialog__ok'),
+                                                                onAgreeTap: () async {
+                                                                  Navigator.of(context).pop();
+                                                                  productParameterHolder.searchTerm = provider.historyList.data!.toList()[index].searchTeam;
+                                                                  final SearchHistory searchHistory = SearchHistory(searchTeam: productParameterHolder.searchTerm);
+                                                                  provider.deleteSearchHistory(searchHistory);
+                                                                },
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          onRefresh: () {
+                                            return provider.resetSearchHistoryList();
+                                          },
+                                        ),
+                                      )
+
+                                    ])
+                            )
+                          ],
+                        )
+                    ),
+                  )),*/
+
+                  ],
+                )
+
+                :
+                Container()
+          );
         })
       ),
     );

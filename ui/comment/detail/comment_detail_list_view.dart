@@ -238,6 +238,7 @@ class _EditTextAndButtonWidgetState extends State<EditTextAndButtonWidget> {
                       if (commentController.text.isEmpty) {
                         showDialog<dynamic>(
                             context: context,
+                            barrierColor: PsColors.transparent,
                             builder: (BuildContext context) {
                               return WarningDialog(
                                 message: Utils.getString(context,

@@ -16,7 +16,9 @@ class PsSearchTextFieldWidget extends StatelessWidget {
       this.height = PsDimens.space44,
       this.keyboardType = TextInputType.text,
       this.textInputAction = TextInputAction.done,
-      this.psValueHolder
+      this.psValueHolder,
+        this.onTextChange,
+        required this.focusNode
       });
 
   final TextEditingController? textEditingController;
@@ -25,38 +27,41 @@ class PsSearchTextFieldWidget extends StatelessWidget {
   final TextInputType keyboardType;
   final PsValueHolder? psValueHolder;
   final TextInputAction textInputAction;
+  final Function(String)? onTextChange;
+  final FocusNode focusNode;
 
   @override
   Widget build(BuildContext context) {
     final ProductParameterHolder productParameterHolder =
         ProductParameterHolder().getLatestParameterHolder();
     final Widget _productTextFieldWidget = TextField(
-      keyboardType: TextInputType.text,
-      textInputAction: textInputAction,
-      maxLines: null,
-      controller: textEditingController,
-      style: Theme.of(context).textTheme.bodyMedium,
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.only(
-          left: PsDimens.space12,
-          bottom: PsDimens.space12,
-          right: PsDimens.space12
+      focusNode: focusNode,
+        onChanged: onTextChange,
+        keyboardType: TextInputType.text,
+        textInputAction: textInputAction,
+        maxLines: null,
+        controller: textEditingController,
+        style: Theme.of(context).textTheme.bodyMedium,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.only(
+            left: PsDimens.space12,
+            bottom: PsDimens.space12,
+            right: PsDimens.space12,
+          ),
+          border: InputBorder.none,
+          hintText: hintText,
         ),
-        border: InputBorder.none,
-        hintText: hintText,
-      ),
-      onSubmitted: (String value) {
-        productParameterHolder.searchTerm = textEditingController!.text;
-        dashboardViewKey.currentState?.selectedProductParameterHolder = productParameterHolder;
-        dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
-            Utils.getString(
-                context, 'home__bottom_app_bar_search'),
-            PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
-        /*Navigator.pushNamed(
-            context, RoutePaths.searchItemList,
-            arguments: productParameterHolder);*/
-      },
-    );
+        onSubmitted: (String value) {
+          // Your onSubmitted code here
+          productParameterHolder.searchTerm = textEditingController!.text;
+          dashboardViewKey.currentState?.selectedProductParameterHolder = productParameterHolder;
+          dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+              Utils.getString(context, 'home__bottom_app_bar_search'),
+              PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
+        },
+      )
+
+    ;
 
     return Column(
       children: <Widget>[

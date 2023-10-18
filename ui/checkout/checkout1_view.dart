@@ -60,9 +60,13 @@ class _Checkout1ViewState extends State<Checkout1View> {
   TextEditingController costPerChargesController = TextEditingController();
   TextEditingController totalCostController = TextEditingController();
   TextEditingController shippingAreaController = TextEditingController();
-  TextEditingController orderTimeTextEditingController =
-      TextEditingController();
+  TextEditingController orderTimeTextEditingController = TextEditingController();
+  FocusNode focusNode = FocusNode();
 
+  void checkFields(String text){
+    setState(() {
+    });
+  }
   bool isSwitchOn = false;
   // List<ScheduleOrder>? scheduleOrder;
   UserRepository? userRepository;
@@ -152,7 +156,29 @@ class _Checkout1ViewState extends State<Checkout1View> {
       }
     });
   }
-
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed
+    userEmailController.dispose();
+    userPostcodeController.dispose();
+    userCityController.dispose();
+    userCountryController.dispose();
+    userPhoneController.dispose();
+    addressController.dispose();
+    distanceController.dispose();
+    unitController.dispose();
+    costPerChargesController.dispose();
+    totalCostController.dispose();
+    shippingAreaController.dispose();
+    orderTimeTextEditingController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
   dynamic updateDateAndTime(DateTime dateTime) {
    
     latestDate = '$dateTime';
@@ -165,7 +191,13 @@ class _Checkout1ViewState extends State<Checkout1View> {
         deliveryPickUpDate! + ' ' + deliveryPickUpTime!;
     // setState(() {});
   }
-
+  void resetAddress(String text){
+    setState(() {
+    });
+    addressController.text = '';
+    userCityController.text = '';
+    userCountryController.text = '';
+  }
   @override
   Widget build(BuildContext context) {
     userRepository = Provider.of<UserRepository>(context);
@@ -177,6 +209,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
 
     dateTime = DateTime.now()
           .add(Duration(minutes: int.parse(valueHolder!.defaultOrderTime!)));
+
 
     if (callDeliveryCost) {
       if (shopInfoProvider!.shopInfo.data != null &&
@@ -221,129 +254,167 @@ class _Checkout1ViewState extends State<Checkout1View> {
           userProvider.selectedArea = userProvider.user.data!.area;
           latlng = userProvider.getUserLatLng(valueHolder!);
           print('${latlng?.latitude} +' '+${latlng?.longitude}');
-;          bindDataFirstTime = false;
+          bindDataFirstTime = false;
         }
-        return SingleChildScrollView(
-          child: Container(
-            color: PsColors.coreBackgroundColor,
-            padding: const EdgeInsets.only(
-                left: PsDimens.space16, right: PsDimens.space16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const SizedBox(
-                  height: PsDimens.space16,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                      left: PsDimens.space12,
-                      right: PsDimens.space12,
-                      top: PsDimens.space16),
-                  child: Text(
-                    Utils.getString(context, 'checkout1__contact_info'),
-                    style: Theme.of(context).textTheme.titleSmall!.copyWith(),
-                  ),
-                ),
-                const SizedBox(
-                  height: PsDimens.space16,
-                ),
-                PsTextFieldWidget(
-                    titleText: Utils.getString(context, 'edit_profile__email'),
-                    textAboutMe: false,
-                    hintText: Utils.getString(context, 'edit_profile__email'),
-                    textEditingController: userEmailController,
-                    isMandatory: true),
-                PsTextFieldWidget(
-                    titleText: Utils.getString(context, 'edit_profile__phone'),
-                    textAboutMe: false,
-                    keyboardType: TextInputType.number,
-                    hintText: Utils.getString(context, 'edit_profile__phone'),
-                    textEditingController: userPhoneController,
-                    isMandatory: true),
+        return GestureDetector(
+            onTap: () {
+              // Hide keyboard and unfocus when tapping outside the TextField
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: SingleChildScrollView(
+              child: Container(
+                color: PsColors.coreBackgroundColor,
+                padding: const EdgeInsets.only(
+                    left: PsDimens.space16, right: PsDimens.space16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const SizedBox(
+                      height: PsDimens.space16,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: PsDimens.space12,
+                          right: PsDimens.space12,
+                          top: PsDimens.space16),
+                      child: Text(
+                        Utils.getString(context, 'checkout1__contact_info'),
+                        style: Theme.of(context).textTheme.titleSmall!.copyWith(),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: PsDimens.space16,
+                    ),
+                    PsTextFieldWidget(
+                      titleText: Utils.getString(context, 'edit_profile__email'),
+                      textAboutMe: false,
+                      hintText: Utils.getString(context, 'edit_profile__email'),
+                      textEditingController: userEmailController,
+                      isMandatory: true,
+                      onChanged: checkFields,
+                      borderColor: userEmailController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                    ),
+                    PsTextFieldWidget(
+                      titleText: Utils.getString(context, 'edit_profile__phone'),
+                      textAboutMe: false,
+                      phoneInputType: true,
+                      hintText: Utils.getString(context, 'edit_profile__phone'),
+                      onChanged: checkFields,
+                      textEditingController: userPhoneController,
+                      isMandatory: true,
+                      borderColor: userPhoneController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                    ),
 
-                /*_EditAndDeleteButtonWidget(
+                    /*_EditAndDeleteButtonWidget(
                     userProvider: userProvider,
                     shopInfoProvider: shopInfoProvider!,
                     updateDeliveryClick: updateDeliveryClick,
                     updatePickUpClick: updatePickUpClick,
                     isClickDeliveryButton: userProvider.isClickDeliveryButton,
                     isClickPickUpButton: userProvider.isClickPickUpButton),*/
-                const SizedBox(height: PsDimens.space8),
-                if (userProvider.isClickDeliveryButton)
-                  Column(
-                    children: <Widget>[
-        PsTextFieldWidget(
-        titleText: Utils.getString(context, 'edit_profile__postcode'),
-          textAboutMe: false,
-          hintText: Utils.getString(context, 'edit_profile__postcode'),
-          textEditingController: userPostcodeController,
-          isMandatory: true),
-
-                      PsDropdownBaseWithControllerWidget(
-                          title: Utils.getString(context, 'edit_profile__address'),
-                          textEditingController: addressController,
-                          isMandatory: true,
-                          onTap: () async {
-                            final isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
-                            isAValidPostcode.whenComplete(() async {
-                              if(await isAValidPostcode) {
-                                final Object? result = await Navigator.pushNamed(
-                                    context, RoutePaths.postalAddressList,
-                                arguments: userPostcodeController.text);
-                                if (result != null) {
-                                  final Address selectedAddress = result as Address;
-                                  setState(() {
-                                    addressController.text = selectedAddress.line_1!;
-                                    userCityController.text = selectedAddress.townOrCity!;
-                                    userCountryController.text = selectedAddress.country!;
-                                    deliveryCostCalculate(
-                                      provider!,
-                                      widget.basketList,
-                                      selectedAddress.latitude!,
-                                      selectedAddress.longitude!,
-                                    );
-                                  });
-                                  //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
-                                  LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
-                                  userProvider!.setUserLatLng(coordinates);
-
-                                }
-                              }
-                              else{
-                                Fluttertoast.showToast(
-                                    msg:
-                                    Utils.getString(context, 'checkout1_view__please_enter_postcode'),
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: PsColors.black,
-                                    textColor: PsColors.white);
-                              }
-                            });
-
-                          }),
-                      PsTextFieldWidget(
-                          titleText: Utils.getString(context, 'edit_profile__city'),
-                          textAboutMe: false,
-                          hintText: Utils.getString(context, 'edit_profile__city'),
-                          textEditingController: userCityController,
-                          isMandatory: true),
-                      PsTextFieldWidget(
-                          titleText: Utils.getString(context, 'edit_profile__country'),
-                          textAboutMe: false,
-                          hintText: Utils.getString(context, 'edit_profile__country'),
-                          textEditingController: userCountryController,
-                          isMandatory: true),
-                      RadioWidget(
-                        userProvider: userProvider,
-                        updateOrderByData: updateOrderByData,
-                        orderTimeTextEditingController:
-                        orderTimeTextEditingController,
-                        updatDateAndTime: updateDateAndTime,
-                        // scheduleOrder: scheduleOrder!,
-                        latestDate: latestDate!, isWeeklySchedule: isWeeklyScheduleOrder,
+                    //const SizedBox(height: PsDimens.space8),
+                    Container(
+                      margin: const EdgeInsets.all(PsDimens.space12),
+                      child:  Divider(
+                        thickness: 1,
+                        height: 1,
+                        color: PsColors.mainColor,
                       ),
-        /*CurrentLocationWidget(
+                    ),
+                    if (userProvider.isClickDeliveryButton)
+                      Column(
+                        children: <Widget>[
+                          PsTextFieldWidget(
+                            titleText: Utils.getString(context, 'edit_profile__postcode'),
+                            textAboutMe: false,
+                            hintText: Utils.getString(context, 'edit_profile__postcode'),
+                            textEditingController: userPostcodeController,
+                            onChanged: resetAddress,
+                            borderColor: userPostcodeController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                            isMandatory: true,
+                          ),
+
+                          PsDropdownBaseWithControllerWidget(
+                              title: Utils.getString(context, 'edit_profile__address'),
+                              textEditingController: addressController,
+                              borderColor: addressController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                              isMandatory: true,
+                              onTap: () async {
+                                final isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
+                                isAValidPostcode.whenComplete(() async {
+                                  if(await isAValidPostcode) {
+                                    final Object? result = await Navigator.pushNamed(
+                                        context, RoutePaths.postalAddressList,
+                                        arguments: userPostcodeController.text);
+                                    if (result != null) {
+                                      final Address selectedAddress = result as Address;
+                                      setState(() {
+                                        addressController.text = selectedAddress.line_1!;
+                                        userCityController.text = selectedAddress.townOrCity!;
+                                        userCountryController.text = selectedAddress.country!;
+                                        deliveryCostCalculate(
+                                          provider!,
+                                          widget.basketList,
+                                          selectedAddress.latitude!,
+                                          selectedAddress.longitude!,
+                                        );
+                                      });
+                                      //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
+                                      LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
+                                      userProvider!.setUserLatLng(coordinates);
+
+                                    }
+                                  }
+                                  else{
+                                    Fluttertoast.showToast(
+                                        msg:
+                                        Utils.getString(context, 'checkout1_view__please_enter_postcode'),
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: PsColors.black,
+                                        textColor: PsColors.white);
+                                  }
+                                });
+
+                              }),
+                          PsTextFieldWidget(
+                              titleText: Utils.getString(context, 'edit_profile__city'),
+                              textAboutMe: false,
+                              hintText: Utils.getString(context, 'edit_profile__city'),
+                              textEditingController: userCityController,
+                              onChanged: checkFields,
+                              isReadonly: true,
+                              borderColor: userCityController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                              isMandatory: true),
+                          PsTextFieldWidget(
+                              titleText: Utils.getString(context, 'edit_profile__country'),
+                              textAboutMe: false,
+                              hintText: Utils.getString(context, 'edit_profile__country'),
+                              textEditingController: userCountryController,
+                              isReadonly: true,
+                              onChanged: checkFields,
+                              borderColor: userCountryController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                              isMandatory: true),
+                          Container(
+                            margin: const EdgeInsets.all(PsDimens.space12),
+                            child:  Divider(
+                              thickness: 1,
+                              height: 1,
+                              color: PsColors.mainColor,
+                            ),
+                          ),
+                          RadioWidget(
+                            userProvider: userProvider,
+                            updateOrderByData: updateOrderByData,
+                            orderTimeTextEditingController:
+                            orderTimeTextEditingController,
+                            updatDateAndTime: updateDateAndTime,
+                            // scheduleOrder: scheduleOrder!,
+                            latestDate: latestDate!, isWeeklySchedule: isWeeklyScheduleOrder,
+                          ),
+                          /*CurrentLocationWidget(
                           provider: provider!,
                           shopInfoProvider: shopInfoProvider!,
                           userProvider: userProvider,
@@ -386,46 +457,47 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                     .copyWith(
                                         color: PsColors.textPrimaryLightColor),
                               ))),*/
-                      if (shopInfoProvider!.shopInfo.data!.isArea != null &&
-                          shopInfoProvider!.shopInfo.data!.isArea ==
-                              PsConst.ONE)
-                        PsDropdownBaseWithControllerWidget(
-                            title: Utils.getString(context, 'checkout1__area'),
-                            textEditingController: shippingAreaController,
-                            isMandatory: true,
-                            onTap: () async {
-                              final dynamic result = await Navigator.pushNamed(
-                                  context, RoutePaths.areaList);
+                          if (shopInfoProvider!.shopInfo.data!.isArea != null &&
+                              shopInfoProvider!.shopInfo.data!.isArea ==
+                                  PsConst.ONE)
+                            PsDropdownBaseWithControllerWidget(
+                                title: Utils.getString(context, 'checkout1__area'),
+                                textEditingController: shippingAreaController,
+                                isMandatory: true,
+                                onTap: () async {
+                                  final dynamic result = await Navigator.pushNamed(
+                                      context, RoutePaths.areaList);
 
-                              if (result != null && result is ShippingArea) {
-                                setState(() {
-                                  shippingAreaController.text =
-                                      result.areaName! +
-                                          ' (' +
-                                          result.currencySymbol! +
-                                          ' ' +
-                                          result.price! +
-                                          ')';
-                                  userProvider.selectedArea = result;
-                                });
-                              }
-                            }),
-                      if (shopInfoProvider!.shopInfo.data!.isArea ==
-                          PsConst.ZERO)
-                        if (provider!.deliveryCost.data != null)
-                          _DeliveryCostWidget(
-                              provider: provider!,
-                              basketList: widget.basketList)
-                        else
-                          _DefaultDeliveryCostWidget(),
-                      const SizedBox(height: PsDimens.space16),
-                    ],
-                  )
-                else
-                  Container(),
-              ],
-            ),
-          ),
+                                  if (result != null && result is ShippingArea) {
+                                    setState(() {
+                                      shippingAreaController.text =
+                                          result.areaName! +
+                                              ' (' +
+                                              result.currencySymbol! +
+                                              ' ' +
+                                              result.price! +
+                                              ')';
+                                      userProvider.selectedArea = result;
+                                    });
+                                  }
+                                }),
+                          if (shopInfoProvider!.shopInfo.data!.isArea ==
+                              PsConst.ZERO)
+                            if (provider!.deliveryCost.data != null)
+                              _DeliveryCostWidget(
+                                  provider: provider!,
+                                  basketList: widget.basketList)
+                            else
+                              _DefaultDeliveryCostWidget(),
+                          const SizedBox(height: PsDimens.space16),
+                        ],
+                      )
+                    else
+                      Container(),
+                  ],
+                ),
+              ),
+            )
         );
       } else {
         return Container();
@@ -474,6 +546,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
     } else {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -510,7 +583,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
         userLat: userProvider.user.data!.userLat!,
         userLng: userProvider.user.data!.userLng!,
       );
-      await PsProgressDialog.showDialog(context);
+      //await PsProgressDialog.showDialog(context);
       final PsResource<User> _apiStatus = await userProvider
           .postProfileUpdate(profileUpdateParameterHolder.toMap());
       if (_apiStatus.data != null) {
@@ -525,10 +598,11 @@ class _Checkout1ViewState extends State<Checkout1View> {
               );
             });*/
       } else {
-        // PsProgressDialog.dismissDialog();
+        PsProgressDialog.dismissDialog();
 
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return ErrorDialog(
                 message: _apiStatus.message,
@@ -538,6 +612,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
     } else {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -597,7 +672,7 @@ class _RadioWidgetState extends State<RadioWidget> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge
-                          !.copyWith(color: PsColors.mainColor))
+                          !.copyWith(color: PsColors.discountColor))
                 ],
               )
             ],
@@ -657,6 +732,7 @@ class _RadioWidgetState extends State<RadioWidget> {
                         0) {
                       showDialog<dynamic>(
                           context: context,
+                          barrierColor: PsColors.transparent,
                           builder: (BuildContext context) {
                             return ErrorDialog(
                               message: Utils.getString(
@@ -752,9 +828,10 @@ class _RadioWidgetState extends State<RadioWidget> {
               decoration: BoxDecoration(
                 color: PsColors.backgroundColor,
                 borderRadius: BorderRadius.circular(PsDimens.space4),
-                border: Border.all(color: PsColors.mainDividerColor),
+                border: Border.all(color: PsColors.mainColor),
               ),
               child: TextField(
+                readOnly: true,
                   enabled: widget.userProvider.selectedRadioBtnName ==
                       PsConst.ORDER_TIME_SCHEDULE,
                   enableInteractiveSelection:
@@ -789,6 +866,7 @@ class _RadioWidgetState extends State<RadioWidget> {
                                 0) {
                               showDialog<dynamic>(
                                   context: context,
+                                  barrierColor: PsColors.transparent,
                                   builder: (BuildContext context) {
                                     return ErrorDialog(
                                       message: Utils.getString(context,

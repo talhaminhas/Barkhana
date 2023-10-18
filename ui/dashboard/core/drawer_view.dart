@@ -425,11 +425,19 @@ class _HomeViewState extends State<DashboardView>
       await GoogleSignIn().signOut();
       await fb_auth.FirebaseAuth.instance.signOut();
     }
+    String _truncateLabel(String label, int maxLength) {
+      if (label.length <= maxLength) {
+        return label;
+      } else {
+        return label.substring(0, maxLength) + '...';
+      }
+    }
 
     Future<bool> _onWillPop() {
       if(_currentIndex == PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT) {
         return showDialog<dynamic>(
                 context: context,
+            barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   return ConfirmDialogView(
                       description: Utils.getString(
@@ -461,11 +469,19 @@ class _HomeViewState extends State<DashboardView>
               ChangeNotifierProvider<UserProvider?>(
                   lazy: false,
                   create: (BuildContext context) {
+                    userProvider = UserProvider(
+                        repo: userRepository!, psValueHolder: valueHolder!);
+                    userProvider!.getUserFromDB(userProvider!.psValueHolder.loginUserId!);
+
+                    return userProvider!;
+                  }
+                  /*lazy: false,
+                  create: (BuildContext context) {
                     return UserProvider(
                         repo: userRepository!,
                         psValueHolder: valueHolder!
                     );
-                  }),
+                  }*/),
               /*ChangeNotifierProvider<DeleteTaskProvider?>(
                   lazy: false,
                   create: (BuildContext context) {
@@ -665,19 +681,19 @@ class _HomeViewState extends State<DashboardView>
                   if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
-                      /*Visibility(
-                        visible: true,
+                      Visibility(
+                        visible: false,
                         child: _DrawerMenuWidget(
                             icon: Icons.book,
                             title: Utils.getString(
-                                context, 'home__menu_drawer_user_history'),
+                                context, 'home__menu_drawer_recent_products'),
                             index: PsConst
                                 .REQUEST_CODE__MENU_USER_HISTORY_FRAGMENT,
                             onTap: (String title, int index) {
                               Navigator.pop(context);
                               updateSelectedIndexWithAnimation(title, index);
                             }),
-                      ),*/
+                      ),
                   // ignore: unnecessary_null_comparison
                   /*if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
@@ -732,6 +748,7 @@ class _HomeViewState extends State<DashboardView>
                             Navigator.pop(context);
                             showDialog<dynamic>(
                                 context: context,
+                                barrierColor: PsColors.transparent,
                                 builder: (BuildContext context) {
                                   return ConfirmDialogView(
                                       description: Utils.getString(context,
@@ -801,7 +818,7 @@ class _HomeViewState extends State<DashboardView>
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
                       }),
-                  ListTile(
+                  /*ListTile(
                     leading: Icon(
                       Icons.share,
                       color: PsColors.mainColorWithWhite,
@@ -815,6 +832,7 @@ class _HomeViewState extends State<DashboardView>
                       Navigator.pop(context);
                       showDialog<dynamic>(
                           context: context,
+                          barrierColor: PsColors.transparent,
                           builder: (BuildContext context) {
                             return ShareAppDialog(
                               onPressed: () {
@@ -823,8 +841,8 @@ class _HomeViewState extends State<DashboardView>
                             );
                           });
                     },
-                  ),
-                  ListTile(
+                  ),*/
+                  /*ListTile(
                     leading: Icon(
                       Icons.star_border,
                       color: PsColors.mainColorWithWhite,
@@ -844,7 +862,7 @@ class _HomeViewState extends State<DashboardView>
                         Utils.launchURL();
                       }
                     },
-                  )
+                  )*/
                 ]);
               },
             ),
@@ -873,12 +891,15 @@ class _HomeViewState extends State<DashboardView>
             )
                 : null,
           backgroundColor: PsColors.backgroundColor,
-          title: Text( appBarTitle,
-            //'title1',//Utils.getString(context, 'app_name'),
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: PsColors.textPrimaryColor,
-                ),
+          title: FittedBox(
+            fit: BoxFit.scaleDown, // This makes the text shrink if space is small
+            child: Text(
+              appBarTitle,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+                color: PsColors.textPrimaryColor,
+              ),
+            ),
           ),
           titleSpacing: 0,
           elevation: 0,
@@ -924,16 +945,22 @@ class _HomeViewState extends State<DashboardView>
                 builder: (BuildContext context, BasketProvider basketProvider, Widget? child) {
                   int totalQuantity = 0;
                   double totalPrice = 0.0;
+                  double totalOriginalPrice = 0.0;
                   String? currencySymbol;
                   for (Basket basket in basketProvider.basketList.data!) {
                     totalQuantity += int.parse(basket.qty!);
                     totalPrice += double.parse(basket.basketPrice!) * double.parse(basket.qty!);
+                    totalOriginalPrice += double.parse(basket.basketOriginalPrice!) * double.parse(basket.qty!);
                     currencySymbol = basket.product!.currencySymbol!;
                   }
-                  if (_currentIndex != PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
+                  if (_currentIndex != PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT &&
+                      _currentIndex != PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT &&
+                      _currentIndex != PsConst.REQUEST_CODE__MENU_SETTING_FRAGMENT &&
+                      _currentIndex != PsConst.REQUEST_CODE__MENU_TERMS_AND_CONDITION_FRAGMENT
+                  )
                   return GestureDetector(
                       onTap: () {
-                        /*controllersStack.add({appBarTitle:_currentIndex});*/
+                        controllersStack.add({appBarTitle:_currentIndex});
                         updateSelectedIndexWithAnimation(Utils.getString(
                             context,
                             Utils.getString(context, 'home__bottom_app_bar_basket_list')),
@@ -943,25 +970,59 @@ class _HomeViewState extends State<DashboardView>
                       child:Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
+                          children: <Widget>[
+                            const SizedBox(width: PsDimens.space10),
                             if (basketProvider
                                 .basketList.data!.isNotEmpty)
                               FittedBox(
                                   child:
-                                  Container(
-                                    child: Align(
-                                      /*alignment: Alignment.center,*/
-                                      child: Text(
-                                        '${Utils.getString(context, 'checkout__price')} $currencySymbol ${totalPrice.toStringAsFixed(2)}',
-                                        textAlign: TextAlign.left,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!,
-                                        maxLines: 1,
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      FittedBox(
+                                          child:
+                                          Container(
+                                            child: Align(
+                                              /*alignment: Alignment.center,*/
+                                              child: Text(
+                                                '${Utils.getString(context, 'checkout__price')} $currencySymbol ${totalPrice.toStringAsFixed(2)}',
+                                                textAlign: TextAlign.left,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                ),
+                                                maxLines: 1,
+                                              ),
+                                            ),
+                                          )
                                       ),
-                                    ),
+                                      Container(
+                                        height: PsDimens.space4,
+                                      ),
+                                      FittedBox(
+                                          child:
+                                          Container(
+                                            child: Align(
+                                              /*alignment: Alignment.center,*/
+                                              child: Text(
+                                                '${Utils.getString(context, 'checkout__savings')} '
+                                                    '$currencySymbol ${(totalOriginalPrice - totalPrice).toStringAsFixed(2)}',
+                                                textAlign: TextAlign.left,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: PsColors.discountColor),
+                                              ),
+                                            ),
+                                          )
+                                      ),
+                                    ],
                                   )
                               ),
+
                             Stack(
                               children: <Widget>[
                                 Container(
@@ -1010,6 +1071,55 @@ class _HomeViewState extends State<DashboardView>
                           ]
                       )
                   );
+                  else if( totalQuantity > 0 &&
+                      _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
+                    return Container(
+                      margin: const EdgeInsets.all(PsDimens.space8),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: PsColors.discountColor, width: 2),
+                          borderRadius: BorderRadius.circular(PsDimens.space8)
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          showDialog<dynamic>(
+                            context: context,
+                              barrierColor: PsColors.transparent,
+                            builder: (BuildContext context) {
+                              return ConfirmDialogView(
+                                  description: Utils.getString(context,
+                                      'basket_list__empty_basket_dialog_description'),
+                                  leftButtonText: Utils.getString(
+                                      context,
+                                      'basket_list__comfirm_dialog_cancel_button'),
+                                  rightButtonText: Utils.getString(
+                                      context,
+                                      'basket_list__comfirm_dialog_ok_button'),
+                                  onAgreeTap: () async {
+                                    /*Navigator.of(context).pop();
+                                    provider.deleteBasketByProduct(
+                                        provider
+                                            .basketList.data![index]);*/
+                                    Navigator.of(context).pop();
+                                    basketProvider.deleteWholeBasketList();
+                                  });
+                            }
+                        );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: PsColors.discountColor.withAlpha(29),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(PsDimens.space8), // Set the border radius for rounded corners
+                          ),
+                        ),
+                        child: Text(
+                          Utils.getString(context, 'basket__empty'),
+                          style: TextStyle(
+                              color: PsColors.discountColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
                   return Container();
                 },
               ),
@@ -1093,8 +1203,7 @@ class _HomeViewState extends State<DashboardView>
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.shopping_cart),
-                      label: Utils.getString(
-                          context, 'home__bottom_app_bar_basket_list'),
+                      label: Utils.getString(context, 'home__bottom_app_bar_basket_list'),
                     ),
                     BottomNavigationBarItem(
                       icon: const Icon(Icons.favorite),
@@ -1893,7 +2002,10 @@ class _HomeViewState extends State<DashboardView>
                     languageIsChanged: () {});
               } else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT) {
-                return ContactUsView(animationController: animationController);
+                return ContactUsView(
+                    animationController: animationController,
+                  userProvider: userProvider,
+                );
               } else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_SETTING_FRAGMENT) {
                 return Container(
@@ -2270,37 +2382,65 @@ class __DrawerHeaderWidgetWithUserProfileState extends State<_DrawerHeaderWidget
   @override
   Widget build(BuildContext context) {
     return DrawerHeader(
-      child: Row(
+      child: Container(
+        //color: Colors.green,
+        alignment: Alignment.center,
+        child: Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Expanded(
+                flex:30,
+        child:
             Container(
               padding: const EdgeInsets.all(PsDimens.space8),
-              width: 60,
-              height: 60,
+              //color: Colors.blue,
               child: PsNetworkCircleImageForUser(
+                width: 100,
+                  height: 100,
                   photoKey: '',
                   imagePath:
                       widget.provider.user.data!.userProfilePhoto,
                   boxfit: BoxFit.cover,
                 ),
-              ),
+              )
+            ),
+              Expanded(
+                flex: 40,
+                  child:
+                  Container(
+                    //color: Colors.red,
+                      child:
               Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(
-                      left: PsDimens.space8,
-                      top: PsDimens.space14),
+                      left: PsDimens.space8,),
                        child: Text(
-                          widget.provider.user.data!.userName!,
-                          style: Theme.of(context).textTheme.bodyMedium!
-                            .copyWith(color: PsColors.white),
-                        )),
+                          widget.provider.user.data!.userName!.toUpperCase(),
+                          style: Theme.of(context).textTheme.titleLarge!
+                            .copyWith(color: PsColors.white,),
+                        )
+
+                  ),
+                  if(widget.provider.user.data!.userPhone != '')
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: PsDimens.space4,
+                        left: PsDimens.space8
+                    ),
+                    child: Text(
+                      '${widget.provider.user.data!.userPhone!}',
+                      style: Theme.of(context).textTheme.bodySmall!
+                          .copyWith(color: PsColors.white),
+                    ),
+                  ),
                   if(widget.provider.user.data!.address != '')
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(
@@ -2312,65 +2452,28 @@ class __DrawerHeaderWidgetWithUserProfileState extends State<_DrawerHeaderWidget
                             size: 14,
                           ),
                         ),
+                        Expanded(child:
                         Padding(
                           padding: const EdgeInsets.only(
                               top: PsDimens.space4),
                           child: Text(
-                            widget.provider.user.data!.address!,
+                            '${widget.provider.user.data!.address!}'
+                                ', ${widget.provider.user.data!.userCity}'
+                                ', ${widget.provider.user.data!.userCountry}.',
                             style: Theme.of(context).textTheme.bodySmall!
                                 .copyWith(color: PsColors.white),
+                            maxLines: 3,
                           ),
+                        ),
                         ),
                       ],
                     ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: PsDimens.space16,
-                            left: PsDimens.space8,
-                            right: PsDimens.space8),
-                            child: MaterialButton(
-                                height: 25,
-                                minWidth: 90,
-                                color: PsColors.white,
-                                child: Text(
-                                  Utils.getString(context, 'home__menu_drawer_logout'),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .copyWith(color: PsColors.mainColor, fontWeight: FontWeight.bold),
-                              ),
-                            onPressed: () async {
-                               Navigator.pop(context);
-                              showDialog<dynamic>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return ConfirmDialogView(
-                                      description: Utils.getString(context,
-                                          'home__logout_dialog_description'),
-                                      leftButtonText: Utils.getString(context,
-                                          'home__logout_dialog_cancel_button'),
-                                      rightButtonText: Utils.getString(context,
-                                          'home__logout_dialog_ok_button'),
-                                      onAgreeTap: () async {
-                                        Navigator.of(context).pop();
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          RoutePaths.home,
-                                        );
-                                        await widget.provider.replaceLoginUserId('');
-                                        await widget.deleteTaskProvider.deleteTask();
-                                        //await FacebookAuth.instance.logOut();
-                                        await GoogleSignIn().signOut();
-                                        await fb_auth.FirebaseAuth.instance
-                                            .signOut();
-                                      });
-                                });
-                            },
-                          ),
-                      )]
-                    ),
+                        ]
+                    )
+                  )
+                  ),
                 ],
-              ),
+              )),
         decoration: BoxDecoration(color: PsColors.mainColor),
     );
   }

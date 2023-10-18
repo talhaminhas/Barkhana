@@ -29,9 +29,17 @@ class HistoryRepository extends PsRepository {
   Future<dynamic> getAllHistoryList(
       StreamController<PsResource<List<Product>>> historyListStream,
       PsStatus status) async {
+    _historyDao.sortingKey = 'added_date';
+    _historyDao.ascending = false;
     historyListStream.sink.add(await _historyDao.getAll(status: status));
   }
-
+  Future<dynamic> deleteAllHistoryList(
+      StreamController<PsResource<List<Product>>> historyListStream,
+      PsStatus status,
+      ) async {
+    await _historyDao.deleteAll();
+    historyListStream.sink.add(await _historyDao.getAll(status: status));
+  }
   Future<dynamic> addAllHistoryList(
       StreamController<PsResource<List<Product>>> historyListStream,
       PsStatus status,

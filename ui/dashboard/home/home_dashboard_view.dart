@@ -106,6 +106,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
                             .callEvent(RateMyAppEventType.laterButtonPressed);
                         await showDialog<dynamic>(
                             context: context,
+                            barrierColor: PsColors.transparent,
                             builder: (BuildContext context) {
                               return ConfirmDialogView(
                                 description: Utils.getString(
@@ -398,7 +399,7 @@ class __HomeLatestProductHorizontalListWidgetState
                                             final Product product =
                                                 productProvider
                                                     .productList.data![index];
-                                            return ProductVeticalListItem(
+                                            return ProductVerticalListItem(
                                               coreTagKey: productProvider
                                                       .hashCode
                                                       .toString() +
@@ -475,6 +476,7 @@ class __HomeLatestProductHorizontalListWidgetState
                                                               null) {
                                                     showDialog<dynamic>(
                                                         context: context,
+                                                        barrierColor: PsColors.transparent,
                                                         builder: (BuildContext
                                                             context) {
                                                           return ChooseAttributeDialog(
@@ -539,7 +541,7 @@ class __HomeLatestProductHorizontalListWidgetState
                                                         toastLength:
                                                             Toast.LENGTH_SHORT,
                                                         gravity:
-                                                            ToastGravity.BOTTOM,
+                                                            ToastGravity.CENTER,
                                                         timeInSecForIosWeb: 1,
                                                         backgroundColor:
                                                             PsColors.mainColor,
@@ -554,6 +556,7 @@ class __HomeLatestProductHorizontalListWidgetState
                                                 } else {
                                                   showDialog<dynamic>(
                                                       context: context,
+                                                      barrierColor: PsColors.transparent,
                                                       builder: (BuildContext
                                                           context) {
                                                         return WarningDialog(

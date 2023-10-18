@@ -2115,6 +2115,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
                               } else {
                                 showDialog<dynamic>(
                                     context: context,
+                                    barrierColor: PsColors.transparent,
                                     builder: (BuildContext context) {
                                       return WarningDialog(
                                         message: Utils.getString(context,
@@ -2634,6 +2635,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                   } else {
                     showDialog<dynamic>(
                         context: context,
+                        barrierColor: PsColors.transparent,
                         builder: (BuildContext context) {
                           return WarningDialog(
                             message: Utils.getString(context,

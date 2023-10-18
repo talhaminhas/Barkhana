@@ -4,7 +4,7 @@ class SearchResultParameterHolder
     extends PsHolder<SearchResultParameterHolder> {
   SearchResultParameterHolder({required this.searchTerm});
 
-  final String searchTerm;
+  late final String searchTerm;
 
   @override
   SearchResultParameterHolder fromMap(dynamic dynamicData) {
@@ -18,6 +18,10 @@ class SearchResultParameterHolder
     return '';
   }
 
+  void setSearchTerm (String text)
+  {
+    searchTerm = text;
+  }
   @override
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> map = <String, dynamic>{};

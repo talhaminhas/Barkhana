@@ -161,6 +161,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
         webController!.reload();
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return ErrorDialog(
                 message: Utils.getString(context, 'error_dialog__payment_unsuccessful'
@@ -201,6 +202,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
             else{
               showDialog<dynamic>(
                   context: context,
+                  barrierColor: PsColors.transparent,
                   builder: (BuildContext context) {
                     return ErrorDialog(
                       message: Utils.getString(context, 'error_dialog__payment_unsuccessful'
@@ -271,6 +273,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
           return showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message: _apiStatus.message,
@@ -281,6 +284,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     } else {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -348,6 +352,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
           return showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message: _apiStatus.message,
@@ -358,6 +363,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     } else {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -427,6 +433,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
           return showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message: _apiStatus.message,
@@ -437,6 +444,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     } else {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -505,6 +513,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
           return showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message: _apiStatus.message,
@@ -515,6 +524,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     } else {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -580,6 +590,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     } else {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -788,6 +799,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
       } else {
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return ErrorDialog(
                 message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -863,6 +875,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
           return showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message: _apiStatus.message,
@@ -874,6 +887,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
         return showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return ErrorDialog(
                 message: _apiStatus.message,
@@ -997,6 +1011,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
             return showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   return ErrorDialog(
                     message: _apiStatus.message,
@@ -1008,6 +1023,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
           return showDialog<dynamic>(
               context: context,
+              barrierColor: PsColors.transparent,
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message: _apiStatus.message,
@@ -1018,6 +1034,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     } else {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),

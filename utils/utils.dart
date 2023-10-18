@@ -395,6 +395,7 @@ class Utils {
     if (context != null) {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (_) {
             return ChatNotiDialog(
                 description: '$payload',
@@ -416,6 +417,7 @@ class Utils {
     if (context != null) {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (_) {
             return ChatNotiDialog(
                 description: '$payload',
@@ -604,6 +606,7 @@ class Utils {
         // ignore: unnecessary_null_comparison
         if (context != null) {
           showDialog<dynamic>(
+          barrierColor: PsColors.transparent,
               context: context,
               builder: (_) {
                 return NotiDialog(message: '$notiMessage');
@@ -625,6 +628,7 @@ class Utils {
         if (context != null) {
           showDialog<dynamic>(
               context: context,
+          barrierColor: PsColors.transparent,
               builder: (_) {
                 return NotiDialog(message: '$notiMessage');
               });

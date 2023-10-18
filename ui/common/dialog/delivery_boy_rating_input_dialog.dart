@@ -251,6 +251,7 @@ class _ButtonWidget extends StatelessWidget {
                         Navigator.pop(context);
                         showDialog<dynamic>(
                         context: context,
+                            barrierColor: PsColors.transparent,
                         builder: (BuildContext context) {
                           return WarningDialog(
                             message:
@@ -263,6 +264,7 @@ class _ButtonWidget extends StatelessWidget {
                     print('There is no comment');
                     showDialog<dynamic>(
                         context: context,
+                        barrierColor: PsColors.transparent,
                         builder: (BuildContext context) {
                           return WarningDialog(
                             message:

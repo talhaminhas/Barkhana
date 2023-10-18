@@ -413,6 +413,7 @@ class _GpsButtonWidget extends StatelessWidget {
       if (!isGpsOn) {
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return WarningDialog(
                 message: Utils.getString(context, 'map_pin__open_gps'),
@@ -430,6 +431,7 @@ class _GpsButtonWidget extends StatelessWidget {
       } else if (status == PermissionStatus.denied) {
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return WarningDialog(
                 message: Utils.getString(context, 'map_pin__open_gps'),

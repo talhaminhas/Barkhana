@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
+import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 
 import 'history_list_view.dart';
@@ -45,7 +46,7 @@ class _HistoryListContainerViewState extends State<HistoryListContainerView>
 
     print(
         '............................Build UI Again ............................');
-    return WillPopScope(
+    return /*WillPopScope(
       onWillPop: _requestPop,
       child: Scaffold(
         appBar: AppBar(
@@ -56,7 +57,7 @@ class _HistoryListContainerViewState extends State<HistoryListContainerView>
               .iconTheme
               .copyWith(color: PsColors.mainColorWithWhite),
           title: Text(
-            Utils.getString(context, 'history_list__title'),
+            Utils.getString(context, ''),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
@@ -64,10 +65,24 @@ class _HistoryListContainerViewState extends State<HistoryListContainerView>
           ),
           elevation: 0,
         ),
-        body: HistoryListView(
-          animationController: animationController!,
-        ),
-      ),
-    );
+        body:*/
+        Column(
+          children: [
+            Container(height: PsDimens.space10,),
+            Text(
+              'Recently Viewed Products',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            Expanded(
+              child: HistoryListView(
+                animationController: animationController!,
+              ),
+            ),
+          ],
+        );
+
+
+     // ),
+   // );
   }
 }

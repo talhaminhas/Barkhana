@@ -35,6 +35,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
+import '../../config/ps_colors.dart';
+
 class UserProvider extends PsProvider {
   UserProvider(
       {required UserRepository repo,
@@ -412,6 +414,7 @@ late  StreamController<PsResource<User>> userListStream;
     if (provider.contains(PsConst.emailAuthProvider) && !ignoreEmail) {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return WarningDialog(
               message: '[ $email ]\n' +
@@ -425,6 +428,7 @@ late  StreamController<PsResource<User>> userListStream;
     else if (provider.contains(PsConst.googleAuthProvider)) {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return WarningDialog(
               message: '[ $email ]\n' +
@@ -438,6 +442,7 @@ late  StreamController<PsResource<User>> userListStream;
     else if (provider.contains(PsConst.facebookAuthProvider)) {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return WarningDialog(
               message: '[ $email ]\n' +
@@ -451,6 +456,7 @@ late  StreamController<PsResource<User>> userListStream;
     else if (provider.contains(PsConst.appleAuthProvider)) {
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return WarningDialog(
               message: '[ $email ]\n' +
@@ -518,6 +524,7 @@ late  StreamController<PsResource<User>> userListStream;
             ///
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   // ignore: unnecessary_null_comparison
                   if (resourceUser.message != null) {
@@ -538,6 +545,7 @@ late  StreamController<PsResource<User>> userListStream;
         ///
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return ErrorDialog(
                 message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -550,6 +558,7 @@ late  StreamController<PsResource<User>> userListStream;
       ///
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return WarningDialog(
               message: Utils.getString(context, 'login__warning_agree_privacy'),
@@ -724,6 +733,7 @@ late  StreamController<PsResource<User>> userListStream;
             ///
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   if (resourceUser != null ) {
                     return ErrorDialog(
@@ -743,6 +753,7 @@ late  StreamController<PsResource<User>> userListStream;
         ///
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return ErrorDialog(
                 message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -755,6 +766,7 @@ late  StreamController<PsResource<User>> userListStream;
       ///
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return WarningDialog(
               message: Utils.getString(context, 'login__warning_agree_privacy'),
@@ -889,6 +901,7 @@ late  StreamController<PsResource<User>> userListStream;
             ///
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   if (resourceUser != null) {
                     return ErrorDialog(
@@ -908,6 +921,7 @@ late  StreamController<PsResource<User>> userListStream;
         ///
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return ErrorDialog(
                 message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -920,6 +934,7 @@ late  StreamController<PsResource<User>> userListStream;
       ///
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return WarningDialog(
               message: Utils.getString(context, 'login__warning_agree_privacy'),
@@ -1057,6 +1072,7 @@ late  StreamController<PsResource<User>> userListStream;
         ///
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               if (resourceUser != null ) {
                 return ErrorDialog(
@@ -1075,6 +1091,7 @@ late  StreamController<PsResource<User>> userListStream;
       ///
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return ErrorDialog(
               message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -1267,6 +1284,7 @@ late  StreamController<PsResource<User>> userListStream;
             ///
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   if (resourceUser != null ) {
                     return ErrorDialog(
@@ -1298,6 +1316,7 @@ late  StreamController<PsResource<User>> userListStream;
         ///
         showDialog<dynamic>(
             context: context,
+            barrierColor: PsColors.transparent,
             builder: (BuildContext context) {
               return ErrorDialog(
                 message: Utils.getString(context, 'error_dialog__no_internet'),
@@ -1310,6 +1329,7 @@ late  StreamController<PsResource<User>> userListStream;
       ///
       showDialog<dynamic>(
           context: context,
+          barrierColor: PsColors.transparent,
           builder: (BuildContext context) {
             return WarningDialog(
               message: Utils.getString(context, 'login__warning_agree_privacy'),

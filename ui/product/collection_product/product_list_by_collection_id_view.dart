@@ -283,7 +283,7 @@ class _ProductListByCollectionIdView
                                                 final Product product = provider
                                                     .productCollectionList
                                                     .data![index];
-                                                return ProductVeticalListItem(
+                                                return ProductVerticalListItem(
                                                   coreTagKey: provider.hashCode
                                                           .toString() +
                                                       provider
@@ -436,7 +436,7 @@ class _ProductListByCollectionIdView
                                                                 .LENGTH_SHORT,
                                                             gravity:
                                                                 ToastGravity
-                                                                    .BOTTOM,
+                                                                    .CENTER,
                                                             timeInSecForIosWeb:
                                                                 1,
                                                             backgroundColor:
@@ -454,6 +454,7 @@ class _ProductListByCollectionIdView
                                                     } else {
                                                       showDialog<dynamic>(
                                                           context: context,
+                                                          barrierColor: PsColors.transparent,
                                                           builder: (BuildContext
                                                               context) {
                                                             return WarningDialog(

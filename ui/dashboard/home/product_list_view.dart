@@ -258,6 +258,7 @@ class _ProductListViewState extends State<ProductListView>
                                                             null) {
                                                   showDialog<dynamic>(
                                                       context: context,
+                                                      barrierColor: PsColors.transparent,
                                                       builder: (BuildContext
                                                           context) {
                                                         return ChooseAttributeDialog(
@@ -318,7 +319,7 @@ class _ProductListViewState extends State<ProductListView>
                                                       toastLength:
                                                           Toast.LENGTH_SHORT,
                                                       gravity:
-                                                          ToastGravity.BOTTOM,
+                                                          ToastGravity.CENTER,
                                                       timeInSecForIosWeb: 1,
                                                       backgroundColor:
                                                           PsColors.mainColor,
@@ -333,6 +334,7 @@ class _ProductListViewState extends State<ProductListView>
                                               } else {
                                                 showDialog<dynamic>(
                                                     context: context,
+                                                    barrierColor: PsColors.transparent,
                                                     builder:
                                                         (BuildContext context) {
                                                       return WarningDialog(

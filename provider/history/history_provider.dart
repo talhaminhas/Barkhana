@@ -50,9 +50,13 @@ class HistoryProvider extends PsProvider {
     isLoading = true;
     await _repo!.getAllHistoryList(historyListStream, PsStatus.PROGRESS_LOADING);
   }
-
+  Future<dynamic> deleteHistoryList() async {
+    isLoading = true;
+    await _repo!.deleteAllHistoryList(historyListStream,PsStatus.PROGRESS_LOADING);
+  }
   Future<dynamic> addHistoryList(Product product) async {
     isLoading = true;
+    product.addedDate = DateTime.now().toString();
     await _repo!.addAllHistoryList(
         historyListStream, PsStatus.PROGRESS_LOADING, product);
   }

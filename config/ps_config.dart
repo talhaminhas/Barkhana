@@ -3,6 +3,7 @@
 // Panacea-Soft license that can be found in the LICENSE file.
 
 import 'package:flutterrestaurant/viewobject/common/language.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PsConfig {
   PsConfig._();
@@ -25,14 +26,15 @@ class PsConfig {
   /// API URL
   /// Change your backend url
   ///
-  static const String ps_core_url = //'https://5ccc-81-150-185-121.ngrok-free.app/Barkhana';
-  'http://62.30.84.56:88/Barkhana';
+  static const String ps_core_url =
+  //'https://5ccc-81-150-185-121.ngrok-free.app/Barkhana';
+   'http://62.30.84.56:88/Barkhana';
   //'http://192.168.1.153:8080/Barkhana';
   static const String ps_app_url = ps_core_url + '/index.php/';
 
   static const String ps_app_image_url = ps_core_url + '/uploads/';
 
-  static const String ps_app_image_thumbs_url = ps_core_url + '/uploads/thumbnail/';
+  static const String ps_app_image_thumbs_url = ps_core_url + '/uploads/';
 
    static const String GOOGLE_PLAY_STORE_URL = 'https://play.google.com/store/apps';
 
@@ -76,7 +78,7 @@ class PsConfig {
   /// 2) Declare at pubspec.yaml
   /// 3) Update your font family name at below
   ///
-  static const String ps_default_font_family = 'Product Sans';
+  static const String ps_default_font_family = 'Times New Roman';
 
   /// Default Language
 // static const ps_default_language = 'en';
@@ -171,7 +173,7 @@ class PsConfig {
   /// - If you set "false", it will load full image directly and for the
   ///   placeholder image it will use default placeholder Image.
   ///
-  // static const bool USE_THUMBNAIL_AS_PLACEHOLDER = true;
+  static const bool USE_THUMBNAIL_AS_PLACEHOLDER = true;
 
   ///
   /// Token Id

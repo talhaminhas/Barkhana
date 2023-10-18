@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:the_apple_sign_in/apple_sign_in_button.dart' as apple;
 
 import '../../../constant/ps_constants.dart';
+import '../../dashboard/core/drawer_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({
@@ -96,7 +97,7 @@ class _LoginViewState extends State<LoginView> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                _HeaderIconAndTextWidget(),
+                //_HeaderIconAndTextWidget(),
                 Container(
                   height: PsDimens.space40,
                 ),
@@ -410,6 +411,7 @@ class __CardWidgetState extends State<_TextFieldAndSignInButtonWidget> {
 dynamic callWarningDialog(BuildContext context, String text) {
   showDialog<dynamic>(
       context: context,
+      barrierColor: PsColors.transparent,
       builder: (BuildContext context) {
         return WarningDialog(
           message: Utils.getString(context, text),
@@ -481,6 +483,7 @@ class __LoginWithPhoneWidgetState extends State<_LoginWithPhoneWidget> {
           } else {
             showDialog<dynamic>(
                 context: context,
+                barrierColor: PsColors.transparent,
                 builder: (BuildContext context) {
                   return WarningDialog(
                     message: Utils.getString(
@@ -628,12 +631,16 @@ class __ForgotPasswordAndRegisterWidgetState
               ),
               onTap: () {
                 if (widget.onForgotPasswordSelected != null) {
-                  widget.onForgotPasswordSelected!();
+                  //widget.onForgotPasswordSelected!();
+                  dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                      Utils.getString(context, 'home__forgot_password'),
+                      PsConst.REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT);
                 } else {
-                  Navigator.pushReplacementNamed(
+
+                 /* Navigator.pushReplacementNamed(
                     context,
                     RoutePaths.user_forgot_password_container,
-                  );
+                  );*/
                 }
               },
             ),

@@ -13,6 +13,7 @@ abstract class PsDao<T extends PsObject<T>> {
  late StoreRef<String?, dynamic> dao;
  late T obj;
   String sortingKey = 'sort';
+  bool ascending = true;
   // Private getter to shorten the amount of code needed to get the
   // singleton instance of an opened database.
   Future<Database> get db async => await PsAppDatabase.instance.database;
@@ -126,7 +127,7 @@ abstract class PsDao<T extends PsObject<T>> {
       PsStatus status = PsStatus.SUCCESS,
       Function? onDataUpdated}) async {
     finder ??= Finder();
-    sortOrders ??= <SortOrder>[SortOrder(sortingKey, true)]; 
+    sortOrders ??= <SortOrder>[SortOrder(sortingKey, ascending)];
     finder.sortOrders = sortOrders;
 
     final dynamic query = dao.query(finder: finder);
@@ -175,7 +176,7 @@ abstract class PsDao<T extends PsObject<T>> {
       List<SortOrder>? sortOrders,
       PsStatus status = PsStatus.SUCCESS}) async {
     finder ??= Finder();
-    sortOrders ??= <SortOrder>[SortOrder(sortingKey, true)]; 
+    sortOrders ??= <SortOrder>[SortOrder(sortingKey, ascending)];
     finder.sortOrders = sortOrders;
 
     final dynamic recordSnapshots = await dao.find(

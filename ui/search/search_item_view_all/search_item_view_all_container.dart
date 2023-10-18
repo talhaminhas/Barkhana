@@ -257,7 +257,7 @@ class _SearchItemViewAllContainerState extends State<SearchItemViewAllContainer>
                                               final Product product =
                                                   searchProductProvider
                                                       .productList.data![index];
-                                              return ProductVeticalListItem(
+                                              return ProductVerticalListItem(
                                                 coreTagKey:
                                                     searchProductProvider
                                                             .hashCode
@@ -365,95 +365,6 @@ class _SearchItemViewAllContainerState extends State<SearchItemViewAllContainer>
                                                           basketSelectedAddOn
                                                               .getSelectedAddOnList());
 
-                                                  if (product.isAvailable ==
-                                                      '1') {
-                                                    if (product.addOnList!
-                                                                .isNotEmpty &&
-                                                            product
-                                                                    .addOnList![
-                                                                        0]
-                                                                    .id !=
-                                                                '' ||
-                                                        product.customizedHeaderList!
-                                                                .isNotEmpty &&
-                                                            product
-                                                                    .customizedHeaderList![
-                                                                        0]
-                                                                    .id !=
-                                                                '' &&
-                                                            product
-                                                                    .customizedHeaderList![
-                                                                        0]
-                                                                    .customizedDetail !=
-                                                                null) {
-                                                      showDialog<dynamic>(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return ChooseAttributeDialog(
-                                                                product: searchProductProvider
-                                                                    .productList
-                                                                    .data![index]);
-                                                          });
-                                                    } else {
-                                                      if (basketProvider!
-                                                          .basketList
-                                                          .data!
-                                                          .isNotEmpty) {
-                                                        showDialog<dynamic>(
-                                                            context: context,
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return ConfirmDialogView(
-                                                                  description: Utils
-                                                                      .getString(
-                                                                          context,
-                                                                          'warning_dialog__change_shop'),
-                                                                  leftButtonText:
-                                                                      Utils.getString(
-                                                                          context,
-                                                                          'basket_list__comfirm_dialog_cancel_button'),
-                                                                  rightButtonText:
-                                                                      Utils.getString(
-                                                                          context,
-                                                                          'basket_list__comfirm_dialog_ok_button'),
-                                                                  onAgreeTap:
-                                                                      () async {
-                                                                    await basketProvider!
-                                                                        .deleteWholeBasketList();
-
-                                                                    await basketProvider!
-                                                                        .addBasket(
-                                                                            basket);
-
-                                                                    Fluttertoast.showToast(
-                                                                        msg: Utils.getString(
-                                                                            context,
-                                                                            'product_detail__success_add_to_basket'),
-                                                                        toastLength:
-                                                                            Toast
-                                                                                .LENGTH_SHORT,
-                                                                        gravity:
-                                                                            ToastGravity
-                                                                                .BOTTOM,
-                                                                        timeInSecForIosWeb:
-                                                                            1,
-                                                                        backgroundColor:
-                                                                            PsColors
-                                                                                .mainColor,
-                                                                        textColor:
-                                                                            PsColors.white);
-
-                                                                    await Navigator
-                                                                        .pushNamed(
-                                                                      context,
-                                                                      RoutePaths
-                                                                          .basketList,
-                                                                    );
-                                                                  });
-                                                            });
-                                                      } else {
                                                         await basketProvider!
                                                             .addBasket(basket);
 
@@ -465,7 +376,7 @@ class _SearchItemViewAllContainerState extends State<SearchItemViewAllContainer>
                                                                 .LENGTH_SHORT,
                                                             gravity:
                                                                 ToastGravity
-                                                                    .BOTTOM,
+                                                                    .CENTER,
                                                             timeInSecForIosWeb:
                                                                 1,
                                                             backgroundColor:
@@ -474,27 +385,6 @@ class _SearchItemViewAllContainerState extends State<SearchItemViewAllContainer>
                                                             textColor:
                                                                 PsColors.white);
 
-                                                        await Navigator
-                                                            .pushNamed(
-                                                          context,
-                                                          RoutePaths.basketList,
-                                                        );
-                                                      }
-                                                    }
-                                                  } else {
-                                                    showDialog<dynamic>(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return WarningDialog(
-                                                            message:
-                                                                Utils.getString(
-                                                                    context,
-                                                                    'product_detail__is_not_available'),
-                                                            onPressed: () {},
-                                                          );
-                                                        });
-                                                  }
                                                 },
                                                 valueHolder: _psValueHolder!,
                                               );

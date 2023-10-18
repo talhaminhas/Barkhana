@@ -216,7 +216,7 @@ class _TokenIdWidget extends StatelessWidget {
             Fluttertoast.showToast(
                 msg: 'Token copied.',
                 toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
+                gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,
                 backgroundColor: PsColors.mainColor,
                 textColor: PsColors.white);

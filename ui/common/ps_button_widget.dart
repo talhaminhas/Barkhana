@@ -146,12 +146,12 @@ class _PSButtonWithIconWidgetState extends State<PSButtonWithIconWidget> {
       width: MediaQuery.of(context).size.width,
       height: 40,
       decoration: ShapeDecoration(
-        shape: const BeveledRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(7.0)),
         ),
-        color: _gradient == null ? _color : null,
-        gradient: _gradient,
-        shadows: <BoxShadow>[
+        color: PsColors.mainColor/*_gradient == null ? _color : null,*/
+        //gradient: _gradient,
+        /*shadows: <BoxShadow>[
           if (widget.hasShadow)
             BoxShadow(
                 color: Utils.isLightMode(context)
@@ -160,7 +160,7 @@ class _PSButtonWithIconWidgetState extends State<PSButtonWithIconWidget> {
                 offset: const Offset(0, 4),
                 blurRadius: 8.0,
                 spreadRadius: 3.0),
-        ],
+        ],*/
       ),
       child: Material(
         color: PsColors.transparent,

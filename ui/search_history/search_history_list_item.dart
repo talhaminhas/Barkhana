@@ -25,13 +25,13 @@ class SearchHistoryListItem extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               border: Border.all(
-                color: PsColors.mainColor,
+                color: Theme.of(context).disabledColor,
                 width: 2.0,
               ),
               borderRadius: BorderRadius.circular(25.0),
             ),
             child: MaterialButton(
-              color: PsColors.baseColor,
+              //color: PsColors.baseColor,
               elevation: 0,
               // Remove fixed height to fit content
               shape: RoundedRectangleBorder(
