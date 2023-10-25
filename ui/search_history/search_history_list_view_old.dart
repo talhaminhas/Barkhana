@@ -29,7 +29,7 @@ class SearchHistoryListView extends StatefulWidget {
   _SearchHistoryListViewState createState() => _SearchHistoryListViewState();
 }
 
-class _SearchHistoryListViewState extends State<SearchHistoryListView>
+class _SearchHistoryListViewState extends State<SearchHistoryListView> 
     with SingleTickerProviderStateMixin {
   AnimationController? animationController;
   @override
@@ -39,11 +39,11 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
     super.initState();
 
   }
-
+    
   final TextEditingController userInputItemNameTextEditingController =
-  TextEditingController();
+      TextEditingController();
   final ProductParameterHolder productParameterHolder =
-  ProductParameterHolder().getLatestParameterHolder();
+      ProductParameterHolder().getLatestParameterHolder();
   bool showRecentSearch = false;
   PsValueHolder? psValueHolder;
 
@@ -55,7 +55,7 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
 
   SearchHistoryProvider? provider;
   SearchHistoryRepository? searchHistoryRepository;
-
+  
   @override
   Widget build(BuildContext context) {
     searchHistoryRepository = Provider.of<SearchHistoryRepository>(context);
@@ -63,7 +63,7 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
 
     Future<bool> _requestPop() {
       animationController!.reverse().then<dynamic>(
-            (void data) {
+        (void data) {
           if (!mounted) {
             return Future<bool>.value(false);
           }
@@ -92,48 +92,47 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
                 psValueHolder!.loginUserId != '')*/
             return provider!;
           },
-          child: Consumer<SearchHistoryProvider>(builder: (BuildContext context,
-              SearchHistoryProvider provider, Widget? child) {
-            return Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  systemOverlayStyle: SystemUiOverlayStyle (
-                      statusBarIconBrightness : Utils.getBrightnessForAppBar(context)
-                  ),
-                  titleSpacing: 0,
-                  iconTheme: Theme.of(context)
-                      .iconTheme
-                      .copyWith(color: PsColors.mainColorWithWhite),
-                  title: InkWell(
-                    child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(PsDimens.space12),
-                      decoration: BoxDecoration(
-                        color: PsColors.mainDividerColor,
-                        borderRadius: BorderRadius.circular(PsDimens.space4),
-                        border: Border.all(color: PsColors.mainDividerColor),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: PsDimens.space12, top: PsDimens.space10),
-                        child: Text(Utils.getString(context, 'search_history__app_bar_search'),
-                            style: Theme.of(context).textTheme.titleSmall),
-                      ),
-                    ),
-                    onTap: () {
-                      productParameterHolder.searchTerm = '';
-                      dashboardViewKey.currentState
-                          ?.selectedProductParameterHolder =
-                          productParameterHolder;
-                      dashboardViewKey.currentState
-                          ?.updateSelectedIndexWithAnimation(
-                          Utils.getString(
-                              context, 'home__bottom_app_bar_search'),
-                          PsConst
-                              .REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
-                    },
-                  ),/*
+       child: Consumer<SearchHistoryProvider>(builder: (BuildContext context,
+            SearchHistoryProvider provider, Widget? child) {    
+          return Scaffold(
+              appBar: AppBar(
+                systemOverlayStyle: SystemUiOverlayStyle (
+                  statusBarIconBrightness : Utils.getBrightnessForAppBar(context)
+                ),
+            titleSpacing: 0,
+            iconTheme: Theme.of(context)
+                .iconTheme
+                .copyWith(color: PsColors.mainColorWithWhite),
+            title: InkWell(
+              child: Container(
+              height: 40,
+                width: double.infinity,
+                margin: const EdgeInsets.all(PsDimens.space12),
+                decoration: BoxDecoration(
+                  color: PsColors.mainDividerColor,
+                  borderRadius: BorderRadius.circular(PsDimens.space4),
+                  border: Border.all(color: PsColors.mainDividerColor),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: PsDimens.space12, top: PsDimens.space10),
+                  child: Text(Utils.getString(context, 'search_history__app_bar_search'),
+                      style: Theme.of(context).textTheme.titleSmall),
+                ),
+              ),
+            onTap: () {
+              productParameterHolder.searchTerm = '';
+              dashboardViewKey.currentState
+                  ?.selectedProductParameterHolder =
+                  productParameterHolder;
+              dashboardViewKey.currentState
+                  ?.updateSelectedIndexWithAnimation(
+                  Utils.getString(
+                      context, 'home__bottom_app_bar_search'),
+                  PsConst
+                      .REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
+            },
+          ),/*
                 GestureDetector(
                 onTap: () {
                   productParameterHolder.searchTerm = '';
@@ -148,7 +147,7 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
                             .REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
                 },
                 child: _searchTextFieldWidget),*/
-                  /*actions: <Widget>[
+            /*actions: <Widget>[
               Padding(padding: const EdgeInsets.only(right: PsDimens.space8),
                 child: IconButton(
                   icon: Icon(Icons.search,
@@ -175,8 +174,8 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
                   ),
                 ),
               ],*/
-                ),
-                body: /*psValueHolder!.loginUserId != null &&
+            ),
+            body: /*psValueHolder!.loginUserId != null &&
                 psValueHolder!.loginUserId != '' &&
                 provider.historyList.data != null &&
                 provider.historyList.data!.isNotEmpty ?*/
@@ -188,9 +187,9 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
                       //right: 0,
                       //bottom: 0,
                       child:*/
-                    HistoryListContainerView(
-                    ),
-                    // ),
+                      HistoryListContainerView(
+                      ),
+                   // ),
                     /*Container(
                         margin: const EdgeInsets.all(PsDimens.space14),
                         decoration: BoxDecoration(
@@ -296,10 +295,10 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
                   ],
                 )
 
-              /*:
+                /*:
                 Container()*/
-            );
-          })
+          );
+        })
       ),
     );
   }
@@ -308,7 +307,7 @@ class _SearchHistoryListViewState extends State<SearchHistoryListView>
 class SearchHistoryItemListViewWidget extends StatelessWidget {
   const SearchHistoryItemListViewWidget({
     required this.productParameterHolder,
-    required this.psValueHolder,
+     required this.psValueHolder,
   });
 
   final ProductParameterHolder productParameterHolder;
@@ -317,96 +316,96 @@ class SearchHistoryItemListViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SearchHistoryProvider provider =
-    Provider.of<SearchHistoryProvider>(context, listen: false);
-    if (psValueHolder.loginUserId != null &&
-        psValueHolder.loginUserId != '')
+          Provider.of<SearchHistoryProvider>(context, listen: false);
+   if (psValueHolder.loginUserId != null &&
+      psValueHolder.loginUserId != '')
       return Container(
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: PsDimens.space16,
-                      left: PsDimens.space16,
-                      right: PsDimens.space16),
-                  child: Text(
-                      Utils.getString(context, 'search__recent_search'),
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: RefreshIndicator(
-                    child: CustomScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        slivers: <Widget>[
-                          SliverGrid(
-                            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 160.0,
-                                childAspectRatio: 3.0),
-                            delegate: SliverChildBuilderDelegate(
-                                  (BuildContext context, int index) {
-                                if (provider.historyList.data != null ||
-                                    provider.historyList.data!.isEmpty) {
-                                  return SearchHistoryListItem(
-                                    searchHistory: provider.historyList.data!.reversed
-                                        .toList()[index],
-                                    onTap: () {
-                                      productParameterHolder.searchTerm =
-                                          provider.historyList.data![index].searchTeam;
-                                      dashboardViewKey.currentState?.selectedProductParameterHolder = productParameterHolder;
-                                      dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
-                                          Utils.getString(
-                                              context, 'home__bottom_app_bar_search'),
-                                          PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
-                                      /*Navigator.pushNamed(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                top: PsDimens.space16,
+                left: PsDimens.space16,
+                right: PsDimens.space16),
+              child: Text(
+                Utils.getString(context, 'search__recent_search'),
+                style: Theme.of(context)
+                  .textTheme
+                  .titleSmall
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RefreshIndicator(
+              child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  slivers: <Widget>[
+                    SliverGrid(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 160.0,
+                          childAspectRatio: 3.0),
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          if (provider.historyList.data != null ||
+                              provider.historyList.data!.isEmpty) {
+                            return SearchHistoryListItem(
+                                searchHistory: provider.historyList.data!.reversed
+                                    .toList()[index],
+                                onTap: () {
+                                  productParameterHolder.searchTerm =
+                                    provider.historyList.data![index].searchTeam;
+                                  dashboardViewKey.currentState?.selectedProductParameterHolder = productParameterHolder;
+                                  dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
+                                      Utils.getString(
+                                          context, 'home__bottom_app_bar_search'),
+                                      PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT);
+                                  /*Navigator.pushNamed(
                                       context, RoutePaths.searchItemList,
                                       arguments: productParameterHolder);*/
-                                    },
-                                    onDeleteTap: () {
-                                      showDialog<dynamic>(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return ConfirmDialogView(
-                                                description: Utils.getString(context,
-                                                    'search_history__confirm_dialog_description'),
-                                                leftButtonText: Utils.getString(context,
-                                                    'app_info__cancel_button_name'),
-                                                rightButtonText: Utils.getString(
-                                                    context,
-                                                    'dialog__ok'),
-                                                onAgreeTap: () async {
-                                                  Navigator.of(context).pop();
-                                                  productParameterHolder.searchTerm =
-                                                      provider.historyList.data![index].searchTeam;
-                                                  final SearchHistory searchHistory = SearchHistory(
-                                                      searchTeam: productParameterHolder.searchTerm);
-                                                  provider.deleteSearchHistory(searchHistory);
+                                },
+                                onDeleteTap: () {
+                                showDialog<dynamic>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ConfirmDialogView(
+                                        description: Utils.getString(context,
+                                            'search_history__confirm_dialog_description'),
+                                        leftButtonText: Utils.getString(context,
+                                            'app_info__cancel_button_name'),
+                                        rightButtonText: Utils.getString(
+                                            context,
+                                            'dialog__ok'),
+                                        onAgreeTap: () async {
+                                          Navigator.of(context).pop();
+                                          productParameterHolder.searchTerm =
+                                            provider.historyList.data![index].searchTeam;
+                                          final SearchHistory searchHistory = SearchHistory(
+                                            searchTeam: productParameterHolder.searchTerm);
+                                          provider.deleteSearchHistory(searchHistory);
 
-                                                });
-                                          });
-                                    },
-                                  );
-                                } else {
-                                  return null;
-                                }
-                              },
-                              childCount: provider.historyList.data!.length,
-                            ),
-                          )
-                        ]),
-                    onRefresh: () {
-                      return provider.resetSearchHistoryList();
-                    },
-                  ),
-                ),
-              ])
-      );
-    else {
-      return Container();
+                                        });
+                                  });
+                                },
+                              );
+                          } else {
+                              return null;
+                          }
+                        },
+                        childCount: provider.historyList.data!.length,
+                      ),
+                    )
+                  ]),
+                  onRefresh: () {
+                    return provider.resetSearchHistoryList();
+                },
+              ),
+            ),
+          ])
+        );
+        else {
+          return Container();
     }
   }
 }

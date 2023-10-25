@@ -65,7 +65,7 @@ class CategoryVerticalListItem extends StatelessWidget {
                           height: PsDimens.space4,
                         ),
                         Container(
-                          height: 30,
+                          height: 25,
                           padding: const EdgeInsets.only(left: PsDimens.space10,right: PsDimens.space10),
                           child: FittedBox(
                             fit: BoxFit.contain,
@@ -73,7 +73,7 @@ class CategoryVerticalListItem extends StatelessWidget {
                               category.name!,
                               maxLines: 1,
                               textAlign: TextAlign.start,
-                              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                   color: PsColors.white, fontWeight: FontWeight.bold),
                             ),
                           ),

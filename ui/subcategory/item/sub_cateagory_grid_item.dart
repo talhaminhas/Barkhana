@@ -52,13 +52,11 @@ class SubCategoryGridItem extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                height: PsDimens.space4,
-                              ),
                               Container(
-                                  height: 30,
+                                margin: const EdgeInsets.all(PsDimens.space4),
+                                  height: 20,
                                   child: FittedBox(
-                                    fit: BoxFit.scaleDown,
+                                    fit: BoxFit.contain,
                                     alignment: Alignment.center,
                                     child: Text(
                                       subCategory.name!,
@@ -67,9 +65,6 @@ class SubCategoryGridItem extends StatelessWidget {
                                           color: PsColors.white, fontWeight: FontWeight.bold),
                                     ),
                                   )
-                              ),
-                              const SizedBox(
-                                height: PsDimens.space4,
                               ),
                             ],
                           ),

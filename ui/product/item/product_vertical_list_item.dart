@@ -81,8 +81,8 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                       /*mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.stretch,*/
                       children: <Widget>[
-                        Expanded(
-                          child: Container(
+                        /*Expanded(
+                          child:*/ Container(
                             decoration: const BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(PsDimens.space10)),
                             ),
@@ -105,7 +105,7 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                               ),
                             ),
                           ),
-                        ),
+                        //),
 
                         Positioned(
                           bottom: 0, // Margin from the bottom

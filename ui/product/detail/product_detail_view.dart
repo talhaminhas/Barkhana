@@ -3225,8 +3225,6 @@ class __FloatingActionButtonState extends State<_FloatingActionButton> {
               backgroundColor: PsColors.mainColor,
               label: InkWell(
                 onTap: () async {
-                  print(index);
-
                   if (await canLaunchUrl(Uri.parse(index == 0
                       ? messengerUrl
                       : index == 1

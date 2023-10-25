@@ -111,7 +111,7 @@ class _SliverAppbarState extends State<_SliverAppbar> {
             .copyWith(fontWeight: FontWeight.bold)
             .copyWith(color: PsColors.mainColorWithWhite),
       ),
-      actions: <Widget>[
+      /*actions: <Widget>[
         IconButton(
           icon: Icon(Icons.notifications_none,
               color: Theme.of(context).iconTheme.color),
@@ -132,7 +132,7 @@ class _SliverAppbarState extends State<_SliverAppbar> {
             );
           },
         )
-      ],
+      ],*/
       elevation: 0,
     );
   }

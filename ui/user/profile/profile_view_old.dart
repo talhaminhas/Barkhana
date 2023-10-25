@@ -19,9 +19,9 @@ class ProfileView extends StatefulWidget {
     required this.flag,
     this.userId,
     required this.scaffoldKey,
-    required this.callLogoutCallBack
+     required this.callLogoutCallBack
   }) : super(key: key);
-
+  
   final AnimationController? animationController;
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final int flag;
@@ -41,33 +41,33 @@ class _ProfilePageState extends State<ProfileView>
     widget.animationController!.forward();
 
     return
-      // SingleChildScrollView(
-      //     child: Container(
-      //   color: PsColors.coreBackgroundColor,
-      //   height: widget.flag ==
-      //           PsConst.REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT
-      //       ? MediaQuery.of(context).size.height - 100
-      //       : MediaQuery.of(context).size.height - 40,
-      //   child:
-      CustomScrollView(scrollDirection: Axis.vertical, slivers: <Widget>[
-        _ProfileDetailWidget(
-          animationController: widget.animationController!,
-          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-              parent: widget.animationController!,
-              curve:
-              const Interval((1 / 4) * 2, 1.0, curve: Curves.fastOutSlowIn),
-            ),
+        // SingleChildScrollView(
+        //     child: Container(
+        //   color: PsColors.coreBackgroundColor,
+        //   height: widget.flag ==
+        //           PsConst.REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT
+        //       ? MediaQuery.of(context).size.height - 100
+        //       : MediaQuery.of(context).size.height - 40,
+        //   child:
+        CustomScrollView(scrollDirection: Axis.vertical, slivers: <Widget>[
+      _ProfileDetailWidget(
+        animationController: widget.animationController!,
+        animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(
+            parent: widget.animationController!,
+            curve:
+                const Interval((1 / 4) * 2, 1.0, curve: Curves.fastOutSlowIn),
           ),
-          userId: widget.userId,
-          callLogoutCallBack: widget.callLogoutCallBack,
-        )/*,
+        ),
+        userId: widget.userId,
+        callLogoutCallBack: widget.callLogoutCallBack,
+      )/*,
       _TransactionListViewWidget(
         scaffoldKey: widget.scaffoldKey!,
         animationController: widget.animationController!,
         userId: widget.userId,
       )*/
-      ]);
+    ]);
     //));
   }
 }
@@ -75,9 +75,9 @@ class _ProfilePageState extends State<ProfileView>
 class _TransactionListViewWidget extends StatelessWidget {
   const _TransactionListViewWidget(
       {Key ?key,
-        required this.animationController,
-        required this.userId,
-        required this.scaffoldKey})
+      required this.animationController,
+      required this.userId,
+      required this.scaffoldKey})
       : super(key: key);
 
   final AnimationController animationController;
@@ -96,9 +96,9 @@ class _TransactionListViewWidget extends StatelessWidget {
             lazy: false,
             create: (BuildContext context) {
               final TransactionHeaderProvider provider =
-              TransactionHeaderProvider(
-                  repo: transactionHeaderRepository,
-                  psValueHolder: psValueHolder);
+                  TransactionHeaderProvider(
+                      repo: transactionHeaderRepository,
+                      psValueHolder: psValueHolder);
               if (provider.psValueHolder.loginUserId == null ||
                   provider.psValueHolder.loginUserId == '') {
                 provider.loadTransactionList(userId!);
@@ -111,64 +111,64 @@ class _TransactionListViewWidget extends StatelessWidget {
             },
             child: Consumer<TransactionHeaderProvider>(builder:
                 (BuildContext context, TransactionHeaderProvider provider,
-                Widget? child) {
+                    Widget? child) {
               if (
-              //provider.transactionList != null &&
-              provider.transactionList.data!.isNotEmpty) {
+                //provider.transactionList != null &&
+                  provider.transactionList.data!.isNotEmpty) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: PsDimens.space44),
                   child: Column(children: <Widget>[
                     _OrderAndSeeAllWidget(),
                     Container(
                         child: RefreshIndicator(
-                          child: CustomScrollView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              slivers: <Widget>[
-                                SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                        (BuildContext context, int index) {
-                                      if (provider.transactionList.data != null ||
-                                          provider
-                                              .transactionList.data!.isNotEmpty) {
-                                        final int count =
-                                            provider.transactionList.data!.length;
-                                        return TransactionListItem(
-                                          scaffoldKey: scaffoldKey,
-                                          animationController: animationController,
-                                          animation:
+                      child: CustomScrollView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          slivers: <Widget>[
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                                  if (provider.transactionList.data != null ||
+                                      provider
+                                          .transactionList.data!.isNotEmpty) {
+                                    final int count =
+                                        provider.transactionList.data!.length;
+                                    return TransactionListItem(
+                                      scaffoldKey: scaffoldKey,
+                                      animationController: animationController,
+                                      animation:
                                           Tween<double>(begin: 0.0, end: 1.0)
                                               .animate(
-                                            CurvedAnimation(
-                                              parent: animationController,
-                                              curve: Interval(
-                                                  (1 / count) * index, 1.0,
-                                                  curve: Curves.fastOutSlowIn),
-                                            ),
-                                          ),
-                                          transaction:
+                                        CurvedAnimation(
+                                          parent: animationController,
+                                          curve: Interval(
+                                              (1 / count) * index, 1.0,
+                                              curve: Curves.fastOutSlowIn),
+                                        ),
+                                      ),
+                                      transaction:
                                           provider.transactionList.data![index],
-                                          onTap: () {
-                                            Navigator.pushNamed(context,
-                                                RoutePaths.orderDetail,
-                                                arguments: provider
-                                                    .transactionList.data![index]);
-                                          },
-                                        );
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                    childCount:
+                                      onTap: () {
+                                        Navigator.pushNamed(context,
+                                            RoutePaths.orderDetail,
+                                            arguments: provider
+                                                .transactionList.data![index]);
+                                      },
+                                    );
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                childCount:
                                     provider.transactionList.data!.length,
-                                  ),
-                                ),
-                              ]),
-                          onRefresh: () {
-                            return provider.resetTransactionList();
-                          },
-                        )),
+                              ),
+                            ),
+                          ]),
+                      onRefresh: () {
+                        return provider.resetTransactionList();
+                      },
+                    )),
                   ]),
                 );
               } else {
@@ -233,9 +233,9 @@ class __ProfileDetailWidgetState extends State<_ProfileDetailWidget> {
                       children: <Widget>[
                         _ImageAndTextWidget(userProvider: provider),
                         if(provider!.user.data!.userPostcode != '')
-                          _dividerWidget,
+                        _dividerWidget,
                         Container(
-                            alignment: Alignment.center,
+                          alignment: Alignment.center,
                             margin: const EdgeInsets.all(PsDimens.space10),
                             child: provider!.user.data!.userPostcode != '' ?
                             Text(
@@ -284,8 +284,8 @@ class _JoinDateWidget extends StatelessWidget {
   final UserProvider? userProvider;
   @override
   Widget build(BuildContext context) {
-    final PsValueHolder psValueHolder =
-    Provider.of<PsValueHolder>(context, listen: false);
+     final PsValueHolder psValueHolder = 
+        Provider.of<PsValueHolder>(context, listen: false);
     return Padding(
         padding: const EdgeInsets.all(PsDimens.space16),
         child: Align(
@@ -317,7 +317,7 @@ class _FavAndSettingWidget extends StatelessWidget {
   const _FavAndSettingWidget({
     @required this.userProvider,
     required this.callLogoutCallBack,
-  });
+    });
 
   final UserProvider? userProvider;
   final Function callLogoutCallBack;
@@ -475,30 +475,30 @@ class _EditAndHistoryTextWidget extends StatelessWidget {
             },
             child: checkText == 0
                 ? Text(
-              Utils.getString(context, 'profile__edit'),
-              softWrap: false,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontWeight: FontWeight.bold, color: PsColors.discountColor),
-            )
+                    Utils.getString(context, 'profile__edit'),
+                    softWrap: false,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(fontWeight: FontWeight.bold, color: PsColors.discountColor),
+                  )
                 : checkText == 1
-                ? Text(
-              Utils.getString(context, 'profile__history'),
-              softWrap: false,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontWeight: FontWeight.bold),
-            )
-                : Text(
-              Utils.getString(context, 'profile__transaction'),
-              softWrap: false,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontWeight: FontWeight.bold),
-            )));
+                    ? Text(
+                        Utils.getString(context, 'profile__history'),
+                        softWrap: false,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      )
+                    : Text(
+                        Utils.getString(context, 'profile__transaction'),
+                        softWrap: false,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      )));
   }
 }
 
@@ -584,35 +584,35 @@ class _ImageAndTextWidget extends StatelessWidget {
             flex: 7,
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child:
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
+            child:
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  userProvider!.user.data!.userName!,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                _spacingWidget,
+                if(userProvider!.user.data!.userPhone != '')
+                Text(
+                  userProvider!.user.data!.userPhone!,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: PsColors.textPrimaryLightColor),
+                ),
+                if(userProvider!.user.data!.userEmail != '')
                   Text(
-                    userProvider!.user.data!.userName!,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    userProvider!.user.data!.userEmail!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(color: PsColors.textPrimaryLightColor),
                   ),
-                  _spacingWidget,
-                  if(userProvider!.user.data!.userPhone != '')
-                    Text(
-                      userProvider!.user.data!.userPhone!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(color: PsColors.textPrimaryLightColor),
-                    ),
-                  if(userProvider!.user.data!.userEmail != '')
-                    Text(
-                      userProvider!.user.data!.userEmail!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(color: PsColors.textPrimaryLightColor),
-                    ),
 
-                ],
-              ),
+              ],
+            ),
             ),
           ),
         ],

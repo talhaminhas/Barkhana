@@ -286,7 +286,6 @@ class Utils {
         psValueHolder.userIdToVerify == null ||
         psValueHolder.userIdToVerify == '') {
       if (psValueHolder == null ||
-         // psValueHolder == null ||
           psValueHolder.loginUserId == null ||
           psValueHolder.loginUserId == '') {
         final dynamic returnData = await Navigator.pushNamed(
@@ -386,7 +385,6 @@ class Utils {
   static Future<void> checkAppleSignInAvailable() async {
     final bool _isAvailable = await TheAppleSignIn.isAvailable();
 
-    //isAppleSignInAvailable = _isAvailable ? 1 : 2;
   }
 
   static Future<void> _onSelectNotification(

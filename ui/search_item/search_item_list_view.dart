@@ -49,7 +49,6 @@ class SearchItemListView extends StatefulWidget {
   }) : super(key: key);
 
   final ProductParameterHolder productParameterHolder;
-
   @override
   _SearchHistoryListViewState createState() => _SearchHistoryListViewState();
 }
@@ -119,8 +118,9 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
     }
 
 
-    //inputSearchController.text = widget.productParameterHolder.searchTerm!;
+    inputSearchController.text = widget.productParameterHolder.searchTerm!;
     final SearchResultParameterHolder holder = SearchResultParameterHolder(searchTerm: inputSearchController.text.trim());
+    searchResultProvider!.loadSearchResult(holder.toMap());
     /*final Widget _searchTextFieldWidget = InkWell(
         key: _searchTextFieldKey,
       child: PsSearchTextFieldWidget(
@@ -169,6 +169,7 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                 SearchResultParameterHolder(
                     searchTerm: text);
                   searchResultProvider!.loadSearchResult(holder.toMap());
+                widget.productParameterHolder.searchTerm = text;
                 // });
               },
               //textInputAction: TextInputAction.search,
@@ -251,11 +252,6 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                     isCallFirstTime = false;
                   }*/
                   if(inputSearchController.text == searchResultProvider.searchResult.data!.id)
-                    print('match');
-                  print(inputSearchController.text);
-                  print(searchResultProvider.searchResult.data!.getPrimaryKey());
-                  print(searchResultProvider.searchResult.data!.products);
-                  print('yes');
                   FocusScope.of(context).requestFocus(_searchFocusNode);
                   print('-----------------------------------building ui------------------------------------------');
                   return SingleChildScrollView(

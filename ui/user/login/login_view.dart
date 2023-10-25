@@ -547,8 +547,8 @@ class _LoginWithAppleIdWidget extends StatelessWidget {
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: apple.AppleSignInButton(
-            style: apple.ButtonStyle.black, // style as needed
-            type: apple.ButtonType.signIn, // style as needed
+            style: apple.ButtonStyle.black,
+            type: apple.ButtonType.signIn,
             onPressed: () async {
               await _userProvider.loginWithAppleId(
                   context, onAppleIdSignInSelected);
@@ -637,10 +637,10 @@ class __ForgotPasswordAndRegisterWidgetState
                       PsConst.REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT);
                 } else {
 
-                 /* Navigator.pushReplacementNamed(
+                  Navigator.pushReplacementNamed(
                     context,
                     RoutePaths.user_forgot_password_container,
-                  );*/
+                  );
                 }
               },
             ),

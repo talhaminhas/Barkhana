@@ -235,6 +235,7 @@ class _HistoryListViewState extends State<HistoryListView>
                               onPressed: () {
                                 showDialog<dynamic>(
                                     context: context,
+                                    barrierColor: PsColors.transparent,
                                     builder: (BuildContext context) {
                                       return ConfirmDialogView(
                                           description: Utils.getString(context,
@@ -365,7 +366,11 @@ class _HistoryListViewState extends State<HistoryListView>
                       parent: widget.animationController,
                       curve: const Interval(0.5 * 1, 1.0,
                           curve: Curves.fastOutSlowIn)));
-                  return AnimatedBuilder(
+                  return Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child:
+                      AnimatedBuilder(
                     animation: widget.animationController,
                     child: SingleChildScrollView(
                       child: Container(
@@ -419,6 +424,8 @@ class _HistoryListViewState extends State<HistoryListView>
                             child: child,
                           ));
                     },
+                  )
+                      )
                   );
                 }
           },

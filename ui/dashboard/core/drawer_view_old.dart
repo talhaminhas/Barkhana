@@ -88,11 +88,11 @@ class DashboardView extends StatefulWidget {
 
 class _HomeViewState extends State<DashboardView>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
-  late AnimationController animationController;
+ late AnimationController animationController;
 
-  Animation<double>? animation;
+ Animation<double>? animation;
   BasketRepository? basketRepository;
-  //late DashboardStateController dashboardStateController;
+ //late DashboardStateController dashboardStateController;
   String appBarTitle = 'Home';
   int _currentIndex = PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT;
   String _userId = '';
@@ -101,7 +101,6 @@ class _HomeViewState extends State<DashboardView>
   String phoneUserName = '';
   String phoneNumber = '';
   String phoneId = '';
-  SearchItemListView? _searchItemListView;
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   ShopInfoProvider? shopInfoProvider;
@@ -139,7 +138,7 @@ class _HomeViewState extends State<DashboardView>
     String itemId = '';
     if (!isResumed) {
       final PendingDynamicLinkData? data =
-      await FirebaseDynamicLinks.instance.getInitialLink();
+          await FirebaseDynamicLinks.instance.getInitialLink();
 
       // ignore: unnecessary_null_comparison
       if (data != null && data.link != null) {
@@ -153,7 +152,7 @@ class _HomeViewState extends State<DashboardView>
             heroTagImage: '-1' + pathList[1] + PsConst.HERO_TAG__IMAGE,
             heroTagTitle: '-1' + pathList[1] + PsConst.HERO_TAG__TITLE,
             heroTagOriginalPrice:
-            '-1' + pathList[1] + PsConst.HERO_TAG__ORIGINAL_PRICE,
+                '-1' + pathList[1] + PsConst.HERO_TAG__ORIGINAL_PRICE,
             heroTagUnitPrice: '-1' + pathList[1] + PsConst.HERO_TAG__UNIT_PRICE,
           );
           Navigator.pushNamed(context, RoutePaths.productDetail,
@@ -206,9 +205,9 @@ class _HomeViewState extends State<DashboardView>
       case PsConst.REQUEST_CODE__MENU_SHOPS_FRAGMENT:
         index = 5;
         break;
-    // case PsConst.REQUEST_CODE__MENU_SHOPS_FRAGMENT:
-    //   index = 1;
-    //break;
+      // case PsConst.REQUEST_CODE__MENU_SHOPS_FRAGMENT:
+      //   index = 1;
+        //break;
       case PsConst.REQUEST_CODE__MENU_USER_HISTORY_FRAGMENT:
         index = 4;
         break;
@@ -230,7 +229,7 @@ class _HomeViewState extends State<DashboardView>
       case PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT:
         index = 1;
         break;
-    /*case PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT:
+      /*case PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT:
         if(previousControllerProductDetail == Utils.getString(context, 'home__bottom_app_bar_search'))
           index = 1;
         else
@@ -277,7 +276,7 @@ class _HomeViewState extends State<DashboardView>
     int index = PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT;
     String title;
     final PsValueHolder psValueHolder =
-    Provider.of<PsValueHolder>(context, listen: false);
+        Provider.of<PsValueHolder>(context, listen: false);
     switch (param) {
       case 0:
         index = PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT;
@@ -294,7 +293,7 @@ class _HomeViewState extends State<DashboardView>
       case 4:
         index = PsConst.REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT;
         title = (
-            psValueHolder.userIdToVerify == null ||
+                psValueHolder.userIdToVerify == null ||
                 psValueHolder.userIdToVerify == '')
             ? Utils.getString(context, 'home__bottom_app_bar_login')
             : Utils.getString(context, 'home__bottom_app_bar_verify_email');
@@ -325,64 +324,64 @@ class _HomeViewState extends State<DashboardView>
   DeleteTaskProvider? deleteTaskProvider;
   UserProvider? userProvider;
 
-  Future<void> updateSelectedIndexWithAnimationUserId(
-      String title, int index, String? userId) async {
-    await animationController.reverse().then<dynamic>((void data) {
-      if (!mounted) {
-        return;
-      }
-      if (userId != null) {
-        _userId = userId;
-      }
-      setState(() {
-        appBarTitle = title;
-        _currentIndex = index;
-      });
-    });
-  }
+ Future<void> updateSelectedIndexWithAnimationUserId(
+     String title, int index, String? userId) async {
+   await animationController.reverse().then<dynamic>((void data) {
+     if (!mounted) {
+       return;
+     }
+     if (userId != null) {
+       _userId = userId;
+     }
+     setState(() {
+       appBarTitle = title;
+       _currentIndex = index;
+     });
+   });
+ }
 
-  Future<void> updateSelectedIndexWithAnimation(
-      String title, int index) async {
-    await animationController.reverse().then<dynamic>((void data) {
-      if (!mounted) {
-        return;
-      }
-      //print(dashboardViewKey.currentState);
-      if(controllersStack.last[title] != index)
-        controllersStack.add({title: index});
-      print('Navigator Stack: $controllersStack');
-      //print(controllers);
-      setState(() {
-        appBarTitle = title;
-        _currentIndex = index;
-      });
-    });
-  }
-  List<Map<String, int>> controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];// to keep track of controller before basket page.
-  restaurant.Category? selectedCategory;
-  //List<Widget> controllers = [];
-  ProductParameterHolder? selectedProductParameterHolder;
-  ProductDetailIntentHolder? selectedProductDetailHolder;
-  ProductDetailProvider? selectedProductDetailProvider;
-  TransactionHeader? selectedTransactionHeader;
-  void onTapBack(){
-    controllersStack.removeLast();
-    //controllers.removeLast();
-    final Map<String, int>? lastRemovedController = controllersStack.last;
-    //final Widget lastController = controllers.last;
-    //print(lastRemovedController);
-    //print(lastController) ;
-    if (lastRemovedController != null) {
-      final String key = lastRemovedController.keys.first;
-      updateSelectedIndexWithAnimation(key, lastRemovedController[key]!);
-      // Do something with the key and value...
-    }
-    else{
-      updateSelectedIndexWithAnimation(
-          Utils.getString(context, 'home__drawer_menu_menu'),
-          PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT);
-    }
-  }
+ Future<void> updateSelectedIndexWithAnimation(
+     String title, int index) async {
+   await animationController.reverse().then<dynamic>((void data) {
+     if (!mounted) {
+       return;
+     }
+     //print(dashboardViewKey.currentState);
+     if(controllersStack.last[title] != index)
+       controllersStack.add({title: index});
+     print('Navigator Stack: $controllersStack');
+     //print(controllers);
+     setState(() {
+       appBarTitle = title;
+       _currentIndex = index;
+     });
+   });
+ }
+ List<Map<String, int>> controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];// to keep track of controller before basket page.
+ restaurant.Category? selectedCategory;
+ //List<Widget> controllers = [];
+ ProductParameterHolder? selectedProductParameterHolder;
+ ProductDetailIntentHolder? selectedProductDetailHolder;
+ ProductDetailProvider? selectedProductDetailProvider;
+ TransactionHeader? selectedTransactionHeader;
+ void onTapBack(){
+   controllersStack.removeLast();
+   //controllers.removeLast();
+   final Map<String, int>? lastRemovedController = controllersStack.last;
+   //final Widget lastController = controllers.last;
+   //print(lastRemovedController);
+   //print(lastController) ;
+   if (lastRemovedController != null) {
+     final String key = lastRemovedController.keys.first;
+     updateSelectedIndexWithAnimation(key, lastRemovedController[key]!);
+     // Do something with the key and value...
+   }
+   else{
+     updateSelectedIndexWithAnimation(
+         Utils.getString(context, 'home__drawer_menu_menu'),
+         PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT);
+   }
+ }
   @override
   Widget build(BuildContext context) {
     shopInfoRepository = Provider.of<ShopInfoRepository>(context);
@@ -417,8 +416,8 @@ class _HomeViewState extends State<DashboardView>
       appBarTitle = Utils.getString(context, 'app_name');
       updateSelectedIndex(index);
       updateSelectedIndexWithAnimation(
-          Utils.getString(context, 'app_name'),
-          index);
+        Utils.getString(context, 'app_name'),
+        index);
       await provider.replaceLoginUserId('');
       await provider.replaceLoginUserName('');
       await deleteTaskProvider.deleteTask();
@@ -437,29 +436,29 @@ class _HomeViewState extends State<DashboardView>
     Future<bool> _onWillPop() {
       if(_currentIndex == PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT) {
         return showDialog<dynamic>(
-            context: context,
+                context: context,
             barrierColor: PsColors.transparent,
-            builder: (BuildContext context) {
-              return ConfirmDialogView(
-                  description: Utils.getString(
-                      context, 'home__quit_dialog_description'),
-                  leftButtonText: Utils.getString(
-                      context, 'app_info__cancel_button_name'),
-                  rightButtonText: Utils.getString(context, 'dialog__ok'),
-                  onAgreeTap: () {
-                    SystemNavigator.pop();
-                  });
-            }) .then((dynamic value) => value as bool);
+                builder: (BuildContext context) {
+                  return ConfirmDialogView(
+                      description: Utils.getString(
+                          context, 'home__quit_dialog_description'),
+                      leftButtonText: Utils.getString(
+                          context, 'app_info__cancel_button_name'),
+                      rightButtonText: Utils.getString(context, 'dialog__ok'),
+                      onAgreeTap: () {
+                        SystemNavigator.pop();
+                      });
+                }) .then((dynamic value) => value as bool);
 
-      } else {
+       } else {
         onTapBack();
-        return Future<bool>.value(false);
+          return Future<bool>.value(false);
       }
     }
     final Animation<double> animation = Tween<double>(begin: 0.0, end: 1.0)
         .animate(CurvedAnimation(
-        parent: animationController,
-        curve: const Interval(0.5 * 1, 1.0, curve: Curves.fastOutSlowIn)));
+            parent: animationController,
+            curve: const Interval(0.5 * 1, 1.0, curve: Curves.fastOutSlowIn)));
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -476,7 +475,7 @@ class _HomeViewState extends State<DashboardView>
 
                     return userProvider!;
                   }
-                /*lazy: false,
+                  /*lazy: false,
                   create: (BuildContext context) {
                     return UserProvider(
                         repo: userRepository!,
@@ -491,7 +490,7 @@ class _HomeViewState extends State<DashboardView>
                         psValueHolder: valueHolder);
                     return deleteTaskProvider;
               }),*/
-              /*ChangeNotifierProvider<BasketProvider>(
+          /*ChangeNotifierProvider<BasketProvider>(
               lazy: false,
               create: (BuildContext context) {
                 final BasketProvider provider =
@@ -509,11 +508,9 @@ class _HomeViewState extends State<DashboardView>
                       provider.user.data!.userProfilePhoto == '')
                     _DrawerHeaderWidget()
                   else
-                    //_DrawerHeaderWidget(),
                     _DrawerHeaderWidgetWithUserProfile(
-                        provider: provider,
-                        //deleteTaskProvider: deleteTaskProvider!
-                    ),
+                      provider: provider,
+                      deleteTaskProvider: deleteTaskProvider!),
                   ListTile(
                     title: Text(
                         Utils.getString(context, 'home__drawer_menu_home')),
@@ -569,7 +566,7 @@ class _HomeViewState extends State<DashboardView>
                       title: Utils.getString(
                           context, 'home__drawer_menu_discount_product'),
                       index:
-                      PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT,
+                          PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT,
                       onTap: (String title, int index) {
                         Navigator.pop(context);
                         dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(title, index);
@@ -579,7 +576,7 @@ class _HomeViewState extends State<DashboardView>
                       title: Utils.getString(
                           context, 'home__menu_drawer_featured_product'),
                       index:
-                      PsConst.REQUEST_CODE__MENU_FEATURED_PRODUCT_FRAGMENT,
+                          PsConst.REQUEST_CODE__MENU_FEATURED_PRODUCT_FRAGMENT,
                       onTap: (String title, int index) {
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
@@ -603,7 +600,7 @@ class _HomeViewState extends State<DashboardView>
                         Navigator.pop(context);
                         updateSelectedIndexWithAnimation(title, index);
                       }),*/
-                  /*const Divider(
+                  const Divider(
                     height: PsDimens.space1,
                   ),
                   ListTile(
@@ -613,20 +610,20 @@ class _HomeViewState extends State<DashboardView>
                   _DrawerMenuWidget(
                       icon: Icons.person,
                       title:
-                      Utils.getString(context, 'home__menu_drawer_profile'),
+                          Utils.getString(context, 'home__menu_drawer_profile'),
                       index:
-                      PsConst.REQUEST_CODE__MENU_SELECT_WHICH_USER_FRAGMENT,
+                          PsConst.REQUEST_CODE__MENU_SELECT_WHICH_USER_FRAGMENT,
                       onTap: (String title, int index) {
                         Navigator.pop(context);
                         title = (valueHolder == null ||
-                            valueHolder!.userIdToVerify == null ||
-                            valueHolder!.userIdToVerify == '')
+                                valueHolder!.userIdToVerify == null ||
+                                valueHolder!.userIdToVerify == '')
                             ? Utils.getString(
-                            context, 'home__menu_drawer_profile')
+                                context, 'home__menu_drawer_profile')
                             : Utils.getString(
-                            context, 'home__bottom_app_bar_verify_email');
+                                context, 'home__bottom_app_bar_verify_email');
                         updateSelectedIndexWithAnimation(title, index);
-                      }),*/
+                      }),
                   // ignore: unnecessary_null_comparison
                   if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
@@ -638,7 +635,7 @@ class _HomeViewState extends State<DashboardView>
                             title: Utils.getString(
                                 context, 'home__menu_drawer_favourite'),
                             index:
-                            PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT,
+                                PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT,
                             onTap: (String title, int index) {
                               Navigator.pop(context);
                               updateSelectedIndexWithAnimation(title, index);
@@ -655,15 +652,15 @@ class _HomeViewState extends State<DashboardView>
                           title: Utils.getString(
                               context, 'profile__order'),
                           index:
-                          PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT,
+                              PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT,
                           onTap: (String title, int index) {
                             Navigator.pop(context);
                             updateSelectedIndexWithAnimation(title, index);
                           },
                         ),
                       ),
-                  //? Remove comment for ( Schedule Order )
-                  /* if (provider != null)
+                    //? Remove comment for ( Schedule Order )
+                   /* if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
                       Visibility(
@@ -715,7 +712,7 @@ class _HomeViewState extends State<DashboardView>
                             }),
                       ),*/
                   // ignore: unnecessary_null_comparison
-                  /* if (provider != null)
+                 /* if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
                       Visibility(
@@ -732,52 +729,6 @@ class _HomeViewState extends State<DashboardView>
                             }),
                       ),*/
                   // ignore: unnecessary_null_comparison
-
-                  const Divider(
-                    height: PsDimens.space1,
-                  ),
-                  ListTile(
-                    title:
-                    Text(Utils.getString(context, 'home__menu_drawer_app')),
-                  ),
-                  /*_DrawerMenuWidget(
-                      icon: Icons.g_translate,
-                      title: Utils.getString(
-                          context, 'home__menu_drawer_language'),
-                      index: PsConst.REQUEST_CODE__MENU_LANGUAGE_FRAGMENT,
-                      onTap: (String title, int index) {
-                        Navigator.pop(context);
-                        updateSelectedIndexWithAnimation('', index);
-                      }),*/
-                  _DrawerMenuWidget(
-                      icon: Icons.contacts,
-                      title: Utils.getString(
-                          context, 'home__menu_drawer_contact_us'),
-                      index: PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT,
-                      onTap: (String title, int index) {
-                        Navigator.pop(context);
-                        updateSelectedIndexWithAnimation(title, index);
-                      }),
-                  _DrawerMenuWidget(
-                      icon: Icons.settings,
-                      title:
-                      Utils.getString(context, 'home__menu_drawer_setting'),
-                      index: PsConst.REQUEST_CODE__MENU_SETTING_FRAGMENT,
-                      onTap: (String title, int index) {
-                        Navigator.pop(context);
-                        updateSelectedIndexWithAnimation(title, index);
-                      }),
-                  _DrawerMenuWidget(
-                      icon: Icons.info_outline,
-                      title: Utils.getString(
-                          context, 'privacy_policy__toolbar_name'),
-                      index: PsConst
-                          .REQUEST_CODE__MENU_TERMS_AND_CONDITION_FRAGMENT,
-                      onTap: (String title, int index) {
-                        Navigator.pop(context);
-                        updateSelectedIndexWithAnimation(title, index);
-                      }),
-
                   if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
@@ -823,6 +774,50 @@ class _HomeViewState extends State<DashboardView>
                           },
                         ),
                       ),
+                  const Divider(
+                    height: PsDimens.space1,
+                  ),
+                  ListTile(
+                    title:
+                        Text(Utils.getString(context, 'home__menu_drawer_app')),
+                  ),
+                  /*_DrawerMenuWidget(
+                      icon: Icons.g_translate,
+                      title: Utils.getString(
+                          context, 'home__menu_drawer_language'),
+                      index: PsConst.REQUEST_CODE__MENU_LANGUAGE_FRAGMENT,
+                      onTap: (String title, int index) {
+                        Navigator.pop(context);
+                        updateSelectedIndexWithAnimation('', index);
+                      }),*/
+                  _DrawerMenuWidget(
+                      icon: Icons.contacts,
+                      title: Utils.getString(
+                          context, 'home__menu_drawer_contact_us'),
+                      index: PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT,
+                      onTap: (String title, int index) {
+                        Navigator.pop(context);
+                        updateSelectedIndexWithAnimation(title, index);
+                      }),
+                  _DrawerMenuWidget(
+                      icon: Icons.settings,
+                      title:
+                          Utils.getString(context, 'home__menu_drawer_setting'),
+                      index: PsConst.REQUEST_CODE__MENU_SETTING_FRAGMENT,
+                      onTap: (String title, int index) {
+                        Navigator.pop(context);
+                        updateSelectedIndexWithAnimation(title, index);
+                      }),
+                  _DrawerMenuWidget(
+                      icon: Icons.info_outline,
+                      title: Utils.getString(
+                          context, 'privacy_policy__toolbar_name'),
+                      index: PsConst
+                          .REQUEST_CODE__MENU_TERMS_AND_CONDITION_FRAGMENT,
+                      onTap: (String title, int index) {
+                        Navigator.pop(context);
+                        updateSelectedIndexWithAnimation(title, index);
+                      }),
                   /*ListTile(
                     leading: Icon(
                       Icons.share,
@@ -875,8 +870,7 @@ class _HomeViewState extends State<DashboardView>
         ),
         appBar: AppBar(
             centerTitle: false,
-            leading:
-                _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
+            leading: _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
                 _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT||
                 _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
                 _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT||
@@ -896,26 +890,26 @@ class _HomeViewState extends State<DashboardView>
               },
             )
                 : null,
-            backgroundColor: PsColors.backgroundColor,
-            title: FittedBox(
-              fit: BoxFit.scaleDown, // This makes the text shrink if space is small
-              child: Text(
-                appBarTitle,
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: PsColors.textPrimaryColor,
-                ),
+          backgroundColor: PsColors.backgroundColor,
+          title: FittedBox(
+            fit: BoxFit.scaleDown, // This makes the text shrink if space is small
+            child: Text(
+              appBarTitle,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+                color: PsColors.textPrimaryColor,
               ),
             ),
-            titleSpacing: 0,
-            elevation: 0,
-            iconTheme: IconThemeData(color: PsColors.textPrimaryColor),
-            toolbarTextStyle: TextStyle(color: PsColors.textPrimaryColor),
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarIconBrightness: Utils.getBrightnessForAppBar(context),
-            ),
-            actions: <Widget>[
-              /*IconButton(
+          ),
+          titleSpacing: 0,
+          elevation: 0,
+          iconTheme: IconThemeData(color: PsColors.textPrimaryColor),
+          toolbarTextStyle: TextStyle(color: PsColors.textPrimaryColor),
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarIconBrightness: Utils.getBrightnessForAppBar(context),
+          ),
+          actions: <Widget>[
+        /*IconButton(
               icon: Icon(
                 Icons.notifications_none,
                 color: Theme.of(context).iconTheme.color,
@@ -939,344 +933,344 @@ class _HomeViewState extends State<DashboardView>
                 );
               },
             ),*/
-              ChangeNotifierProvider<BasketProvider>(
-                lazy: false,
-                create: (BuildContext context) {
-                  final BasketProvider provider =
+            ChangeNotifierProvider<BasketProvider>(
+            lazy: false,
+            create: (BuildContext context) {
+              final BasketProvider provider =
                   BasketProvider(repo: basketRepository!);
-                  provider.loadBasketList();
-                  return provider;
-                },
-                child: Consumer<BasketProvider>(
-                  builder: (BuildContext context, BasketProvider basketProvider, Widget? child) {
-                    int totalQuantity = 0;
-                    double totalPrice = 0.0;
-                    double totalOriginalPrice = 0.0;
-                    String? currencySymbol;
-                    for (Basket basket in basketProvider.basketList.data!) {
-                      totalQuantity += int.parse(basket.qty!);
-                      totalPrice += double.parse(basket.basketPrice!) * double.parse(basket.qty!);
-                      totalOriginalPrice += double.parse(basket.basketOriginalPrice!) * double.parse(basket.qty!);
-                      currencySymbol = basket.product!.currencySymbol!;
-                    }
-                    if (_currentIndex != PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT &&
-                        _currentIndex != PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT &&
-                        _currentIndex != PsConst.REQUEST_CODE__MENU_SETTING_FRAGMENT &&
-                        _currentIndex != PsConst.REQUEST_CODE__MENU_TERMS_AND_CONDITION_FRAGMENT
-                    )
-                      return GestureDetector(
-                          onTap: () {
-                            controllersStack.add({appBarTitle:_currentIndex});
-                            updateSelectedIndexWithAnimation(Utils.getString(
-                                context,
-                                Utils.getString(context, 'home__bottom_app_bar_basket_list')),
-                                PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
+              provider.loadBasketList();
+              return provider;
+            },
+              child: Consumer<BasketProvider>(
+                builder: (BuildContext context, BasketProvider basketProvider, Widget? child) {
+                  int totalQuantity = 0;
+                  double totalPrice = 0.0;
+                  double totalOriginalPrice = 0.0;
+                  String? currencySymbol;
+                  for (Basket basket in basketProvider.basketList.data!) {
+                    totalQuantity += int.parse(basket.qty!);
+                    totalPrice += double.parse(basket.basketPrice!) * double.parse(basket.qty!);
+                    totalOriginalPrice += double.parse(basket.basketOriginalPrice!) * double.parse(basket.qty!);
+                    currencySymbol = basket.product!.currencySymbol!;
+                  }
+                  if (_currentIndex != PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT &&
+                      _currentIndex != PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT &&
+                      _currentIndex != PsConst.REQUEST_CODE__MENU_SETTING_FRAGMENT &&
+                      _currentIndex != PsConst.REQUEST_CODE__MENU_TERMS_AND_CONDITION_FRAGMENT
+                  )
+                  return GestureDetector(
+                      onTap: () {
+                        controllersStack.add({appBarTitle:_currentIndex});
+                        updateSelectedIndexWithAnimation(Utils.getString(
+                            context,
+                            Utils.getString(context, 'home__bottom_app_bar_basket_list')),
+                            PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
 
-                          },
-                          child:Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                      },
+                      child:Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            const SizedBox(width: PsDimens.space10),
+                            if (basketProvider
+                                .basketList.data!.isNotEmpty)
+                              FittedBox(
+                                  child:
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      FittedBox(
+                                          child:
+                                          Container(
+                                            child: Align(
+                                              /*alignment: Alignment.center,*/
+                                              child: Text(
+                                                '${Utils.getString(context, 'checkout__price')} $currencySymbol ${totalPrice.toStringAsFixed(2)}',
+                                                textAlign: TextAlign.left,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                ),
+                                                maxLines: 1,
+                                              ),
+                                            ),
+                                          )
+                                      ),
+                                      Container(
+                                        height: PsDimens.space4,
+                                      ),
+                                      FittedBox(
+                                          child:
+                                          Container(
+                                            child: Align(
+                                              /*alignment: Alignment.center,*/
+                                              child: Text(
+                                                '${Utils.getString(context, 'checkout__savings')} '
+                                                    '$currencySymbol ${(totalOriginalPrice - totalPrice).toStringAsFixed(2)}',
+                                                textAlign: TextAlign.left,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: PsColors.discountColor),
+                                              ),
+                                            ),
+                                          )
+                                      ),
+                                    ],
+                                  )
+                              ),
+
+                            Stack(
                               children: <Widget>[
-                                const SizedBox(width: PsDimens.space10),
+                                Container(
+                                  width: PsDimens.space40,
+                                  height: PsDimens.space40,
+                                  margin: const EdgeInsets.only(
+                                      top: PsDimens.space8,
+                                      left: PsDimens.space8,
+                                      right: PsDimens.space8),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.shopping_basket,
+                                      color: PsColors.mainColor,
+                                    ),
+                                  ),
+                                ),
                                 if (basketProvider
                                     .basketList.data!.isNotEmpty)
-                                  FittedBox(
-                                      child:
-                                      Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          FittedBox(
-                                              child:
-                                              Container(
-                                                child: Align(
-                                                  /*alignment: Alignment.center,*/
-                                                  child: Text(
-                                                    '${Utils.getString(context, 'checkout__price')} $currencySymbol ${totalPrice.toStringAsFixed(2)}',
-                                                    textAlign: TextAlign.left,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyLarge!.copyWith(
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    maxLines: 1,
-                                                  ),
-                                                ),
-                                              )
-                                          ),
-                                          Container(
-                                            height: PsDimens.space4,
-                                          ),
-                                          FittedBox(
-                                              child:
-                                              Container(
-                                                child: Align(
-                                                  /*alignment: Alignment.center,*/
-                                                  child: Text(
-                                                    '${Utils.getString(context, 'checkout__savings')} '
-                                                        '$currencySymbol ${(totalOriginalPrice - totalPrice).toStringAsFixed(2)}',
-                                                    textAlign: TextAlign.left,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyLarge!.copyWith(
-                                                        fontWeight: FontWeight.bold,
-                                                        color: PsColors.discountColor),
-                                                  ),
-                                                ),
-                                              )
-                                          ),
-                                        ],
-                                      )
-                                  ),
-
-                                Stack(
-                                  children: <Widget>[
-                                    Container(
-                                      width: PsDimens.space40,
-                                      height: PsDimens.space40,
-                                      margin: const EdgeInsets.only(
-                                          top: PsDimens.space8,
-                                          left: PsDimens.space8,
-                                          right: PsDimens.space8),
+                                  Positioned(
+                                    right: PsDimens.space4,
+                                    top: PsDimens.space1,
+                                    child: Container(
+                                      width: PsDimens.space28,
+                                      height: PsDimens.space28,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: PsColors.black.withAlpha(200),
+                                      ),
                                       child: Align(
                                         alignment: Alignment.center,
-                                        child: Icon(
-                                          Icons.shopping_basket,
-                                          color: PsColors.mainColor,
+                                        child: Text(
+                                          totalQuantity > 99 ? '99+' : totalQuantity.toString(),
+                                          textAlign: TextAlign.left,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(color: PsColors.white),
+                                          maxLines: 1,
                                         ),
                                       ),
                                     ),
-                                    if (basketProvider
-                                        .basketList.data!.isNotEmpty)
-                                      Positioned(
-                                        right: PsDimens.space4,
-                                        top: PsDimens.space1,
-                                        child: Container(
-                                          width: PsDimens.space28,
-                                          height: PsDimens.space28,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: PsColors.black.withAlpha(200),
-                                          ),
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              totalQuantity > 99 ? '99+' : totalQuantity.toString(),
-                                              textAlign: TextAlign.left,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .copyWith(color: PsColors.white),
-                                              maxLines: 1,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ]
-                          )
-                      );
-                    else if( totalQuantity > 0 &&
-                        _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
-                      return Container(
-                        margin: const EdgeInsets.all(PsDimens.space8),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: PsColors.discountColor, width: 2),
-                            borderRadius: BorderRadius.circular(PsDimens.space8)
-                        ),
-                        child: TextButton(
-                          onPressed: () {
-                            showDialog<dynamic>(
-                                context: context,
-                                barrierColor: PsColors.transparent,
-                                builder: (BuildContext context) {
-                                  return ConfirmDialogView(
-                                      description: Utils.getString(context,
-                                          'basket_list__empty_basket_dialog_description'),
-                                      leftButtonText: Utils.getString(
-                                          context,
-                                          'basket_list__comfirm_dialog_cancel_button'),
-                                      rightButtonText: Utils.getString(
-                                          context,
-                                          'basket_list__comfirm_dialog_ok_button'),
-                                      onAgreeTap: () async {
-                                        /*Navigator.of(context).pop();
+                                  ),
+                              ],
+                            ),
+                          ]
+                      )
+                  );
+                  else if( totalQuantity > 0 &&
+                      _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT)
+                    return Container(
+                      margin: const EdgeInsets.all(PsDimens.space8),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: PsColors.discountColor, width: 2),
+                          borderRadius: BorderRadius.circular(PsDimens.space8)
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          showDialog<dynamic>(
+                            context: context,
+                              barrierColor: PsColors.transparent,
+                            builder: (BuildContext context) {
+                              return ConfirmDialogView(
+                                  description: Utils.getString(context,
+                                      'basket_list__empty_basket_dialog_description'),
+                                  leftButtonText: Utils.getString(
+                                      context,
+                                      'basket_list__comfirm_dialog_cancel_button'),
+                                  rightButtonText: Utils.getString(
+                                      context,
+                                      'basket_list__comfirm_dialog_ok_button'),
+                                  onAgreeTap: () async {
+                                    /*Navigator.of(context).pop();
                                     provider.deleteBasketByProduct(
                                         provider
                                             .basketList.data![index]);*/
-                                        Navigator.of(context).pop();
-                                        basketProvider.deleteWholeBasketList();
-                                      });
-                                }
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: PsColors.discountColor.withAlpha(29),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(PsDimens.space8), // Set the border radius for rounded corners
-                            ),
-                          ),
-                          child: Text(
-                            Utils.getString(context, 'basket__empty'),
-                            style: TextStyle(
-                              color: PsColors.discountColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                    Navigator.of(context).pop();
+                                    basketProvider.deleteWholeBasketList();
+                                  });
+                            }
+                        );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: PsColors.discountColor.withAlpha(29),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(PsDimens.space8), // Set the border radius for rounded corners
                           ),
                         ),
-                      );
-                    return Container();
-                  },
-                ),
+                        child: Text(
+                          Utils.getString(context, 'basket__empty'),
+                          style: TextStyle(
+                              color: PsColors.discountColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
+                  return Container();
+                },
               ),
-            ]
+            ),
+        ]
         ),
 
-        bottomNavigationBar: _currentIndex ==
-            PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT ||
-            _currentIndex == PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT ||
-            _currentIndex ==
-                PsConst
-                    .REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT ||
-            _currentIndex ==
-                PsConst
-                    .REQUEST_CODE__DASHBOARD_USER_PROFILE_FRAGMENT || //go to profile
-            _currentIndex ==
-                PsConst
-                    .REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT || //go to forgot password
-            _currentIndex ==
-                PsConst
-                    .REQUEST_CODE__DASHBOARD_REGISTER_FRAGMENT || //go to register
-            _currentIndex ==
-                PsConst
-                    .REQUEST_CODE__DASHBOARD_VERIFY_EMAIL_FRAGMENT || //go to email verify
-            _currentIndex ==
-                PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_LOGIN_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT||
+      bottomNavigationBar: _currentIndex ==
+                    PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT ||
+                _currentIndex == PsConst.REQUEST_CODE__MENU_CATEGORY_FRAGMENT ||
+                _currentIndex ==
+                    PsConst
+                        .REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT ||
+                _currentIndex ==
+                    PsConst
+                        .REQUEST_CODE__DASHBOARD_USER_PROFILE_FRAGMENT || //go to profile
+                _currentIndex ==
+                    PsConst
+                        .REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT || //go to forgot password
+                _currentIndex ==
+                    PsConst
+                        .REQUEST_CODE__DASHBOARD_REGISTER_FRAGMENT || //go to register
+                _currentIndex ==
+                    PsConst
+                        .REQUEST_CODE__DASHBOARD_VERIFY_EMAIL_FRAGMENT || //go to email verify
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_LOGIN_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT||
             _currentIndex ==
                 PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT||
             _currentIndex ==
                 PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT||
             _currentIndex == PsConst.REQUEST_CODE__MENU_FEATURED_PRODUCT_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__MENU_USER_HISTORY_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__MENU_SELECT_WHICH_USER_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT||
-            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
+          _currentIndex == PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__MENU_USER_HISTORY_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__MENU_SELECT_WHICH_USER_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__MENU_TRANSACTION_DETAIL_FRAGMENT||
+          _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
 
 
             ? Visibility(
-          visible: true,
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: getBottomNavigationIndex(_currentIndex),
-            showUnselectedLabels: true,
-            backgroundColor: PsColors.backgroundColor,
-            selectedItemColor: PsColors.mainColor,
-            elevation: 10,
-            showSelectedLabels: true,
-            onTap: (int index) {
-              final dynamic _returnValue =
-              getIndexFromBottomNavigationIndex(index);
-              controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];
-              updateSelectedIndexWithAnimation(
-                  _returnValue[0], _returnValue[1]);
-            },
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: const Icon(
-                  Icons.restaurant,
-                  size: 20,
-                ),
-                label: Utils.getString(context, 'home__drawer_menu_menu'),
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.search),
-                label: Utils.getString(
-                    context, 'home__bottom_app_bar_search'),
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.shopping_cart),
-                label: Utils.getString(context, 'home__bottom_app_bar_basket_list'),
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.favorite),
-                label: Utils.getString(
-                    context, 'home__bottom_app_bar_favorites'),
-              ),
+                visible: true,
+                child: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  currentIndex: getBottomNavigationIndex(_currentIndex),
+                  showUnselectedLabels: true,
+                  backgroundColor: PsColors.backgroundColor,
+                  selectedItemColor: PsColors.mainColor,
+                  elevation: 10,
+                  showSelectedLabels: true,
+                  onTap: (int index) {
+                    final dynamic _returnValue =
+                        getIndexFromBottomNavigationIndex(index);
+                      controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];
+                    updateSelectedIndexWithAnimation(
+                        _returnValue[0], _returnValue[1]);
+                  },
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: const Icon(
+                        Icons.restaurant,
+                        size: 20,
+                      ),
+                      label: Utils.getString(context, 'home__drawer_menu_menu'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.search),
+                      label: Utils.getString(
+                          context, 'home__bottom_app_bar_search'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.shopping_cart),
+                      label: Utils.getString(context, 'home__bottom_app_bar_basket_list'),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.favorite),
+                      label: Utils.getString(
+                          context, 'home__bottom_app_bar_favorites'),
+                    ),
 
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.person),
-                label: Utils.getString(
-                    context, 'home__bottom_app_bar_login'),
-              ),
-            ],
-          ),
-        )
+                    BottomNavigationBarItem(
+                      icon: const Icon(Icons.person),
+                      label: Utils.getString(
+                          context, 'home__bottom_app_bar_login'),
+                    ),
+                  ],
+                ),
+              )
             : null,
         floatingActionButton: _currentIndex ==
-            PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_SHOP_INFO_FRAGMENT ||
-            _currentIndex ==
-                PsConst
-                    .REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_USER_PROFILE_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_REGISTER_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_VERIFY_EMAIL_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_LOGIN_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
-            _currentIndex ==
-                PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT||
+                    PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_SHOP_INFO_FRAGMENT ||
+                _currentIndex ==
+                    PsConst
+                        .REQUEST_CODE__DASHBOARD_SELECT_WHICH_USER_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_USER_PROFILE_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_REGISTER_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_VERIFY_EMAIL_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__MENU_FAVOURITE_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_LOGIN_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
+                _currentIndex ==
+                    PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT||
             _currentIndex ==
                 PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT||
             _currentIndex ==
                 PsConst.REQUEST_CODE__MENU_LATEST_PRODUCT_FRAGMENT ||
-            _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
+        _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_FRAGMENT||
             _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT||
             _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_DETAIL_FRAGMENT||
             _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_PRODUCT_INGREDIENTS_FRAGMENT||
             _currentIndex == PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT
             ? Container(
-          height: 65.0,
-          width: 65.0,
-          child: FittedBox(
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: PsColors.mainColor.withOpacity(0.3),
-                        offset: const Offset(1.1, 1.1),
-                        blurRadius: 10.0),
-                  ],
+                height: 65.0,
+                width: 65.0,
+                child: FittedBox(
+                  child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: PsColors.mainColor.withOpacity(0.3),
+                              offset: const Offset(1.1, 1.1),
+                              blurRadius: 10.0),
+                        ],
+                      ),
+                      child: Container()),
                 ),
-                child: Container()),
-          ),
-        )
+              )
             : null,
         body: ChangeNotifierProvider<NotificationProvider>(
           lazy: false,
@@ -1371,18 +1365,18 @@ class _HomeViewState extends State<DashboardView>
                                 psValueHolder: valueHolder);
                             return deleteTaskProvider;
                           }),
-                    ],
+                      ],
                     child: Consumer<UserProvider>(builder:
                         (BuildContext context, UserProvider provider,
-                        Widget? child) {
+                            Widget? child) {
                       if (
-                      //provider == null ||
-                      provider.psValueHolder.userIdToVerify == null ||
+                        //provider == null ||
+                          provider.psValueHolder.userIdToVerify == null ||
                           provider.psValueHolder.userIdToVerify == '') {
                         if (
-                        //provider == null ||
-                        // provider.psValueHolder == null ||
-                        provider.psValueHolder.loginUserId == null ||
+                          //provider == null ||
+                           // provider.psValueHolder == null ||
+                            provider.psValueHolder.loginUserId == null ||
                             provider.psValueHolder.loginUserId == '') {
                           return _CallLoginWidget(
                               currentIndex: _currentIndex,
@@ -1454,12 +1448,12 @@ class _HomeViewState extends State<DashboardView>
                         animationController: animationController,
                         animation: animation,
                         productParameterHolder:
-                        ProductParameterHolder().getLatestParameterHolder())
+                            ProductParameterHolder().getLatestParameterHolder())
                   ],
                 );
               }
               else if (_currentIndex ==
-                  PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
+                      PsConst.REQUEST_CODE__DASHBOARD_PHONE_SIGNIN_FRAGMENT ||
                   _currentIndex ==
                       PsConst.REQUEST_CODE__MENU_PHONE_SIGNIN_FRAGMENT) {
                 return Stack(children: <Widget>[
@@ -1525,7 +1519,7 @@ class _HomeViewState extends State<DashboardView>
                   ])
                 ]);
               } else if (_currentIndex ==
-                  PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT ||
+                      PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT ||
                   _currentIndex ==
                       PsConst.REQUEST_CODE__MENU_PHONE_VERIFY_FRAGMENT) {
                 return _CallVerifyPhoneWidget(
@@ -1549,7 +1543,7 @@ class _HomeViewState extends State<DashboardView>
                       });
                     });
               } else if (_currentIndex ==
-                  PsConst.REQUEST_CODE__DASHBOARD_USER_PROFILE_FRAGMENT ||
+                      PsConst.REQUEST_CODE__DASHBOARD_USER_PROFILE_FRAGMENT ||
                   _currentIndex ==
                       PsConst.REQUEST_CODE__MENU_USER_PROFILE_FRAGMENT) {
                 return ProfileView(
@@ -1573,10 +1567,8 @@ class _HomeViewState extends State<DashboardView>
               }
               else if (_currentIndex ==
                   PsConst.REQUEST_CODE__DASHBOARD_SEARCH_ITEM_LIST_FRAGMENT) {
-                //selectedProductParameterHolder!.searchTerm = 'lam';
-                  return SearchItemListView(
-                        productParameterHolder: selectedProductParameterHolder!,
-                    );
+                return SearchItemListView(
+                    productParameterHolder: selectedProductParameterHolder!);
               }
               else if (_currentIndex ==
                   PsConst.REQUEST_CODE__DASHBOARD_SUBCATEGORY_PRODUCTS_FRAGMENT) {
@@ -1616,7 +1608,7 @@ class _HomeViewState extends State<DashboardView>
                   key: const Key('1'),
                   animationController: animationController,
                   productParameterHolder:
-                  ProductParameterHolder().getLatestParameterHolder(),
+                      ProductParameterHolder().getLatestParameterHolder(),
                 );
               } else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_DISCOUNT_PRODUCT_FRAGMENT) {
@@ -1624,7 +1616,7 @@ class _HomeViewState extends State<DashboardView>
                   key: const Key('2'),
                   animationController: animationController,
                   productParameterHolder:
-                  ProductParameterHolder().getDiscountParameterHolder(),
+                      ProductParameterHolder().getDiscountParameterHolder(),
                 );
               } else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_TRENDING_PRODUCT_FRAGMENT) {
@@ -1632,7 +1624,7 @@ class _HomeViewState extends State<DashboardView>
                   key: const Key('3'),
                   animationController: animationController,
                   productParameterHolder:
-                  ProductParameterHolder().getTrendingParameterHolder(),
+                      ProductParameterHolder().getTrendingParameterHolder(),
                 );
               } else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_FEATURED_PRODUCT_FRAGMENT) {
@@ -1640,11 +1632,11 @@ class _HomeViewState extends State<DashboardView>
                   key: const Key('4'),
                   animationController: animationController,
                   productParameterHolder:
-                  ProductParameterHolder().getFeaturedParameterHolder(),
+                      ProductParameterHolder().getFeaturedParameterHolder(),
                 );
               } else if (_currentIndex ==
-                  PsConst
-                      .REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT ||
+                      PsConst
+                          .REQUEST_CODE__DASHBOARD_FORGOT_PASSWORD_FRAGMENT ||
                   _currentIndex ==
                       PsConst.REQUEST_CODE__MENU_FORGOT_PASSWORD_FRAGMENT) {
                 return Stack(children: <Widget>[
@@ -1686,7 +1678,7 @@ class _HomeViewState extends State<DashboardView>
                       ])
                 ]);
               } else if (_currentIndex ==
-                  PsConst.REQUEST_CODE__DASHBOARD_REGISTER_FRAGMENT ||
+                      PsConst.REQUEST_CODE__DASHBOARD_REGISTER_FRAGMENT ||
                   _currentIndex ==
                       PsConst.REQUEST_CODE__MENU_REGISTER_FRAGMENT) {
                 return Stack(children: <Widget>[
@@ -1782,7 +1774,7 @@ class _HomeViewState extends State<DashboardView>
                   ])
                 ]);
               } else if (_currentIndex ==
-                  PsConst.REQUEST_CODE__DASHBOARD_VERIFY_EMAIL_FRAGMENT ||
+                      PsConst.REQUEST_CODE__DASHBOARD_VERIFY_EMAIL_FRAGMENT ||
                   _currentIndex ==
                       PsConst.REQUEST_CODE__MENU_VERIFY_EMAIL_FRAGMENT) {
                 return _CallVerifyEmailWidget(
@@ -1804,7 +1796,7 @@ class _HomeViewState extends State<DashboardView>
                       });
                     });
               } else if (_currentIndex ==
-                  PsConst.REQUEST_CODE__DASHBOARD_LOGIN_FRAGMENT ||
+                      PsConst.REQUEST_CODE__DASHBOARD_LOGIN_FRAGMENT ||
                   _currentIndex == PsConst.REQUEST_CODE__MENU_LOGIN_FRAGMENT) {
                 return _CallLoginWidget(
                     currentIndex: _currentIndex,
@@ -1836,12 +1828,12 @@ class _HomeViewState extends State<DashboardView>
                     },
                     child: Consumer<UserProvider>(builder:
                         (BuildContext context, UserProvider provider,
-                        Widget? child) {
+                            Widget? child) {
                       if (
-                      provider.psValueHolder.userIdToVerify == null ||
+                          provider.psValueHolder.userIdToVerify == null ||
                           provider.psValueHolder.userIdToVerify == '') {
                         if (
-                        provider.psValueHolder.loginUserId == null ||
+                            provider.psValueHolder.loginUserId == null ||
                             provider.psValueHolder.loginUserId == '') {
                           return Stack(
                             children: <Widget>[
@@ -1981,7 +1973,7 @@ class _HomeViewState extends State<DashboardView>
                 return FavouriteProductListView(
                     animationController: animationController);
               }
-              else if (_currentIndex ==
+                else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_ORDER_FRAGMENT) {
                 return TransactionListView(
                     scaffoldKey: scaffoldKey,
@@ -2011,7 +2003,7 @@ class _HomeViewState extends State<DashboardView>
               } else if (_currentIndex ==
                   PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT) {
                 return ContactUsView(
-                  animationController: animationController,
+                    animationController: animationController,
                   userProvider: userProvider,
                 );
               } else if (_currentIndex ==
@@ -2033,12 +2025,12 @@ class _HomeViewState extends State<DashboardView>
                 return BasketListView(
                   animationController: animationController,
                 );
-                // }else if (_currentIndex ==
-                //     PsConst.REQUEST_CODE__MENU_VIEW_MY_SCHEDULE) {
-                //   return ScheduleOrderListView(
-                //     user: userProvider!.user.data!,
-                //     isHideAppBar: true,
-                //   );
+              // }else if (_currentIndex ==
+              //     PsConst.REQUEST_CODE__MENU_VIEW_MY_SCHEDULE) {
+              //   return ScheduleOrderListView(
+              //     user: userProvider!.user.data!,
+              //     isHideAppBar: true,
+              //   );
               } else {
                 animationController.forward();
                 /*if(controllers.isEmpty)
@@ -2068,10 +2060,10 @@ class _HomeViewState extends State<DashboardView>
 class _CallLoginWidget extends StatelessWidget {
   const _CallLoginWidget(
       {required this.animationController,
-        required this.animation,
-        required this.updateCurrentIndex,
-        required this.updateUserCurrentIndex,
-        required this.currentIndex});
+      required this.animation,
+      required this.updateCurrentIndex,
+      required this.updateUserCurrentIndex,
+      required this.currentIndex});
   final Function updateCurrentIndex;
   final Function updateUserCurrentIndex;
   final AnimationController animationController;
@@ -2186,13 +2178,13 @@ class _CallLoginWidget extends StatelessWidget {
 class _CallVerifyPhoneWidget extends StatelessWidget {
   const _CallVerifyPhoneWidget(
       {this.userName,
-        this.phoneNumber,
-        this.phoneId,
-        required this.updateCurrentIndex,
-        required this.updateUserCurrentIndex,
-        required this.animationController,
-        required this.animation,
-        required this.currentIndex});
+      this.phoneNumber,
+      this.phoneId,
+      required this.updateCurrentIndex,
+      required this.updateUserCurrentIndex,
+      required this.animationController,
+      required this.animation,
+      required this.currentIndex});
 
   final String? userName;
   final String? phoneNumber;
@@ -2221,9 +2213,9 @@ class _CallVerifyPhoneWidget extends StatelessWidget {
                   PsConst.REQUEST_CODE__MENU_USER_PROFILE_FRAGMENT,
                   userId);
             } else
-              // if (currentIndex ==
-              //     PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT)
-                {
+            // if (currentIndex ==
+            //     PsConst.REQUEST_CODE__DASHBOARD_PHONE_VERIFY_FRAGMENT)
+            {
               updateUserCurrentIndex(
                   Utils.getString(context, 'home__menu_drawer_profile'),
                   PsConst.REQUEST_CODE__DASHBOARD_USER_PROFILE_FRAGMENT,
@@ -2248,11 +2240,11 @@ class _CallVerifyPhoneWidget extends StatelessWidget {
 class _CallVerifyEmailWidget extends StatelessWidget {
   const _CallVerifyEmailWidget(
       {required this.updateCurrentIndex,
-        required this.updateUserCurrentIndex,
-        required this.animationController,
-        required this.animation,
-        required this.currentIndex,
-        required this.userId});
+      required this.updateUserCurrentIndex,
+      required this.animationController,
+      required this.animation,
+      required this.currentIndex,
+      required this.userId});
   final Function updateCurrentIndex;
   final Function updateUserCurrentIndex;
   final int currentIndex;
@@ -2276,9 +2268,9 @@ class _CallVerifyEmailWidget extends StatelessWidget {
                   PsConst.REQUEST_CODE__MENU_USER_PROFILE_FRAGMENT,
                   userId);
             } else
-              // (currentIndex ==
-              //     PsConst.REQUEST_CODE__DASHBOARD_VERIFY_EMAIL_FRAGMENT)
-                {
+            // (currentIndex ==
+            //     PsConst.REQUEST_CODE__DASHBOARD_VERIFY_EMAIL_FRAGMENT)
+            {
               updateUserCurrentIndex(
                   Utils.getString(context, 'home__menu_drawer_profile'),
                   PsConst.REQUEST_CODE__DASHBOARD_USER_PROFILE_FRAGMENT,
@@ -2372,17 +2364,17 @@ class _DrawerHeaderWidget extends StatelessWidget {
 
 class _DrawerHeaderWidgetWithUserProfile extends StatefulWidget {
   const _DrawerHeaderWidgetWithUserProfile({
-    Key? key,
+    Key? key, 
     required this.provider,
-    //required this.deleteTaskProvider
-  }): super(key: key);
+    required this.deleteTaskProvider
+    }): super(key: key);
 
   final UserProvider provider;
-  //final DeleteTaskProvider deleteTaskProvider;
+  final DeleteTaskProvider deleteTaskProvider;
 
   @override
-  __DrawerHeaderWidgetWithUserProfileState createState() =>
-      __DrawerHeaderWidgetWithUserProfileState();
+  __DrawerHeaderWidgetWithUserProfileState createState() => 
+    __DrawerHeaderWidgetWithUserProfileState();
 }
 
 class __DrawerHeaderWidgetWithUserProfileState extends State<_DrawerHeaderWidgetWithUserProfile> {
@@ -2398,50 +2390,50 @@ class __DrawerHeaderWidgetWithUserProfileState extends State<_DrawerHeaderWidget
               width: 2.0,
             ),
           ),
-          //color: Colors.green,
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                  flex:30,
-                  child:
-                  Container(
-                    padding: const EdgeInsets.all(PsDimens.space8),
-                    //color: Colors.blue,
-                    child: PsNetworkCircleImageForUser(
-                      width: 100,
-                      height: 100,
-                      photoKey: '',
-                      imagePath:
+        //color: Colors.green,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+                flex:30,
+        child:
+            Container(
+              padding: const EdgeInsets.all(PsDimens.space8),
+              //color: Colors.blue,
+              child: PsNetworkCircleImageForUser(
+                width: 100,
+                  height: 100,
+                  photoKey: '',
+                  imagePath:
                       widget.provider.user.data!.userProfilePhoto,
-                      boxfit: BoxFit.cover,
-                    ),
-                  )
-              ),
+                  boxfit: BoxFit.cover,
+                ),
+              )
+            ),
               Expanded(
-                  flex: 40,
+                flex: 40,
                   child:
                   Container(
                     //color: Colors.red,
                       child:
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                                padding: const EdgeInsets.only(
-                                  left: PsDimens.space8,),
-                                child: Text(
-                                  widget.provider.user.data!.userName!.toUpperCase(),
-                                  style: Theme.of(context).textTheme.titleLarge!
-                                      .copyWith(color: PsColors.white,),
-                                )
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: PsDimens.space8,),
+                       child: Text(
+                          widget.provider.user.data!.userName!.toUpperCase(),
+                          style: Theme.of(context).textTheme.titleLarge!
+                            .copyWith(color: PsColors.white,),
+                        )
 
-                            ),
-                            /*if(widget.provider.user.data!.userPhone != '')
+                  ),
+                  /*if(widget.provider.user.data!.userPhone != '')
                   Padding(
                     padding: const EdgeInsets.only(
                         top: PsDimens.space4,
@@ -2453,11 +2445,11 @@ class __DrawerHeaderWidgetWithUserProfileState extends State<_DrawerHeaderWidget
                           .copyWith(color: PsColors.white),
                     ),
                   ),*/
-                            if(widget.provider.user.data!.address != '')
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  /*Padding(
+                  if(widget.provider.user.data!.address != '')
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        /*Padding(
                           padding: const EdgeInsets.only(
                               left: PsDimens.space6,
                               top: PsDimens.space4),
@@ -2467,32 +2459,32 @@ class __DrawerHeaderWidgetWithUserProfileState extends State<_DrawerHeaderWidget
                             size: 14,
                           ),
                         ),*/
-                                  Expanded(
-                                    child:
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: PsDimens.space4,
-                                          left: PsDimens.space6
-                                      ),
-                                      child: Text(
-                                        '${widget.provider.user.data!.address!}'
-                                            ', ${widget.provider.user.data!.userCity}'
-                                            ', ${widget.provider.user.data!.userCountry}.',
-                                        style: Theme.of(context).textTheme.bodySmall!
-                                            .copyWith(color: PsColors.white),
-                                        maxLines: 3,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                          ]
-                      )
+                        Expanded(
+                          child:
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: PsDimens.space4,
+                              left: PsDimens.space6
+                          ),
+                          child: Text(
+                            '${widget.provider.user.data!.address!}'
+                                ', ${widget.provider.user.data!.userCity}'
+                                ', ${widget.provider.user.data!.userCountry}.',
+                            style: Theme.of(context).textTheme.bodySmall!
+                                .copyWith(color: PsColors.white),
+                            maxLines: 3,
+                          ),
+                        ),
+                        ),
+                      ],
+                    ),
+                        ]
+                    )
                   )
-              ),
-            ],
-          )),
-      decoration: BoxDecoration(color: PsColors.mainColor),
+                  ),
+                ],
+              )),
+        decoration: BoxDecoration(color: PsColors.mainColor),
     );
   }
 }

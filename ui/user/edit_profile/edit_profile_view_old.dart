@@ -83,7 +83,7 @@ class _EditProfileViewState extends State<EditProfileView>
 
     Future<bool> _requestPop() {
       animationController!.reverse().then<dynamic>(
-            (void data) {
+        (void data) {
           if (!mounted) {
             return Future<bool>.value(false);
           }
@@ -119,7 +119,7 @@ class _EditProfileViewState extends State<EditProfileView>
             builder:
                 (BuildContext context, UserProvider provider, Widget? child) {
               if (userProvider != null &&
-                  // userProvider!.user != null &&
+                 // userProvider!.user != null &&
                   userProvider!.user.data != null) {
                 if (bindDataFirstTime) {
                   userNameController.text = userProvider!.user.data!.userName!;
@@ -157,72 +157,72 @@ class _EditProfileViewState extends State<EditProfileView>
                             color: PsColors.mainColor,
                           ),
                         ),
-                        PsTextFieldWidget(
-                          titleText: Utils.getString(context, 'edit_profile__postcode'),
-                          textAboutMe: false,
-                          hintText: Utils.getString(context, 'edit_profile__postcode'),
-                          textEditingController: userPostcodeController,
-                          onChanged: resetAddress,
-                          borderColor: userPostcodeController.text == '' ? PsColors.discountColor : PsColors.mainColor,
-                          isMandatory: true,
-                        ),
+                            PsTextFieldWidget(
+                              titleText: Utils.getString(context, 'edit_profile__postcode'),
+                              textAboutMe: false,
+                              hintText: Utils.getString(context, 'edit_profile__postcode'),
+                              textEditingController: userPostcodeController,
+                              onChanged: resetAddress,
+                              borderColor: userPostcodeController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                              isMandatory: true,
+                            ),
 
-                        PsDropdownBaseWithControllerWidget(
-                            title: Utils.getString(context, 'edit_profile__address'),
-                            textEditingController: userAddressController,
-                            borderColor: userAddressController.text == '' ? PsColors.discountColor : PsColors.mainColor,
-                            isMandatory: true,
-                            onTap: () async {
-                              final isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
-                              isAValidPostcode.whenComplete(() async {
-                                if(await isAValidPostcode) {
-                                  final Object? result = await Navigator.pushNamed(
-                                      context, RoutePaths.postalAddressList,
-                                      arguments: userPostcodeController.text);
-                                  if (result != null) {
-                                    final Address selectedAddress = result as Address;
-                                    setState(() {
-                                      userAddressController.text = selectedAddress.line_1!;
-                                      userCityController.text = selectedAddress.townOrCity!;
-                                      userCountryController.text = selectedAddress.country!;
-                                    });
-                                    //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
-                                    LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
-                                    userProvider!.setUserLatLng(coordinates);
+                            PsDropdownBaseWithControllerWidget(
+                                title: Utils.getString(context, 'edit_profile__address'),
+                                textEditingController: userAddressController,
+                                borderColor: userAddressController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                                isMandatory: true,
+                                onTap: () async {
+                                  final isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
+                                  isAValidPostcode.whenComplete(() async {
+                                    if(await isAValidPostcode) {
+                                      final Object? result = await Navigator.pushNamed(
+                                          context, RoutePaths.postalAddressList,
+                                          arguments: userPostcodeController.text);
+                                      if (result != null) {
+                                        final Address selectedAddress = result as Address;
+                                        setState(() {
+                                          userAddressController.text = selectedAddress.line_1!;
+                                          userCityController.text = selectedAddress.townOrCity!;
+                                          userCountryController.text = selectedAddress.country!;
+                                        });
+                                        //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
+                                        LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
+                                        userProvider!.setUserLatLng(coordinates);
 
-                                  }
-                                }
-                                else{
-                                  Fluttertoast.showToast(
-                                      msg:
-                                      Utils.getString(context, 'checkout1_view__please_enter_postcode'),
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: PsColors.black,
-                                      textColor: PsColors.white);
-                                }
-                              });
+                                      }
+                                    }
+                                    else{
+                                      Fluttertoast.showToast(
+                                          msg:
+                                          Utils.getString(context, 'checkout1_view__please_enter_postcode'),
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: PsColors.black,
+                                          textColor: PsColors.white);
+                                    }
+                                  });
 
-                            }),
-                        PsTextFieldWidget(
-                            titleText: Utils.getString(context, 'edit_profile__city'),
-                            textAboutMe: false,
-                            hintText: Utils.getString(context, 'edit_profile__city'),
-                            textEditingController: userCityController,
-                            //onChanged: checkFields,
-                            isReadonly: true,
-                            borderColor: userCityController.text == '' ? PsColors.discountColor : PsColors.mainColor,
-                            isMandatory: true),
-                        PsTextFieldWidget(
-                            titleText: Utils.getString(context, 'edit_profile__country'),
-                            textAboutMe: false,
-                            hintText: Utils.getString(context, 'edit_profile__country'),
-                            textEditingController: userCountryController,
-                            isReadonly: true,
-                            onChanged: checkFields,
-                            borderColor: userCountryController.text == '' ? PsColors.discountColor : PsColors.mainColor,
-                            isMandatory: true),
+                                }),
+                            PsTextFieldWidget(
+                                titleText: Utils.getString(context, 'edit_profile__city'),
+                                textAboutMe: false,
+                                hintText: Utils.getString(context, 'edit_profile__city'),
+                                textEditingController: userCityController,
+                                //onChanged: checkFields,
+                                isReadonly: true,
+                                borderColor: userCityController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                                isMandatory: true),
+                            PsTextFieldWidget(
+                                titleText: Utils.getString(context, 'edit_profile__country'),
+                                textAboutMe: false,
+                                hintText: Utils.getString(context, 'edit_profile__country'),
+                                textEditingController: userCountryController,
+                                isReadonly: true,
+                                onChanged: checkFields,
+                                borderColor: userCountryController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                                isMandatory: true),
 
 
                         /*PsTextFieldWidget(
@@ -300,12 +300,12 @@ class _EditProfileViewState extends State<EditProfileView>
 class _TwoButtonWidget extends StatelessWidget {
   const _TwoButtonWidget(
       {required this.userProvider,
-        required this.userNameController,
-        required this.emailController,
-        required this.phoneController,
-        required this.aboutMeController,
-        required this.userAddressController,
-        required this.shippingAreaController,
+      required this.userNameController,
+      required this.emailController,
+      required this.phoneController,
+      required this.aboutMeController,
+      required this.userAddressController,
+      required this.shippingAreaController,
         required this.userCityController,
         required this.userCountryController,
         required this.userPostcodeController});
@@ -356,21 +356,21 @@ class _TwoButtonWidget extends StatelessWidget {
               } else {
                 if (await Utils.checkInternetConnectivity()) {
                   final ProfileUpdateParameterHolder
-                  profileUpdateParameterHolder =
-                  ProfileUpdateParameterHolder(
-                    userId: userProvider.user.data!.userId!,
-                    userName: userNameController.text.toUpperCase(),
-                    userEmail: emailController.text.trim(),
-                    userPhone: phoneController.text,
-                    userAddress: userAddressController.text,
-                    userAboutMe: aboutMeController.text,
-                    userAreaId: userProvider.selectedArea!.id!,
-                    userLat: userProvider.user.data!.userLat!,
-                    userLng: userProvider.user.data!.userLng!,
-                    userCountry: userCountryController.text,
-                    userCity: userCityController.text,
-                    userPostcode: userPostcodeController.text.trim().toUpperCase(),
-                  );
+                      profileUpdateParameterHolder =
+                      ProfileUpdateParameterHolder(
+                          userId: userProvider.user.data!.userId!,
+                          userName: userNameController.text.toUpperCase(),
+                          userEmail: emailController.text.trim(),
+                          userPhone: phoneController.text,
+                          userAddress: userAddressController.text,
+                          userAboutMe: aboutMeController.text,
+                          userAreaId: userProvider.selectedArea!.id!,
+                          userLat: userProvider.user.data!.userLat!,
+                          userLng: userProvider.user.data!.userLng!,
+                          userCountry: userCountryController.text,
+                        userCity: userCityController.text,
+                        userPostcode: userPostcodeController.text.trim().toUpperCase(),
+                      );
                   await PsProgressDialog.showDialog(context);
                   final PsResource<User> _apiStatus = await userProvider
                       .postProfileUpdate(profileUpdateParameterHolder.toMap());
@@ -426,7 +426,7 @@ class _TwoButtonWidget extends StatelessWidget {
             colorData: PsColors.grey,
             width: double.infinity,
             titleText:
-            Utils.getString(context, 'edit_profile__password_change'),
+                Utils.getString(context, 'edit_profile__password_change'),
             onPressed: () {
               Navigator.pushNamed(
                 context,
@@ -484,50 +484,50 @@ class __ImageWidgetState extends State<_ImageWidget> {
       }
       setState(() {});
 
-      if (pickedImage!.name.contains('.webp')) {
-        showDialog<dynamic>(
-            context: context,
-            builder: (BuildContext context) {
-              return ErrorDialog(
-                message: Utils.getString(context, 'error_dialog__webp_image'),
-              );
+        if (pickedImage!.name.contains('.webp')) {
+          showDialog<dynamic>(
+              context: context,
+              builder: (BuildContext context) {
+                return ErrorDialog(
+                  message: Utils.getString(context, 'error_dialog__webp_image'),
+                );
+              });
+        } else {
+          PsProgressDialog.dismissDialog();
+          final PsResource<User> _apiStatus = await widget.userProvider!
+              .postImageUpload(
+                  widget.userProvider!.psValueHolder.loginUserId!,
+                  PsConst.PLATFORM,
+                  await Utils.getImageFileFromAssets(
+                      pickedImage!, PsConfig.profileImageAize));
+          if (_apiStatus.data != null) {
+            setState(() {
+              widget.userProvider!.user.data = _apiStatus.data;
             });
-      } else {
-        PsProgressDialog.dismissDialog();
-        final PsResource<User> _apiStatus = await widget.userProvider!
-            .postImageUpload(
-            widget.userProvider!.psValueHolder.loginUserId!,
-            PsConst.PLATFORM,
-            await Utils.getImageFileFromAssets(
-                pickedImage!, PsConfig.profileImageAize));
-        if (_apiStatus.data != null) {
-          setState(() {
-            widget.userProvider!.user.data = _apiStatus.data;
-          });
+          }
+          PsProgressDialog.dismissDialog();
         }
-        PsProgressDialog.dismissDialog();
-      }
     }
 
     final Widget _imageWidget = widget.userProvider!.user.data!.userProfilePhoto != null
         ? PsNetworkImageWithUrl(
-      photoKey: '',
-      imagePath: widget.userProvider!.user.data!.userProfilePhoto!,
-      width: double.infinity,
-      height: PsDimens.space200,
-      boxfit: BoxFit.cover,
-      onTap: () {},
-    )
+            photoKey: '',
+            imagePath: widget.userProvider!.user.data!.userProfilePhoto!,
+            width: double.infinity,
+            height: PsDimens.space200,
+            boxfit: BoxFit.cover,
+            onTap: () {},
+          )
         : InkWell(
-      onTap: () {},
-      child: Ink(
-        child: Image.file(
-          File(pickedImage!.path),
-          width: PsDimens.space100,
-          height: PsDimens.space160,
-        ),
-      ),
-    );
+            onTap: () {},
+            child: Ink(
+                child: Image.file(
+                  File(pickedImage!.path),
+                  width: PsDimens.space100,
+                  height: PsDimens.space160,
+                ),
+              ),
+          );
 
     final Widget _editWidget = Container(
       child: IconButton(
@@ -551,7 +551,7 @@ class __ImageWidgetState extends State<_ImageWidget> {
                 builder: (BuildContext context) {
                   return ErrorDialog(
                     message:
-                    Utils.getString(context, 'error_dialog__no_internet'),
+                        Utils.getString(context, 'error_dialog__no_internet'),
                   );
                 });
           }
@@ -633,9 +633,9 @@ class __ImageWidgetState extends State<_ImageWidget> {
 class _UserFirstCardWidget extends StatelessWidget {
   const _UserFirstCardWidget(
       {required this.userNameController,
-        required this.emailController,
-        required this.phoneController,
-        required this.aboutMeController});
+      required this.emailController,
+      required this.phoneController,
+      required this.aboutMeController});
   final TextEditingController userNameController;
   final TextEditingController emailController;
   final TextEditingController phoneController;
@@ -668,7 +668,7 @@ class _UserFirstCardWidget extends StatelessWidget {
               phoneInputType: true,
               hintText: Utils.getString(context, 'edit_profile__phone'),
               textEditingController: phoneController),
-          /* PsTextFieldWidget(
+         /* PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__about_me'),
               height: PsDimens.space120,
               keyboardType: TextInputType.multiline,
