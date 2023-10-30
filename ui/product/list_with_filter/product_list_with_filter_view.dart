@@ -311,7 +311,9 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                     });
                                                 } else {*/
                                                     id =
-                                                    '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
+                                                    '${product.id}$colorId'
+                                                        '${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}'
+                                                        '${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                                                     if (product.minimumOrder == '0') {
                                                       product.minimumOrder = '1' ;
                                                     }

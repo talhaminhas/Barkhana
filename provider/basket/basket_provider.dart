@@ -72,6 +72,14 @@ late  StreamController<PsResource<List<Basket>>> basketListStream;
       basket,
     );
   }
+  Future<dynamic> addBasketList(List<Basket> baskets) async {
+    isLoading = true;
+    await _repo!.addAllBaskets(
+      basketListStream,
+      PsStatus.PROGRESS_LOADING,
+      baskets,
+    );
+  }
   Future<Basket?> getBasketById(String basketId) async {
     return await _repo!.getBasketById(basketId);
   }

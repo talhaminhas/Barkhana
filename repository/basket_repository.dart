@@ -19,6 +19,12 @@ late  BasketDao _basketDao;
     return _basketDao.insert(primaryKey, basket);
   }
 
+  Future<void> insertListOfBaskets(List<Basket> baskets) async {
+    for (Basket basket in baskets) {
+      await _basketDao.insert(primaryKey, basket);
+    }
+  }
+
   Future<dynamic> update(Basket basket) async {
     return _basketDao.update(basket);
   }
@@ -63,6 +69,15 @@ late  BasketDao _basketDao;
     basketListStream.sink.add(await _basketDao.getAll(status: status));
   }
 
+  Future<void> addAllBaskets(
+      StreamController<PsResource<List<Basket>>> basketListStream,
+      PsStatus status,
+      List<Basket> baskets) async {
+    for (Basket basket in baskets) {
+      await _basketDao.insert(primaryKey, basket);
+    }
+    basketListStream.sink.add(await _basketDao.getAll(status: status));
+  }
   Future<dynamic> updateBasket(
       StreamController<PsResource<List<Basket>>> basketListStream,
       Basket product) async {

@@ -75,6 +75,17 @@ class _ItemWidget extends StatelessWidget {
       balancePrice = double.parse(transaction.originalPrice!) *
           double.parse(transaction.qty!);
     }
+    String formattedAddOnPrices = '';
+    if(transaction.productAddonPrice! != '') {
+      List<String> priceList = transaction.productAddonPrice!.split('#');
+      List<String> formattedPrices = priceList.map((price) {
+        print(price);
+        double priceValue = double.parse(price);
+        String formattedPrice = priceValue.toStringAsFixed(2);
+        return formattedPrice;
+      }).toList();
+      formattedAddOnPrices = formattedPrices.join('#');
+    }
     return Container(
         //color: PsColors.backgroundColor,
         margin: const EdgeInsets.only(
@@ -166,12 +177,19 @@ class _ItemWidget extends StatelessWidget {
                   ),
                 ],
               ),
+            if(transaction.productAddonName! != '')
+              _CustomizedAndAddOnTextWidget(
+                addOnNames: '${transaction.productAddonName!.replaceAll('#', ' :\n')} :',
+                addOnPrices: '£ ${formattedAddOnPrices!.replaceAll('#', '\n£ ')}',
+                title:
+                '${Utils.getString(context, 'transaction_detail__add_on')} :',
+              ),
             _TransactionNoTextWidget(
-              transationInfoText:
-                  '${transaction.currencySymbol}  ${Utils.getPriceFormat(transaction.originalPrice!,valueHolder)}',
-              title:
-                  '${Utils.getString(context, 'transaction_detail__price')} :',
+              transationInfoText: '${transaction.qty}',
+              title: '${Utils.getString(context, 'transaction_detail__qty')} :',
             ),
+
+
             if (transaction.discountAmount != null && transaction.discountAmount != '0')
               Column(
                 children: <Widget>[
@@ -180,21 +198,21 @@ class _ItemWidget extends StatelessWidget {
                     '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.discountAmount.toString(), valueHolder)}',
                     title: '${Utils.getString(context, 'transaction_detail__discount_avaiable_amount')} :',
                   ),
-                  _TransactionNoTextWidget(
+                  /*_TransactionNoTextWidget(
                     transationInfoText:
                     '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.price.toString(), valueHolder)}',
                     title: '${Utils.getString(context, 'transaction_detail__discounted_price')} :',
-                  ),
+                  ),*/
                 ],
               ),
-            _TransactionNoTextWidget(
-              transationInfoText: '${transaction.qty}',
-              title: '${Utils.getString(context, 'transaction_detail__qty')} :',
-            ),
 
-            const SizedBox(
-              height: PsDimens.space12,
+            _TransactionNoTextWidget(
+              transationInfoText:
+              '${transaction.currencySymbol}  ${Utils.getPriceFormat(transaction.originalPrice!,valueHolder)}',
+              title:
+              '${Utils.getString(context, 'transaction_detail__price')} :',
             ),
+            const SizedBox(height: PsDimens.space12),
             _dividerWidget,
             _TransactionNoTextWidget(
               transationInfoText:
@@ -203,17 +221,13 @@ class _ItemWidget extends StatelessWidget {
                   '${Utils.getString(context, 'transaction_detail__sub_total')} :',
             ),
             const SizedBox(height: PsDimens.space12),
-            _CustomizedAndAddOnTextWidget(
+            /*_CustomizedAndAddOnTextWidget(
               infoText:
                   '${transaction.productCustomizedName!.replaceAll('#', ', ')}',
               title:
                   '${Utils.getString(context, 'transaction_detail__customized')} :',
-            ),
-            _CustomizedAndAddOnTextWidget(
-              infoText: '${transaction.productAddonName!.replaceAll('#', ', ')}',
-              title:
-                  '${Utils.getString(context, 'transaction_detail__add_on')} :',
-            ),
+            ),*/
+
           ],
         ));
   }
@@ -222,13 +236,15 @@ class _ItemWidget extends StatelessWidget {
 class _CustomizedAndAddOnTextWidget extends StatelessWidget {
   const _CustomizedAndAddOnTextWidget(
       {Key? key, 
-      required this.title, required this.infoText})
+      required this.title, required this.addOnNames, required this.addOnPrices})
       : super(key: key);
 
   final String title;
-  final String infoText;
+  final String addOnNames;
+  final String addOnPrices;
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.only(
         left: PsDimens.space16,
@@ -239,23 +255,40 @@ class _CustomizedAndAddOnTextWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          const SizedBox(
+            height: PsDimens.space12,
+          ),
           Visibility(
-            visible: infoText != '',
+            visible: addOnNames != ' :',
             child: Text(
               title,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
           Visibility(
-            visible: infoText != '',
+            visible: addOnNames != ' :',
             child: Container(
               margin: const EdgeInsets.all(PsDimens.space12),
-              child: Text(
-                infoText,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    addOnNames,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const Spacer(),
+                  Text(
+                    addOnPrices,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.right,
+                  ),
+                ],
+              )
+
             ),
-          )
+          ),
+          const Divider(
+            height: PsDimens.space2,
+          ),
         ],
       ),
     );

@@ -321,7 +321,10 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
           ));
     }
   }
-
+  bool validatePhoneNumber(String phoneNumber ){
+    final RegExp phoneRegExp = RegExp(r'^[0-9]{11}$');
+    return phoneRegExp.hasMatch(phoneNumber);
+  }
   dynamic clickToNextCheck(User user, Function _closeCheckoutContainer,
       TokenProvider tokenProvider) async {
     if (viewNo < maxViewNo) {
@@ -709,7 +712,18 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       Utils.getString(context, 'warning_dialog__input_fields'),
                 );
               });
-        } /*else if (!checkout1ViewState.userProvider.hasLatLng(valueHolder) &&
+        } else if(!validatePhoneNumber(checkout1ViewState.userPhoneController.text)){
+          showDialog<dynamic>(
+              context: context,
+              barrierColor: Colors.transparent,
+              builder: (BuildContext context) {
+                return ErrorDialog(
+                  message: Utils.getString(
+                      context, 'Please Enter A Valid Phone Number'),
+                );
+              });
+        }
+        /*else if (!checkout1ViewState.userProvider.hasLatLng(valueHolder) &&
             checkout1ViewState.addressController.text == '' &&
             checkout1ViewState.userProvider.isClickDeliveryButton) {
           showDialog<dynamic>(

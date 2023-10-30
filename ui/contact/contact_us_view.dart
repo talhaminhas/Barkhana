@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 
 import '../../provider/user/user_provider.dart';
 import '../../repository/user_repository.dart';
+import '../../utils/ps_progress_dialog.dart';
 import '../../viewobject/common/ps_value_holder.dart';
 
 class ContactUsView extends StatefulWidget {
@@ -101,10 +102,7 @@ class _ContactUsViewState extends State<ContactUsView> {
                                         textAboutMe: false,
                                         hintText: Utils.getString(
                                             context, 'contact_us__contact_name_hint'),
-                                        borderColor: nameController.text == ''
-                                            ? PsColors.discountColor
-                                            : PsColors.mainColor,
-                                        onChanged: checkFields,
+                                       onChanged: checkFields,
                                         textEditingController: nameController
                                     ),
                                     PsTextFieldWidget(
@@ -112,11 +110,9 @@ class _ContactUsViewState extends State<ContactUsView> {
                                             context, 'contact_us__contact_email'),
                                         isMandatory: true,
                                         textAboutMe: false,
+                                        isEmail: true,
                                         hintText: Utils.getString(
                                             context, 'contact_us__contact_email_hint'),
-                                        borderColor: emailController.text == ''
-                                            ? PsColors.discountColor
-                                            : PsColors.mainColor,
                                         onChanged: checkFields,
                                         textEditingController: emailController),
                                     PsTextFieldWidget(
@@ -127,10 +123,7 @@ class _ContactUsViewState extends State<ContactUsView> {
                                         hintText: Utils.getString(
                                             context, 'contact_us__contact_phone_hint'),
                                         keyboardType: TextInputType.phone,
-                                        phoneInputType: true,
-                                        borderColor: phoneController.text == ''
-                                            ? PsColors.discountColor
-                                            : PsColors.mainColor,
+                                        isPhoneNumber: true,
                                         onChanged: checkFields,
                                         textEditingController: phoneController),
                                     PsTextFieldWidget(
@@ -142,9 +135,6 @@ class _ContactUsViewState extends State<ContactUsView> {
                                         hintText: Utils.getString(
                                             context,
                                             'contact_us__contact_message_hint'),
-                                        borderColor: messageController.text == ''
-                                            ? PsColors.discountColor
-                                            : PsColors.mainColor,
                                         onChanged: checkFields,
                                         textEditingController: messageController),
                                     Container(
@@ -213,15 +203,14 @@ class PsButtonWidget extends StatelessWidget {
                 phone: phoneText.text,
               );
 
+              await PsProgressDialog.showDialog(context);
               final PsResource<ApiStatus> _apiStatus = await provider
                   .postContactUs(contactUsParameterHolder.toMap());
+              PsProgressDialog.dismissDialog();
 
               if (_apiStatus.data != null) {
                 print('Success');
-                nameText.clear();
-                emailText.clear();
                 messageText.clear();
-                phoneText.clear();
                 showDialog<dynamic>(
                     context: context,
                     barrierColor: PsColors.transparent,

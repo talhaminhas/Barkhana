@@ -3,7 +3,7 @@ import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 
 class PsTextFieldWidget extends StatefulWidget {
-  const PsTextFieldWidget({
+   const PsTextFieldWidget({
     Key? key,
     this.textEditingController,
     this.titleText = '',
@@ -12,11 +12,11 @@ class PsTextFieldWidget extends StatefulWidget {
     this.height = PsDimens.space44,
     this.showTitle = true,
     this.keyboardType = TextInputType.text,
-    this.phoneInputType = false,
+    this.isPhoneNumber = false,
     this.isMandatory = false,
     this.isReadonly = false,
-    this.borderColor,
-    this.onChanged
+    this.onChanged,
+     this.isEmail = false,
   }) : super(key: key);
 
   final TextEditingController? textEditingController;
@@ -26,11 +26,12 @@ class PsTextFieldWidget extends StatefulWidget {
   final bool textAboutMe;
   final TextInputType keyboardType;
   final bool showTitle;
-  final bool phoneInputType;
+  final bool isPhoneNumber;
   final bool isMandatory;
   final bool isReadonly;
+  final bool isEmail;
   final Function(String)? onChanged;
-  final Color? borderColor;
+
 
 
   @override
@@ -44,6 +45,16 @@ class _PsTextFieldWidgetState extends State<PsTextFieldWidget> {
   @override
   void initState() {
     super.initState();
+  }
+  Color borderColor = PsColors.mainColor;
+  Color color = PsColors.backgroundColor;
+  bool validatePhoneNumber(String phoneNumber ){
+    final RegExp phoneRegExp = RegExp(r'^[0-9]{11}$');
+    return phoneRegExp.hasMatch(phoneNumber);
+  }
+  bool validateEmail(String email) {
+      final RegExp emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)*$');
+      return emailRegExp.hasMatch(email);
   }
   @override
   Widget build(BuildContext context) {
@@ -85,14 +96,40 @@ class _PsTextFieldWidgetState extends State<PsTextFieldWidget> {
           height: widget.height,
           margin: const EdgeInsets.all(PsDimens.space12),
           decoration: BoxDecoration(
-            color: widget.textEditingController?.text == '' ? PsColors.discountColor.withOpacity(0.1) :PsColors.backgroundColor,
+            color: color ,
             borderRadius: BorderRadius.circular(PsDimens.space4),
-            border: Border.all(color: widget.borderColor ?? PsColors.mainColor),
+            border: Border.all(color: borderColor),
           ),
           child: TextField(
-            onChanged: widget.onChanged,
+            onChanged: (String text){
+              setState(() {
+                if(widget.isPhoneNumber)
+                  {
+                    color = !validatePhoneNumber(widget.textEditingController!.text) ?
+                    PsColors.discountColor.withOpacity(0.1) : PsColors
+                        .backgroundColor;
+                    borderColor = !validatePhoneNumber(widget.textEditingController!.text) ?
+                    PsColors.discountColor : PsColors.mainColor;
+                  }
+                else if (widget.isEmail)
+                  {
+                    color = !validateEmail(widget.textEditingController!.text) ?
+                    PsColors.discountColor.withOpacity(0.1) : PsColors
+                        .backgroundColor;
+                    borderColor = !validateEmail(widget.textEditingController!.text) ?
+                    PsColors.discountColor : PsColors.mainColor;
+                  }
+                else {
+                  color = widget.textEditingController?.text == '' ?
+                  PsColors.discountColor.withOpacity(0.1) : PsColors
+                      .backgroundColor;
+                  borderColor = widget.textEditingController?.text == '' ?
+                  PsColors.discountColor : PsColors.mainColor;
+                }
+              });
+            },
             keyboardType:
-            widget.phoneInputType ? TextInputType.phone : TextInputType.text,
+            widget.isPhoneNumber ? TextInputType.phone : TextInputType.text,
             maxLines: null,
 
             controller: widget.textEditingController,

@@ -5,6 +5,7 @@ import 'package:flutterrestaurant/provider/address/postal_address_provider.dart'
 import 'package:flutterrestaurant/repository/postal_address_repository.dart';
 import 'package:flutterrestaurant/ui/checkout/postal_address_list_item.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar.dart';
+import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:provider/provider.dart';
@@ -114,8 +115,10 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
                       itemCount: provider.addressList.data!.length,
                       itemBuilder: (BuildContext context, int index) {
 
-                        if (provider.addressList.status ==
-                            PsStatus.BLOCK_LOADING) {
+                        if (/*provider.addressList.status ==
+                            PsStatus.BLOCK_LOADING*/
+                        provider.addressList.data!.isEmpty) {
+                          PsProgressDialog.showDialog(context);
                           return Shimmer.fromColors(
                               baseColor: PsColors.grey,
                               highlightColor: PsColors.white,
@@ -133,6 +136,7 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
                               ]));
                         }
                         else {
+                          PsProgressDialog.dismissDialog();
                           final int count = provider.addressList.data!.length;
 
                           return FadeTransition(

@@ -244,7 +244,7 @@ class _CreateReservationViewState extends State<CreateReservationView> {
                           'create_reservation__user_phone_hint',
                         ),
                         keyboardType: TextInputType.phone,
-                        phoneInputType: true,
+                        isPhoneNumber: true,
                         textEditingController: userPhoneController,
                         isMandatory: true),
                     PsTextFieldWidget(

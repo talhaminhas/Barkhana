@@ -320,6 +320,7 @@ class _ProductDetailState extends State<ProductDetailView>
               final String loginUserId = Utils.checkUserLoginId(psValueHolder!);
               productDetailProvider!.loadProduct(widget.productId!, loginUserId);
 
+
               return productDetailProvider!;
             },
           ),

@@ -163,7 +163,6 @@ class _EditProfileViewState extends State<EditProfileView>
                           hintText: Utils.getString(context, 'edit_profile__postcode'),
                           textEditingController: userPostcodeController,
                           onChanged: resetAddress,
-                          borderColor: userPostcodeController.text == '' ? PsColors.discountColor : PsColors.mainColor,
                           isMandatory: true,
                         ),
 
@@ -212,7 +211,6 @@ class _EditProfileViewState extends State<EditProfileView>
                             textEditingController: userCityController,
                             //onChanged: checkFields,
                             isReadonly: true,
-                            borderColor: userCityController.text == '' ? PsColors.discountColor : PsColors.mainColor,
                             isMandatory: true),
                         PsTextFieldWidget(
                             titleText: Utils.getString(context, 'edit_profile__country'),
@@ -221,7 +219,6 @@ class _EditProfileViewState extends State<EditProfileView>
                             textEditingController: userCountryController,
                             isReadonly: true,
                             onChanged: checkFields,
-                            borderColor: userCountryController.text == '' ? PsColors.discountColor : PsColors.mainColor,
                             isMandatory: true),
 
 
@@ -321,6 +318,10 @@ class _TwoButtonWidget extends StatelessWidget {
   final TextEditingController userPostcodeController;
   final UserProvider userProvider;
 
+  bool validatePhoneNumber(String phoneNumber ){
+    final RegExp phoneRegExp = RegExp(r'^[0-9]{11}$');
+    return phoneRegExp.hasMatch(phoneNumber);
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -353,7 +354,19 @@ class _TwoButtonWidget extends StatelessWidget {
                             context, 'edit_profile__email_error'),
                       );
                     });
-              } else {
+              }
+              else if(!validatePhoneNumber(phoneController.text)){
+                     showDialog<dynamic>(
+                         context: context,
+                         barrierColor: Colors.transparent,
+                         builder: (BuildContext context) {
+                           return ErrorDialog(
+                             message: Utils.getString(
+                                 context, 'Please Enter A Valid Phone Number'),
+                           );
+                         });
+                }
+              else {
                 if (await Utils.checkInternetConnectivity()) {
                   final ProfileUpdateParameterHolder
                   profileUpdateParameterHolder =
@@ -651,21 +664,25 @@ class _UserFirstCardWidget extends StatelessWidget {
             height: PsDimens.space16,
           ),
           PsTextFieldWidget(
+            isMandatory: true,
               titleText: Utils.getString(context, 'edit_profile__user_name'),
               hintText: Utils.getString(context, 'edit_profile__user_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: userNameController),
           PsTextFieldWidget(
+              isMandatory: true,
               titleText: Utils.getString(context, 'edit_profile__email'),
               hintText: Utils.getString(context, 'edit_profile__email'),
               textAboutMe: false,
-              phoneInputType: false,
+              isEmail: true,
+              isPhoneNumber: false,
               textEditingController: emailController),
           PsTextFieldWidget(
+              isMandatory: true,
               titleText: Utils.getString(context, 'edit_profile__phone'),
               textAboutMe: false,
-              phoneInputType: true,
+              isPhoneNumber: true,
               hintText: Utils.getString(context, 'edit_profile__phone'),
               textEditingController: phoneController),
           /* PsTextFieldWidget(
@@ -743,38 +760,38 @@ class __ShippingAddressCardWidgetState
               titleText: Utils.getString(context, 'edit_profile__first_name'),
               hintText: Utils.getString(context, 'edit_profile__first_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.shippingfirstNameController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__last_name'),
               hintText: Utils.getString(context, 'edit_profile__last_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.shippingLastNameController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__email'),
               hintText: Utils.getString(context, 'edit_profile__email'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.shippingEmailController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__phone'),
               textAboutMe: false,
-              phoneInputType: true,
+              isPhoneNumber: true,
               hintText: Utils.getString(context, 'edit_profile__phone'),
               textEditingController: widget.shippingPhoneController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__company_name'),
               hintText: Utils.getString(context, 'edit_profile__company_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.shippingCompanyNameController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__address1'),
               height: PsDimens.space120,
               keyboardType: TextInputType.multiline,
               textAboutMe: true,
-              phoneInputType: false,
+              isPhoneNumber: false,
               hintText: Utils.getString(context, 'edit_profile__address1'),
               textEditingController: widget.userAddressController),
           PsTextFieldWidget(
@@ -782,7 +799,7 @@ class __ShippingAddressCardWidgetState
               height: PsDimens.space120,
               keyboardType: TextInputType.multiline,
               textAboutMe: true,
-              phoneInputType: false,
+              isPhoneNumber: false,
               hintText: Utils.getString(context, 'edit_profile__address2'),
               textEditingController: widget.shippingAddress2Controller),
           // PsDropdownBaseWithControllerWidget(
@@ -806,7 +823,7 @@ class __ShippingAddressCardWidgetState
               titleText: Utils.getString(context, 'edit_profile__state_name'),
               hintText: Utils.getString(context, 'edit_profile__state_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.shippingStateController),
           // PsDropdownBaseWithControllerWidget(
           //     title: Utils.getString(context, 'edit_profile__city_name'),
@@ -837,7 +854,7 @@ class __ShippingAddressCardWidgetState
               titleText: Utils.getString(context, 'edit_profile__postal_code'),
               hintText: Utils.getString(context, 'edit_profile__postal_code'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.shippingPostalCodeController),
           const SizedBox(
             height: PsDimens.space12,
@@ -908,38 +925,38 @@ class __BillingAddressCardWidgetState extends State<_BillingAddressCardWidget> {
               titleText: Utils.getString(context, 'edit_profile__first_name'),
               hintText: Utils.getString(context, 'edit_profile__first_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.billingfirstNameController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__last_name'),
               hintText: Utils.getString(context, 'edit_profile__last_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.billingLastNameController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__email'),
               hintText: Utils.getString(context, 'edit_profile__email'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.billingEmailController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__phone'),
               textAboutMe: false,
-              phoneInputType: true,
+              isPhoneNumber: true,
               hintText: Utils.getString(context, 'edit_profile__phone'),
               textEditingController: widget.billingPhoneController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__company_name'),
               hintText: Utils.getString(context, 'edit_profile__company_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.billingCompanyNameController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__address1'),
               height: PsDimens.space120,
               keyboardType: TextInputType.multiline,
               textAboutMe: true,
-              phoneInputType: false,
+              isPhoneNumber: false,
               hintText: Utils.getString(context, 'edit_profile__address1'),
               textEditingController: widget.billingAddress1Controller),
           PsTextFieldWidget(
@@ -947,7 +964,7 @@ class __BillingAddressCardWidgetState extends State<_BillingAddressCardWidget> {
               height: PsDimens.space120,
               keyboardType: TextInputType.multiline,
               textAboutMe: true,
-              phoneInputType: false,
+              isPhoneNumber: false,
               hintText: Utils.getString(context, 'edit_profile__address2'),
               textEditingController: widget.billingAddress2Controller),
           // PsDropdownBaseWidget(
@@ -968,13 +985,13 @@ class __BillingAddressCardWidgetState extends State<_BillingAddressCardWidget> {
               titleText: Utils.getString(context, 'edit_profile__state_name'),
               hintText: Utils.getString(context, 'edit_profile__state_name'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.billingStateController),
           PsTextFieldWidget(
               titleText: Utils.getString(context, 'edit_profile__postal_code'),
               hintText: Utils.getString(context, 'edit_profile__postal_code'),
               textAboutMe: false,
-              phoneInputType: false,
+              isPhoneNumber: false,
               textEditingController: widget.shippingAreaController),
         ],
       ),

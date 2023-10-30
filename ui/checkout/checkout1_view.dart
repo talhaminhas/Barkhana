@@ -161,6 +161,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
     super.didChangeDependencies();
     FocusScope.of(context).requestFocus(FocusNode());
   }
+
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed
@@ -234,6 +235,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
 
       updateDateAndTime(dateTime);
 
+
     return Consumer<UserProvider>(builder:
         (BuildContext context, UserProvider userProvider, Widget? child) {
       if (userProvider.user.data != null) {
@@ -293,17 +295,16 @@ class _Checkout1ViewState extends State<Checkout1View> {
                       textEditingController: userEmailController,
                       isMandatory: true,
                       onChanged: checkFields,
-                      borderColor: userEmailController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                      isEmail: true,
                     ),
                     PsTextFieldWidget(
                       titleText: Utils.getString(context, 'edit_profile__phone'),
                       textAboutMe: false,
-                      phoneInputType: true,
+                      isPhoneNumber: true,
                       hintText: Utils.getString(context, 'edit_profile__phone'),
                       onChanged: checkFields,
                       textEditingController: userPhoneController,
                       isMandatory: true,
-                      borderColor: userPhoneController.text == '' ? PsColors.discountColor : PsColors.mainColor,
                     ),
 
                     /*_EditAndDeleteButtonWidget(
@@ -331,7 +332,6 @@ class _Checkout1ViewState extends State<Checkout1View> {
                             hintText: Utils.getString(context, 'edit_profile__postcode'),
                             textEditingController: userPostcodeController,
                             onChanged: resetAddress,
-                            borderColor: userPostcodeController.text == '' ? PsColors.discountColor : PsColors.mainColor,
                             isMandatory: true,
                           ),
 
@@ -386,7 +386,6 @@ class _Checkout1ViewState extends State<Checkout1View> {
                               textEditingController: userCityController,
                               onChanged: checkFields,
                               isReadonly: true,
-                              borderColor: userCityController.text == '' ? PsColors.discountColor : PsColors.mainColor,
                               isMandatory: true),
                           PsTextFieldWidget(
                               titleText: Utils.getString(context, 'edit_profile__country'),
@@ -395,8 +394,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                               textEditingController: userCountryController,
                               isReadonly: true,
                               onChanged: checkFields,
-                              borderColor: userCountryController.text == '' ? PsColors.discountColor : PsColors.mainColor,
-                              isMandatory: true),
+                             isMandatory: true),
                           Container(
                             margin: const EdgeInsets.all(PsDimens.space12),
                             child:  Divider(

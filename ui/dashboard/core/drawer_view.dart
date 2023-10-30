@@ -472,7 +472,8 @@ class _HomeViewState extends State<DashboardView>
                   create: (BuildContext context) {
                     userProvider = UserProvider(
                         repo: userRepository!, psValueHolder: valueHolder!);
-                    userProvider!.getUserFromDB(userProvider!.psValueHolder.loginUserId!);
+                    if(userProvider!.psValueHolder.loginUserId != null)
+                      userProvider!.getUserFromDB(userProvider!.psValueHolder.loginUserId!);
 
                     return userProvider!;
                   }
