@@ -11,6 +11,7 @@ import 'package:flutterrestaurant/ui/common/ps_textfield_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/api_status.dart';
 import 'package:flutterrestaurant/viewobject/holder/contact_us_holder.dart';
+import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/user/user_provider.dart';
@@ -59,7 +60,7 @@ class _ContactUsViewState extends State<ContactUsView> {
       });
     }
     return MultiProvider(
-        providers: [
+        providers: <SingleChildWidget>[
 
     ChangeNotifierProvider<ContactUsProvider>(
     lazy: false,
@@ -88,8 +89,10 @@ class _ContactUsViewState extends State<ContactUsView> {
               phoneController.text = widget.userProvider!.user.data!.userPhone!;
             }
                 return AnimatedBuilder(
-                          animation: widget.animationController,
-                          child: SingleChildScrollView(
+                    animation: widget.animationController,
+                    child: Stack(
+                        children: <Widget>[
+                          SingleChildScrollView(
                               child: Container(
                                 padding: const EdgeInsets.all(PsDimens.space8),
                                 child: Column(
@@ -102,7 +105,7 @@ class _ContactUsViewState extends State<ContactUsView> {
                                         textAboutMe: false,
                                         hintText: Utils.getString(
                                             context, 'contact_us__contact_name_hint'),
-                                       onChanged: checkFields,
+                                        onChanged: checkFields,
                                         textEditingController: nameController
                                     ),
                                     PsTextFieldWidget(
@@ -137,33 +140,36 @@ class _ContactUsViewState extends State<ContactUsView> {
                                             'contact_us__contact_message_hint'),
                                         onChanged: checkFields,
                                         textEditingController: messageController),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          left: PsDimens.space16,
-                                          top: PsDimens.space16,
-                                          right: PsDimens.space16,
-                                          bottom: PsDimens.space40),
-                                      child: PsButtonWidget(
-                                        provider: provider,
-                                        nameText: nameController,
-                                        emailText: emailController,
-                                        messageText: messageController,
-                                        phoneText: phoneController,
-                                      ),
-                                    ),
-                                    _largeSpacingWidget,
+                                    Container(height: 50,)
                                   ],
                                 ),
                               )),
-                          builder: (BuildContext context, Widget? child) {
-                            return FadeTransition(
-                                opacity: animation,
-                                child: Transform(
-                                  transform: Matrix4.translationValues(
-                                      0.0, 100 * (1.0 - animation.value), 0.0),
-                                  child: child,
-                                ));
-                          });
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child:
+                            Container(
+                              margin: const EdgeInsets.all(PsDimens.space16),
+                              child: PsButtonWidget(
+                                provider: provider,
+                                nameText: nameController,
+                                emailText: emailController,
+                                messageText: messageController,
+                                phoneText: phoneController,
+                              ),
+                            ),
+                          )
+                        ]),
+                    builder: (BuildContext context, Widget? child) {
+                      return FadeTransition(
+                          opacity: animation,
+                          child: Transform(
+                            transform: Matrix4.translationValues(
+                                0.0, 100 * (1.0 - animation.value), 0.0),
+                            child: child,
+                          ));
+                    });
 
               }
         )

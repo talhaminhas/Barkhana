@@ -19,7 +19,6 @@ import '../../../viewobject/holder/intent_holder/product_list_intent_holder.dart
 import '../../../viewobject/holder/product_parameter_holder.dart';
 import '../../../viewobject/holder/touch_count_parameter_holder.dart';
 import '../../category/item/category_vertical_list_item.dart';
-import '../../noti/detail/noti_view.dart';
 import '../core/drawer_view.dart';
 
 class HomeTabbarProductListView extends StatefulWidget {
@@ -218,8 +217,8 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
               ),
             if(widget.shopInfo.shopSchedules != null)
               getOpenAndCloseTime(),
-            Row(
-              children: const <Widget>[
+            const Row(
+              children: <Widget>[
                 /*const SizedBox(
                   width: PsDimens.space4,
                 ),*/

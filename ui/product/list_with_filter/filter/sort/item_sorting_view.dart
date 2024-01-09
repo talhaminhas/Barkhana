@@ -5,7 +5,6 @@ import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/provider/product/search_product_provider.dart';
 import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';

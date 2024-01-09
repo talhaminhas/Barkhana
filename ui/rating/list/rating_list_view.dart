@@ -8,7 +8,6 @@ import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/repository/rating_repository.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar_with_two_provider.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_button_widget.dart';
 import 'package:flutterrestaurant/ui/common/smooth_star_rating_widget.dart';
 import 'package:flutterrestaurant/ui/rating/entry/rating_input_dialog.dart';

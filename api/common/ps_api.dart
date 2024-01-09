@@ -7,13 +7,11 @@ import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
 import 'package:flutterrestaurant/db/common/ps_shared_preferences.dart';
 import 'package:flutterrestaurant/main.dart';
-import 'package:flutterrestaurant/ui/app_loading/app_loading_view.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:path/path.dart';
 
-import '../../constant/ps_constants.dart';
 import '../ps_url.dart';
 
 abstract class PsApi {
@@ -29,7 +27,7 @@ abstract class PsApi {
     }
     final Client client = http.Client();
     try {
-      final Map<String, String> headers = {
+      final Map<String, String> headers = <String, String>{
         'content-type': 'application/json',
         'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
       };
@@ -62,7 +60,7 @@ abstract class PsApi {
     }
     final Client client = http.Client();
     try {
-      final Map<String, String> headers = {
+      final Map<String, String> headers = <String, String>{
         'content-type': 'application/json',
         'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
       };
@@ -102,6 +100,7 @@ abstract class PsApi {
   Future<PsResource<R>> postData<T extends PsObject<dynamic>, R>(
       T obj, String url, Map<dynamic, dynamic> jsonMap) async {
     print('postData');
+
     if (PSApp.apiTokenRefresher.isExpired
         && url != PsUrl.ps_api_request_token_post_url
         && url != PsUrl.ps_api_update_token_post_url) {
@@ -111,11 +110,10 @@ abstract class PsApi {
     print('post url: ${PsConfig.ps_app_url}$url');
     final Client client = http.Client();
     try {
-      final Map<String, String> headers = {
+      final Map<String, String> headers = <String, String>{
         'content-type': 'application/json',
         'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
       };
-
       final Response response = await client
           .post(Uri.parse('${PsConfig.ps_app_url}$url'),
           headers: headers,

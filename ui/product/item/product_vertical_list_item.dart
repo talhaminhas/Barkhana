@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -117,7 +116,7 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
 
                               children: <Widget>[
                                 if(widget.product.isAvailable == '0')
-                                  ...[
+                                  ...<Widget>[
                                     Container(
                                       decoration: BoxDecoration(
                                         color: PsColors.discountColor.withOpacity(0.8), // Adjust the background color and opacity
@@ -202,7 +201,7 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              if (widget.product.isDiscount == PsConst.ONE) ...[
+                                                              if (widget.product.isDiscount == PsConst.ONE) ...<Widget>[
                                                                 PsHero(
                                                                   tag: '', // Replace with your tag
                                                                   flightShuttleBuilder: Utils.flightShuttleBuilder,
@@ -474,7 +473,7 @@ class _IconAndTextWidgetState extends State<_IconAndTextWidget>  {
                             )
                         ),
                       ),
-                    if (!showBasket) ...[
+                    if (!showBasket) ...<Widget>[
                       _removeIconWidget,
                       Center(
                         child: Container(

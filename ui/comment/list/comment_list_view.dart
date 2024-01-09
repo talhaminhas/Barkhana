@@ -10,7 +10,6 @@ import 'package:flutterrestaurant/repository/comment_header_repository.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_textfield_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/comment_header.dart';

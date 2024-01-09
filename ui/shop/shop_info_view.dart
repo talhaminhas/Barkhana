@@ -529,7 +529,7 @@ class _AddressWidget extends StatelessWidget {
             ),
             Flexible( // Wrap the Text with Flexible
               child: Wrap( // Use Wrap to handle text overflow
-                children: [
+                children: <Widget>[
                   Text(
                     title != '' ? title : '-',
                     style: Theme.of(context).textTheme.bodyMedium,

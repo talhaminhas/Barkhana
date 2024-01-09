@@ -4,7 +4,6 @@ import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/provider/category/category_provider.dart';
 import 'package:flutterrestaurant/repository/category_repository.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/category_parameter_holder.dart';

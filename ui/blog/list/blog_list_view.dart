@@ -4,7 +4,6 @@ import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/blog/blog_provider.dart';
 import 'package:flutterrestaurant/repository/blog_repository.dart';
 import 'package:flutterrestaurant/ui/blog/item/blog_list_item.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';

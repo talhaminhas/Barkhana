@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
-import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/basket/basket_provider.dart';
 import 'package:flutterrestaurant/provider/transaction/transaction_header_provider.dart';
@@ -13,7 +12,6 @@ import 'package:flutterrestaurant/provider/user/user_provider.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar_with_no_provider.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
-import 'package:flutterrestaurant/ui/common/ps_button_widget.dart';
 import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
@@ -209,7 +207,7 @@ class CreditCardViewState extends State<CreditCardView> {
           widget.deliveryPickUpTime);
     }
 
-    return PsWidgetWithAppBarWithNoProvider(
+    return const PsWidgetWithAppBarWithNoProvider(
       appBarTitle: 'Credit Card',
       child: Column(
         children: <Widget>[

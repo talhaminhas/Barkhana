@@ -2,26 +2,20 @@ import 'dart:async';
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
+import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutterrestaurant/api/api_token_refresher.dart';
 import 'package:flutterrestaurant/api/ps_api_service.dart';
 import 'package:flutterrestaurant/config/ps_theme_data.dart';
 import 'package:flutterrestaurant/config/router.dart' as router;
 import 'package:flutterrestaurant/provider/common/ps_theme_provider.dart';
-import 'package:flutterrestaurant/provider/delete_task/delete_task_provider.dart';
 import 'package:flutterrestaurant/provider/ps_provider_dependencies.dart';
-import 'package:flutterrestaurant/provider/user/user_provider.dart';
-import 'package:flutterrestaurant/repository/delete_task_repository.dart';
 import 'package:flutterrestaurant/repository/ps_theme_repository.dart';
-import 'package:flutterrestaurant/repository/user_repository.dart';
-import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/language.dart';
-import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -37,7 +31,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  SystemChrome.setPreferredOrientations([
+  SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
   ]);
   if (prefs.getString('codeC') == null) {
@@ -45,11 +39,14 @@ Future<void> main() async {
     await prefs.setString('codeL', '');
   }
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   //MobileAds.instance.initialize();
 
   //FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
+  if (!kIsWeb)
   if (Platform.isIOS) {
     FirebaseMessaging.instance.requestPermission(
         alert: true,
@@ -58,7 +55,8 @@ Future<void> main() async {
         carPlay: false,
         criticalAlert: false,
         provisional: false,
-        sound: true);
+        sound: true
+    );
   }
 
   /// Update the iOS foreground notification presentation options to allow
@@ -93,13 +91,17 @@ Future<void> main() async {
         ?.createNotificationChannel(androidNotificationChannel);
   }
   _createNotificationChannel('Channel ID', 'name', 'description');*/
-  final String? fcmToken = await FirebaseMessaging.instance.getToken();
-  print('fcmToken: $fcmToken');
+  if(!kIsWeb) {
+    final String? fcmToken = await FirebaseMessaging.instance.getToken();
+    print('fcmToken: $fcmToken');
+  }
   //GoogleApiAvailability.makeGooglePlayServicesAvailable();
   //check is apple signin is available
-  await Utils.checkAppleSignInAvailable();
+  if(!kIsWeb)
+    await Utils.checkAppleSignInAvailable();
   await EasyLocalization.ensureInitialized();
-  runApp(EasyLocalization(
+  runApp(
+      EasyLocalization(
       path: 'assets/langs',
       saveLocale: true,
       // startLocale: PsConfig.defaultLanguage.toLocale(),

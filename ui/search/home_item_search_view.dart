@@ -9,7 +9,6 @@ import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/product/search_product_provider.dart';
 import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_button_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_dropdown_base_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_special_check_text_widget.dart';

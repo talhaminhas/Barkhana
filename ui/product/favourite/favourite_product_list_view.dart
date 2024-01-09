@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
-import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/basket/basket_provider.dart';
 import 'package:flutterrestaurant/provider/product/favourite_product_provider.dart';
 import 'package:flutterrestaurant/repository/basket_repository.dart';
 import 'package:flutterrestaurant/repository/product_repository.dart';
-import 'package:flutterrestaurant/ui/common/dialog/choose_attribute_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/product/item/product_vertical_list_item.dart';
@@ -25,7 +22,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-import '../../common/dialog/confirm_dialog_view.dart';
 
 class FavouriteProductListView extends StatefulWidget {
   const FavouriteProductListView({Key? key, required this.animationController})
@@ -144,7 +140,7 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                             .favouriteProductList.data!.length;
                                         final Product product = provider
                                             .favouriteProductList.data![index];
-                                        Basket? basket = basketProvider!.basketList.data!.firstWhere((item) => item.id == product.id, orElse: () => Basket());
+                                        Basket? basket = basketProvider!.basketList.data!.firstWhere((Basket item) => item.id == product.id, orElse: () => Basket());
 
                                         return Container(
                                           margin: const EdgeInsets.only(
@@ -217,7 +213,7 @@ class _FavouriteProductListView extends State<FavouriteProductListView>
                                             '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                                             basket = Basket(
                                                 id: id,
-                                                productId: product!.id,
+                                                productId: product.id,
                                                 qty: productQuantity,
                                                 shopId: psValueHolder!.shopId,
                                                 selectedColorId: colorId,

@@ -82,8 +82,8 @@ class _VerifyPhoneViewState extends State<VerifyPhoneView> {
                         provider: provider,
                         onProfileSelected: widget.onProfileSelected,
                       ),
-                      Column(
-                        children: const <Widget>[
+                      const Column(
+                        children: <Widget>[
                           SizedBox(
                             height: PsDimens.space16,
                           ),

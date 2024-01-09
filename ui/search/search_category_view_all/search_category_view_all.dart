@@ -12,7 +12,6 @@ import '../../../viewobject/holder/category_parameter_holder.dart';
 import '../../../viewobject/holder/intent_holder/product_list_intent_holder.dart';
 import '../../../viewobject/holder/product_parameter_holder.dart';
 import '../../category/item/category_vertical_list_item.dart';
-import '../../common/ps_admob_banner_widget.dart';
 import '../../common/ps_ui_widget.dart';
 
 

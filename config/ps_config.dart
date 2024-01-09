@@ -3,7 +3,6 @@
 // Panacea-Soft license that can be found in the LICENSE file.
 
 import 'package:flutterrestaurant/viewobject/common/language.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class PsConfig {
   PsConfig._();
@@ -28,8 +27,8 @@ class PsConfig {
   ///
   static const String ps_core_url =
   //'https://5ccc-81-150-185-121.ngrok-free.app/Barkhana';
-   'http://62.30.84.56:88/Barkhana';
-  //'http://192.168.1.153:8080/Barkhana';
+  //'http://81.108.145.98:88/Barkhana';
+  'http://192.168.1.172:8080/Barkhana';
   static const String ps_app_url = ps_core_url + '/index.php/';
 
   static const String ps_app_image_url = ps_core_url + '/uploads/';
@@ -202,7 +201,7 @@ class PsConfig {
   // static const int TRENDING_PRODUCT_LOADING_LIMIT = 12;
 
   ///
-  ///Login Setting
+  /// Login Setting
   ///
   // static bool showFacebookLogin = true;
   // static bool showGoogleLogin = true;

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
@@ -8,14 +9,10 @@ import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/basket/basket_provider.dart';
 import 'package:flutterrestaurant/provider/category/category_provider.dart';
-import 'package:flutterrestaurant/provider/category/trending_category_provider.dart';
 import 'package:flutterrestaurant/provider/product/search_product_provider.dart';
-import 'package:flutterrestaurant/provider/productcollection/product_collection_provider.dart';
 import 'package:flutterrestaurant/provider/shop_info/shop_info_provider.dart';
 import 'package:flutterrestaurant/repository/basket_repository.dart';
 import 'package:flutterrestaurant/repository/category_repository.dart';
-import 'package:flutterrestaurant/repository/product_collection_repository.dart';
-import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/repository/shop_info_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/choose_attribute_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/confirm_dialog_view.dart';
@@ -31,7 +28,6 @@ import 'package:flutterrestaurant/viewobject/basket_selected_add_on.dart';
 import 'package:flutterrestaurant/viewobject/basket_selected_attribute.dart';
 import 'package:flutterrestaurant/viewobject/category.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:flutterrestaurant/viewobject/holder/category_parameter_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_detail_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/product.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -82,6 +78,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
       _categoryProvider!.loadCategoryList(/*categoryIconList.toMap()*/);
     }
 
+    if (!foundation.kIsWeb)
     if (Platform.isAndroid) {
       _rateMyApp.init().then((_) {
         if (_rateMyApp.shouldOpenDialog) {
@@ -257,7 +254,8 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
                 }
               });
             },*/
-            child: _HomeCategoryHorizontalListWidget(categoryProvider: _categoryProvider,
+            child: _HomeCategoryHorizontalListWidget(
+              categoryProvider: _categoryProvider,
               shopInfoProvider: shopInfoProvider,
               psValueHolder: valueHolder!,
               //animationController: widget.animationController,
@@ -697,10 +695,9 @@ class __HomeCategoryHorizontalListWidgetState
             widget.shopInfoProvider!.shopInfo.data == null) {
           return Container();
         }
-
         final List<Category> _tmpList =
             List<Category>.from(categoryProvider.categoryList.data!);
-        int i = 0;
+        const int i = 0;
 
         /*if (showMainMenu) {
           _tmpList.insert(

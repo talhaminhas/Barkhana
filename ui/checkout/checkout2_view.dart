@@ -13,7 +13,6 @@ import 'package:flutterrestaurant/repository/basket_repository.dart';
 import 'package:flutterrestaurant/repository/coupon_discount_repository.dart';
 import 'package:flutterrestaurant/repository/transaction_header_repository.dart';
 import 'package:flutterrestaurant/repository/user_repository.dart';
-import 'package:flutterrestaurant/ui/category/list/category_list_view.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/success_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
@@ -34,7 +33,6 @@ import '../../viewobject/holder/globalTokenPost.dart';
 import '../../viewobject/holder/intent_holder/checkout_status_intent_holder.dart';
 import '../../viewobject/holder/intent_holder/privacy_policy_intent_holder.dart';
 import '../../viewobject/transaction_header.dart';
-import '../privacy_policy/privacy_policy_view.dart';
 
 class Checkout2View extends StatefulWidget {
   const Checkout2View({
@@ -88,13 +86,13 @@ class _Checkout2ViewState extends State<Checkout2View> {
       TransactionHeaderProvider transactionHeaderProvider)
   {
     Navigator.pushNamed(context, RoutePaths.globalWebview,
-        arguments:{
+        arguments:<String, Object>{
           'token': token,
           'onHppResponse': (String hppResponse) async {
             globalTokenPost.jsonResponse = '{' + hppResponse + '}';
             final Map<String, dynamic>? jsonResponse = await tokenRepository.getGlobalTransactionStatus(globalTokenPost, context);
-            print('''payment response from server${jsonResponse!['status']},${jsonResponse!['error']}''');
-            if(jsonResponse!['status'] == true)//payment successfully
+            print('''payment response from server${jsonResponse!['status']},${jsonResponse['error']}''');
+            if(jsonResponse['status'] == true)//payment successfully
                 {
               callCardNow(basketProvider, userProvider, transactionHeaderProvider);
             }
@@ -426,7 +424,7 @@ class _Checkout2ViewState extends State<Checkout2View> {
                       TextSpan(
                         text: Utils.getString(context, 'checkout2__agree_policy'),
                         style: Theme.of(context).textTheme.bodyMedium,
-                        children: [
+                        children: <InlineSpan>[
                           TextSpan(
                             text: 'terms/conditions', // The word you want to make tappable
                             style: const TextStyle(

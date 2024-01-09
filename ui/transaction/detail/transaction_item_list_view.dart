@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fluttericon/octicons_icons.dart';
-import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
@@ -16,8 +15,6 @@ import 'package:flutterrestaurant/repository/tansaction_detail_repository.dart';
 import 'package:flutterrestaurant/repository/transaction_header_repository.dart';
 import 'package:flutterrestaurant/repository/transaction_status_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/delivery_boy_rating_input_dialog.dart';
-import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
-import 'package:flutterrestaurant/ui/common/dialog/success_dialog.dart';
 import 'package:flutterrestaurant/ui/common/ps_button_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/transaction/detail/transaction_item_view.dart';
@@ -25,8 +22,6 @@ import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/transaction_header.dart';
-import 'package:flutterrestaurant/viewobject/transaction_status.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -180,7 +175,6 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
               ),*/
               body: Stack(children: <Widget>[
                 RefreshIndicator(
-
                   child: CustomScrollView(
                       controller: _scrollController,
                       scrollDirection: Axis.vertical,
@@ -273,119 +267,9 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                           ))
                         else*/
                           SliverToBoxAdapter(
-                            child: Container(
-                              margin: const EdgeInsets.all(PsDimens.space10),
-                              height: 50, 
-                              decoration: BoxDecoration(
-                                color: PsColors.mainColor,
-                                borderRadius: BorderRadius.circular(PsDimens.space10), // Adjust the radius as needed
-                                /*border: Border.all(
-                                  color: Colors.blue, // Border color
-                                  width: 2.0, // Border width
-                                ),*/
-                              ),
-                              child: MaterialButton(
-                                onPressed: () async {
-                                  showDialog<dynamic>(
-                                      context: context,
-
-                                      barrierColor: PsColors.transparent,
-                                      builder: (BuildContext context) {
-                                        return ConfirmDialogView(
-                                            description: Utils.getString(context,
-                                                'Are You Sure To Add This Order Into Your Basket?'),
-                                            leftButtonText: Utils.getString(
-                                                context,
-                                                'basket_list__comfirm_dialog_cancel_button'),
-                                            rightButtonText: Utils.getString(
-                                                context,
-                                                'basket_list__comfirm_dialog_ok_button'),
-                                            onAgreeTap: () async {
-                                              Navigator.pop(context);
-                                              PsProgressDialog.showDialog(context);
-                                              final List<Basket> listOfBaskets = [];
-                                              for (int index = 0; index < provider.transactionDetailList.data!.length; index++) {
-                                                final String id =
-                                                    '${provider.transactionDetailList
-                                                    .data![index].productId}'
-                                                /*'${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}'
-                                        '${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}'*/;
-                                                /* if (product.minimumOrder == '0') {
-                                      product.minimumOrder = '1' ;
-                                    }*/List <BasketSelectedAddOn> basketSelectedAddOn = [];
-                                                if(provider.transactionDetailList.data![index].productAddonPrice != '') {
-                                                  List<String> addOnPriceList =
-                                                  provider.transactionDetailList.data![index].productAddonPrice!.split('#');
-                                                  List<String>  addOnNameList=
-                                                  provider.transactionDetailList.data![index].productAddonName!.split('#');
-                                                  List<String> addOnIdList =
-                                                  provider.transactionDetailList.data![index].productAddonId!.split('#');
-                                                  for (int i = 0; i < addOnPriceList.length; i++) {
-                                                    basketSelectedAddOn.add(
-                                                        BasketSelectedAddOn(
-                                                            id: addOnIdList[i],
-                                                            name: addOnNameList[i],
-                                                            price: addOnPriceList[i],
-                                                            currencySymbol: '£'
-                                                        )
-                                                    );
-                                                  }
-                                                }
-                                                await productDetailProvider!.loadProduct(
-                                                    provider.transactionDetailList.data![index]
-                                                        .productId!, loginUserId);
-                                                print(productDetailProvider
-                                                    ?.productDetail.data!.name);
-                                                listOfBaskets.add(
-                                                    Basket(
-                                                        id: id,
-                                                        productId: provider
-                                                            .transactionDetailList.data![index]
-                                                            .productId,
-                                                        qty: provider.transactionDetailList
-                                                            .data![index].qty,
-                                                        shopId: valueHolder!.shopId,
-                                                        //selectedColorId: colorId,
-                                                        //selectedColorValue: colorValue,
-                                                        basketPrice: provider
-                                                            .transactionDetailList.data![index]
-                                                            .price,
-                                                        basketOriginalPrice: provider
-                                                            .transactionDetailList.data![index]
-                                                            .originalPrice,
-                                                        /*selectedAttributeTotalPrice: basketSelectedAttribute
-                                            .getTotalSelectedAttributePrice()
-                                            .toString(),*/
-                                                        product: productDetailProvider
-                                                            ?.productDetail.data!,
-                                                        /*basketSelectedAttributeList:
-                                        basketSelectedAttribute.getSelectedAttributeList(),*/
-                                                        basketSelectedAddOnList:
-                                                        basketSelectedAddOn,
-                                                    )
-                                                );
-
-                                              }
-                                              await basketProvider!.addBasketList(listOfBaskets);
-                                              PsProgressDialog.dismissDialog();
-
-                                              dashboardViewKey.currentState?.
-                                              updateSelectedIndexWithAnimation(Utils.getString(
-                                                  context,
-                                                  Utils.getString(context, 'home__bottom_app_bar_basket_list')),
-                                                  PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
-                                            });
-                                      });
-
-                                },
-                                child: Text(
-                                  'Reorder',
-                                  style: TextStyle(
-                                    color: PsColors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                            child:
+                            Container(
+                              height: 80,
                             )
                           ),
                         /*if (widget.transaction.ratingStatus == PsConst.ONE)
@@ -402,6 +286,124 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                     return provider.resetTransactionDetailList(widget.transaction);
                     //return widget.provider.resetTransactionList();
                   },
+                ),
+                Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child:Container(
+                      margin: const EdgeInsets.all(PsDimens.space12),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: PsColors.mainColor,
+                        borderRadius: BorderRadius.circular(PsDimens.space10), // Adjust the radius as needed
+                      ),
+                      child: MaterialButton(
+                        onPressed: () async {
+                          showDialog<dynamic>(
+                              context: context,
+
+                              barrierColor: PsColors.transparent,
+                              builder: (BuildContext context) {
+                                return ConfirmDialogView(
+                                    description: Utils.getString(context,
+                                        'Are You Sure To Add This Order Into Your Basket?'),
+                                    leftButtonText: Utils.getString(
+                                        context,
+                                        'basket_list__comfirm_dialog_cancel_button'),
+                                    rightButtonText: Utils.getString(
+                                        context,
+                                        'basket_list__comfirm_dialog_ok_button'),
+                                    onAgreeTap: () async {
+                                      Navigator.pop(context);
+                                      PsProgressDialog.showDialog(context);
+                                      final List<Basket> listOfBaskets = <Basket>[];
+                                      for (int index = 0; index < provider.transactionDetailList.data!.length; index++) {
+                                        final String id =
+                                            '${provider.transactionDetailList
+                                            .data![index].productId}'
+                                        /*'${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}'
+                                        '${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}'*/;
+                                        /* if (product.minimumOrder == '0') {
+                                      product.minimumOrder = '1' ;
+                                    }*/
+                                        final List <BasketSelectedAddOn> basketSelectedAddOn = <BasketSelectedAddOn>[];
+                                        double calculatedPrice =
+                                        double.parse(provider.transactionDetailList.data![index].price!);
+                                        if(provider.transactionDetailList.data![index].productAddonPrice != '') {
+                                          final List<String> addOnPriceList =
+                                          provider.transactionDetailList.data![index].productAddonPrice!.split('#');
+                                          final List<String>  addOnNameList=
+                                          provider.transactionDetailList.data![index].productAddonName!.split('#');
+                                          final List<String> addOnIdList =
+                                          provider.transactionDetailList.data![index].productAddonId!.split('#');
+                                          for (int i = 0; i < addOnPriceList.length; i++) {
+                                            calculatedPrice += double.parse(addOnPriceList[i]);
+                                            basketSelectedAddOn.add(
+                                                BasketSelectedAddOn(
+                                                    id: addOnIdList[i],
+                                                    name: addOnNameList[i],
+                                                    price: addOnPriceList[i],
+                                                    currencySymbol: '£'
+                                                )
+                                            );
+                                          }
+                                        }
+                                        await productDetailProvider!.loadProduct(
+                                            provider.transactionDetailList.data![index]
+                                                .productId!, loginUserId);
+
+                                        listOfBaskets.add(
+                                            Basket(
+                                              id: id,
+                                              productId: provider
+                                                  .transactionDetailList.data![index]
+                                                  .productId,
+                                              qty: provider.transactionDetailList
+                                                  .data![index].qty,
+                                              shopId: valueHolder!.shopId,
+                                              //selectedColorId: colorId,
+                                              //selectedColorValue: colorValue,
+                                              basketPrice: calculatedPrice.toString(),
+
+                                              basketOriginalPrice: provider
+                                                  .transactionDetailList.data![index]
+                                                  .originalPrice,
+                                              /*selectedAttributeTotalPrice: basketSelectedAttribute
+                                            .getTotalSelectedAttributePrice()
+                                            .toString(),*/
+                                              product: productDetailProvider
+                                                  ?.productDetail.data!,
+                                              /*basketSelectedAttributeList:
+                                        basketSelectedAttribute.getSelectedAttributeList(),*/
+                                              basketSelectedAddOnList:
+                                              basketSelectedAddOn,
+
+                                            )
+                                        );
+                                      }
+                                      await basketProvider!.addBasketList(listOfBaskets);
+                                      PsProgressDialog.dismissDialog();
+
+                                      dashboardViewKey.currentState?.
+                                      updateSelectedIndexWithAnimation(Utils.getString(
+                                          context,
+                                          Utils.getString(context, 'home__bottom_app_bar_basket_list')),
+                                          PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT);
+                                    });
+                              });
+
+                        },
+                        child: Text(
+                          'Reorder',
+                          style: TextStyle(
+                            color: PsColors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                    )
                 ),
                 PSProgressIndicator(provider.transactionDetailList.status)
               ]),
@@ -592,9 +594,9 @@ class _OrderStatusWidget extends StatelessWidget {
                 _RefundedStatusWidget(
                   transaction: transaction,
                 ),
-              const SizedBox(
+              /*const SizedBox(
                 height: PsDimens.space6,
-              ),
+              ),*/
             ],
           )
         else
@@ -634,9 +636,23 @@ class _TransactionStatusListWidget extends StatelessWidget {
             margin: const EdgeInsets.only(
                 left: PsDimens.space16,
                 right: PsDimens.space16,
-                top: PsDimens.space8,
-                bottom: PsDimens.space8),
-            child: CustomScrollView(
+                top: PsDimens.space8,),
+            child: Column(
+              children: <Widget>[
+                for (int index = 0; index < provider.transactionStatusList.data!.length; index++)
+                  if (provider.transactionStatusList.data != null &&
+                      provider.transactionStatusList.data!.isNotEmpty)
+                    _ColorCircleWidget(
+                      psValueHolder: psValueHolder,
+                      statusTitle: provider.transactionStatusList.data![index].title!,
+                      statusOrdering: provider.transactionStatusList.data![index].ordering!,
+                      transaction: transaction,
+                      statusLength: provider.transactionStatusList.data!.length,
+                    ),
+                const Divider(height: 1,),
+              ],
+            )
+            /*CustomScrollView(
                 // controller: _scrollController,
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -664,7 +680,7 @@ class _TransactionStatusListWidget extends StatelessWidget {
                       childCount: provider.transactionStatusList.data!.length,
                     ),
                   ),
-                ]),
+                ]),*/
           );
         },
       ),

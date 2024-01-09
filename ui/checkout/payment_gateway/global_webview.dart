@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/api/ps_url.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
@@ -8,7 +6,6 @@ import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../../utils/ps_progress_dialog.dart';
 
 
 class GlobalWebView extends StatefulWidget {
@@ -31,13 +28,13 @@ class _GlobalWebViewState extends State<GlobalWebView> {
     super.initState();
 
     // Get the IP address of the development machine
-    _getIpAddress().then((ipAddress) {
+    _getIpAddress().then((String ipAddress) {
       // Start the HTTP server
-      final handler = const shelf.Pipeline()
+      final shelf.Handler handler = const shelf.Pipeline()
           .addMiddleware(shelf.logRequests())
           .addHandler(_receiveHandler);
       deviceIp = ipAddress;
-      io.serve(handler, ipAddress, 8080).then((server) {
+      io.serve(handler, ipAddress, 8080).then((HttpServer server) {
         setState(() {
           _httpServer = server;
         });
@@ -46,8 +43,8 @@ class _GlobalWebViewState extends State<GlobalWebView> {
   }
   Future<String> _getIpAddress() async {
     // Get the IP address of the first non-loopback network interface
-    for (var interface in await NetworkInterface.list()) {
-      for (var addr in interface.addresses) {
+    for (NetworkInterface interface in await NetworkInterface.list()) {
+      for (InternetAddress addr in interface.addresses) {
         if (!addr.isLoopback) {
           return addr.address;
         }
@@ -67,7 +64,7 @@ class _GlobalWebViewState extends State<GlobalWebView> {
   Future<shelf.Response> _receiveHandler(shelf.Request request) async {
     if (request.method == 'POST') {
       // Handle the incoming POST data
-      final body = await request.readAsString();
+      final String body = await request.readAsString();
       // Decode the JSON data into a Dart object
       String decodedData = Uri.decodeFull(body);
 
@@ -92,7 +89,7 @@ class _GlobalWebViewState extends State<GlobalWebView> {
         backgroundColor: PsColors.mainColor,
       ),
       body: Stack(
-        children: [
+        children: <Widget>[
               WebView(
             initialUrl: PsUrl.ps_global_payment_hpp_url,
             javascriptMode: JavascriptMode.unrestricted,

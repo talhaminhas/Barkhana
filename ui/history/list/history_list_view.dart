@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
-import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/history/history_provider.dart';
 import 'package:flutterrestaurant/repository/history_repsitory.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
-import 'package:flutterrestaurant/ui/history/item/history_list_item.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_detail_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/product.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,12 +13,10 @@ import 'package:provider/single_child_widget.dart';
 
 import '../../../provider/basket/basket_provider.dart';
 import '../../../repository/basket_repository.dart';
-import '../../../utils/ps_progress_dialog.dart';
 import '../../../utils/utils.dart';
 import '../../../viewobject/basket.dart';
 import '../../../viewobject/common/ps_value_holder.dart';
 import '../../common/dialog/confirm_dialog_view.dart';
-import '../../common/ps_ui_widget.dart';
 import '../../dashboard/core/drawer_view.dart';
 import '../../product/item/product_vertical_list_item.dart';
 
@@ -111,7 +106,7 @@ class _HistoryListViewState extends State<HistoryListView>
                                                     .isNotEmpty) {
                                               final int count = provider.historyList.data!.length;
                                               final Product product = provider.historyList.data![index];
-                                              Basket? basket = basketProvider!.basketList.data!.firstWhere((item) => item.id == product.id, orElse: () => Basket());
+                                              Basket? basket = basketProvider!.basketList.data!.firstWhere((Basket item) => item.id == product.id, orElse: () => Basket());
                                               return Container(
                                                   margin: const EdgeInsets.only(
                                                   bottom: PsDimens.space4,
@@ -172,7 +167,7 @@ class _HistoryListViewState extends State<HistoryListView>
                                                   id ='${product.id}';
                                                   basket = Basket(
                                                       id: id,
-                                                      productId: product!.id,
+                                                      productId: product.id,
                                                       qty: productQuantity,
                                                       shopId: psValueHolder!.shopId,
                                                       basketPrice: product.unitPrice,

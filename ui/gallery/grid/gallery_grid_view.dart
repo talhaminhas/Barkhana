@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/gallery/gallery_provider.dart';
 import 'package:flutterrestaurant/provider/product/product_provider.dart';
 import 'package:flutterrestaurant/repository/gallery_repository.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
-import 'package:flutterrestaurant/ui/gallery/item/gallery_grid_item.dart';
-import 'package:flutterrestaurant/utils/utils.dart';
-import 'package:flutterrestaurant/viewobject/product.dart';
 import 'package:provider/provider.dart';
 
 import '../../product/detail/views/detail_info_tile_view.dart';
@@ -53,7 +49,7 @@ class _GalleryGridViewState extends State<GalleryGridView>
             return /*Stack(
               children: <Widget>[*/
                 Column (
-                  children: [
+                  children: <Widget>[
                     DetailInfoTileView(
                       productDetail: widget.provider,
                     ),

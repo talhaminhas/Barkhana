@@ -9,9 +9,7 @@ import 'package:flutterrestaurant/provider/basket/basket_provider.dart';
 import 'package:flutterrestaurant/provider/product/search_product_provider.dart';
 import 'package:flutterrestaurant/repository/basket_repository.dart';
 import 'package:flutterrestaurant/repository/product_repository.dart';
-import 'package:flutterrestaurant/ui/common/dialog/choose_attribute_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/ui/product/item/product_vertical_list_item.dart';
@@ -29,7 +27,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-import '../../common/dialog/confirm_dialog_view.dart';
 
 class ProductListWithFilterView extends StatefulWidget {
   const ProductListWithFilterView(
@@ -176,7 +173,7 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                               provider.productList.data!.length;
                                           final Product product = provider
                                               .productList.data![index];
-                                          Basket? basket = basketProvider!.basketList.data!.firstWhere((item) => item.id == product.id, orElse: () => Basket());
+                                          Basket? basket = basketProvider!.basketList.data!.firstWhere((Basket item) => item.id == product.id, orElse: () => Basket());
                                           return
                                             Padding(
                                               padding: const EdgeInsets.only( bottom:PsDimens.space6), // Adjust this value for the spacing you want
@@ -246,7 +243,7 @@ class _ProductListWithFilterViewState extends State<ProductListWithFilterView>
                                                   '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                                                   basket = Basket(
                                                       id: id,
-                                                      productId: product!.id,
+                                                      productId: product.id,
                                                       qty: productQuantity,
                                                       shopId: valueHolder!.shopId,
                                                       selectedColorId: colorId,

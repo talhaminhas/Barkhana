@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
-import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/ps_api_service.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
-import 'package:flutterrestaurant/config/ps_config.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
-import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/basket/basket_provider.dart';
 import 'package:flutterrestaurant/provider/coupon_discount/coupon_discount_provider.dart';
 import 'package:flutterrestaurant/provider/delivery_cost/delivery_cost_provider.dart';
@@ -27,24 +22,16 @@ import 'package:flutterrestaurant/ui/common/dialog/confirm_dialog_view.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
-import 'package:flutterrestaurant/viewobject/api_status.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:flutterrestaurant/viewobject/global_token_header.dart';
-import 'package:flutterrestaurant/viewobject/holder/intent_holder/credit_card_intent_holder.dart';
-import 'package:flutterrestaurant/viewobject/holder/intent_holder/paystack_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:webview_flutter/src/webview.dart';
-import '../../api/common/ps_status.dart';
-import '../../api/ps_url.dart';
+
 import '../../ui/checkout/checkout1_view.dart';
 import '../../ui/checkout/checkout2_view.dart';
 import '../../ui/checkout/checkout3_view.dart';
-import '../../utils/ps_progress_dialog.dart';
 import '../../viewobject/holder/globalTokenPost.dart';
-import '../common/dialog/demo_warning_dialog.dart';
 
 class CheckoutContainerView extends StatefulWidget {
   const CheckoutContainerView({Key? key, required this.basketList})
@@ -170,8 +157,6 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
           body: Column(
             children: <Widget>[
               Container(
-                width: double.infinity,
-                height: PsDimens.space160,
                 child: _TopImageForCheckout(
                   viewNo: viewNo,
                   onTap: () {
@@ -1553,91 +1538,112 @@ class _TopImageForCheckout extends StatelessWidget {
       return Container();
     } else {
       return Container(
-        color: PsColors.coreBackgroundColor,
+        color: PsColors.mainColor,
         child:  Stack(
           children: <Widget>[
             Column(
               children: <Widget>[
-                const SizedBox(
-                  height: PsDimens.space36,
-                ),
-                Text(Utils.getString(context, 'checkout_container__checkout'),
-                    style: Theme.of(context).textTheme.headlineSmall),
-                const SizedBox(
-                  height: PsDimens.space16,
+                Container(
+                  padding: const EdgeInsets.only(top: 40, bottom: 2),
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  child:Text(Utils.getString(context, 'checkout_container__checkout'),
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        color: Colors.white
+                      )),
+                  color: PsColors.mainColor,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(
-                      left: PsDimens.space32, right: PsDimens.space32),
+                  margin: const EdgeInsets.only(left: 5, right: 5),
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 4, bottom: 4),
+                  decoration: BoxDecoration(
+                    color: PsColors.coreBackgroundColor,
+                    borderRadius: BorderRadius.circular(28),
+                  ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          checkFirstCircle(),
-                          const SizedBox(
-                            height: PsDimens.space12,
-                          ),
-                          Text(
-                              Utils.getString(
-                                  context, 'checkout_container__address'),
-                              style: viewNo == 1
-                                  ? Theme.of(context).textTheme.bodyMedium
-                                  : Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color:
-                                              PsColors.textPrimaryDarkColor)),
-                        ],
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin:
-                              const EdgeInsets.only(bottom: PsDimens.space32),
-                          child: Divider(
-                            height: 2,
-                            color: PsColors.mainColor,
-                          ),
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          checkSecondCircle(),
-                          const SizedBox(
-                            height: PsDimens.space12,
-                          ),
-                          Text(
-                              Utils.getString(
-                                  context, 'checkout_container__confirm'),
-                              style: Theme.of(context).textTheme.bodyMedium),
-                        ],
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin:
-                              const EdgeInsets.only(bottom: PsDimens.space32),
-                          child: Divider(
-                            height: 2,
-                            color: PsColors.mainColor,
-                          ),
-                        ),
-                      ),
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            checkThirdCircle(),
-                            const SizedBox(
-                              height: PsDimens.space12,
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: viewNo! > 1 ? PsColors.mainColor : PsColors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              border:  Border.all(
+                                color: viewNo! >= 1 ? PsColors.mainColor : PsColors.transparent,
+                                width: 2,
+                              ),
                             ),
-                            Text(
-                                Utils.getString(
-                                    context, 'checkout_container__payment'),
-                                style: Theme.of(context).textTheme.bodyMedium),
-                          ]),
+                            child: Text(
+                              Utils.getString(context, 'checkout_container__address'),
+                              style: viewNo! > 1
+                                  ? Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: PsColors.white,)
+                                  : Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: PsColors.textPrimaryDarkColor,
+                              ),
+                            ),
+                          ),
+
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 5, right: 5),
+                          child: Image.asset(
+                            'assets/images/right_arrow.png',
+                            height: 45,
+                          ),
+                        ),
+                      ),
+
+                      Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: viewNo! > 2 ? PsColors.mainColor : PsColors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              border:  Border.all(
+                                color: viewNo! >= 2 ? PsColors.mainColor : PsColors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                            child: Text(
+                              Utils.getString(context, 'checkout_container__confirm'),
+                              style: viewNo! > 2
+                                  ? Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: PsColors.white,)
+                                  : Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: PsColors.textPrimaryDarkColor,
+                              ),
+                            ),
+                          ),
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 5, right: 5),
+                          child: Image.asset(
+                            'assets/images/right_arrow.png',
+                            height: 45,
+                          ),
+                        ),
+                      ),
+                      Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: viewNo! > 3 ? PsColors.mainColor : PsColors.transparent,
+                                borderRadius: BorderRadius.circular(20),
+                                border:  Border.all(
+                                  color: viewNo! >= 3 ? PsColors.mainColor : PsColors.transparent,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Text(
+                                Utils.getString(context, 'checkout_container__payment'),
+                                style: viewNo! > 3
+                                    ? Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  color: PsColors.white,)
+                                    : Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  color: PsColors.textPrimaryDarkColor,
+                                ),
+                              ),
+                            ),
                     ],
                   ),
                 ),
@@ -1645,11 +1651,12 @@ class _TopImageForCheckout extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.only(
-                  top: PsDimens.space24, left: PsDimens.space2),
+                  top: PsDimens.space28, left: PsDimens.space2),
               child: IconButton(
                 icon: const Icon(
                   Icons.clear,
                   size: PsDimens.space24,
+                  color: Colors.white,
                 ),
                 onPressed: onTap as void Function()?,
               ),

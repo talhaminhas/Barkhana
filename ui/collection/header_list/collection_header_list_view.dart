@@ -3,7 +3,6 @@ import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/productcollection/product_collection_provider.dart';
 import 'package:flutterrestaurant/repository/product_collection_repository.dart';
 import 'package:flutterrestaurant/ui/collection/item/collection_header_list_item.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/product/collection_product/product_list_by_collection_id_view.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';

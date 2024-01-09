@@ -6,7 +6,6 @@ import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/noti/noti_provider.dart';
 import 'package:flutterrestaurant/repository/noti_repository.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/category.dart';

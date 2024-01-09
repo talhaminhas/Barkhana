@@ -13,7 +13,6 @@ import '../../../viewobject/holder/intent_holder/product_list_intent_holder.dart
 import '../../../viewobject/holder/product_parameter_holder.dart';
 import '../../../viewobject/holder/sub_category_parameter_holder.dart';
 import '../../../viewobject/sub_category.dart';
-import '../../common/ps_admob_banner_widget.dart';
 import '../../common/ps_ui_widget.dart';
 import '../../subcategory/item/sub_cateagory_grid_item.dart';
 import '../../subcategory/list/sub_category_grid_view.dart';
@@ -128,7 +127,7 @@ class _SearchSubCategoryViewAllState extends State<SearchSubCategoryViewAll>
                                     return Shimmer.fromColors(
                                         baseColor: PsColors.grey,
                                         highlightColor: PsColors.white,
-                                        child: Column(children: const <Widget>[
+                                        child: const Column(children: <Widget>[
                                           FrameUIForLoading(),
                                           FrameUIForLoading(),
                                           FrameUIForLoading(),

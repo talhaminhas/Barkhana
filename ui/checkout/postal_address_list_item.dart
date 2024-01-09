@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
-import 'package:flutterrestaurant/utils/utils.dart';
-import 'package:flutterrestaurant/viewobject/shipping_area.dart';
 
 class PostalAddressListItem extends StatelessWidget {
   const PostalAddressListItem(

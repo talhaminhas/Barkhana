@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
@@ -11,11 +11,9 @@ import 'package:flutterrestaurant/provider/shop_info/shop_info_provider.dart';
 import 'package:flutterrestaurant/provider/user/user_provider.dart';
 import 'package:flutterrestaurant/repository/user_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
-import 'package:flutterrestaurant/ui/common/dialog/success_dialog.dart';
 import 'package:flutterrestaurant/ui/common/ps_button_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_dropdown_base_with_controller_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_textfield_widget.dart';
-import 'package:flutterrestaurant/ui/map/current_location_view.dart';
 import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
@@ -341,7 +339,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                               borderColor: addressController.text == '' ? PsColors.discountColor : PsColors.mainColor,
                               isMandatory: true,
                               onTap: () async {
-                                final isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
+                                final Future<bool> isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
                                 isAValidPostcode.whenComplete(() async {
                                   if(await isAValidPostcode) {
                                     final Object? result = await Navigator.pushNamed(
@@ -361,8 +359,8 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                         );
                                       });
                                       //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
-                                      LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
-                                      userProvider!.setUserLatLng(coordinates);
+                                      final LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
+                                      userProvider.setUserLatLng(coordinates);
 
                                     }
                                   }

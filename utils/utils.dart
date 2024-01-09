@@ -5,6 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
@@ -21,7 +22,6 @@ import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/noti_register_holder.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -31,14 +31,16 @@ import 'package:provider/provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../provider/transaction/transaction_header_provider.dart';
-import '../repository/transaction_header_repository.dart';
 import '../viewobject/common/language.dart';
-import '../viewobject/transaction_header.dart';
 
 class Utils {
   Utils._();
   static bool MoveToTransactionDetail = false;
+
+
+
+
+
   static String getString(BuildContext context, String key) {
     if (key != '') {
       return tr(key) ;
@@ -93,15 +95,24 @@ class Utils {
   }
 
   static bool isLightMode(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.light;
+    if(!kIsWeb)
+      return Theme.of(context).brightness == Brightness.light;
+    else
+      return false;
   }
 
   static Brightness getBrightnessForAppBar(BuildContext context) {
+    /*if (kIsWeb) {
+      return Brightness.light;
+    }
+    else
+      return Theme.of(context).brightness;*/
     if (Platform.isAndroid) {
       return Brightness.dark;
     } else {
       return Theme.of(context).brightness;
     }
+
   }
 
   static Future<bool> requestWritePermission() async {
@@ -142,17 +153,13 @@ class Utils {
       XFile xFile, int imageAize) async {
     final int imageWidth = imageAize;
 
-    // final ByteData byteData = await asset.getByteData(quality: 80);
-
     final  Uint8List byteData = await xFile.readAsBytes();
-
-    // final bool status = await Utils.requestWritePermission();
-
-    // if (status) {
+    Directory _appTempDirFolder = Directory(PsConfig.tmpImageFolderName);
+    if(!kIsWeb) {
       final Directory _appTempDir = await getTemporaryDirectory();
 
-      final Directory _appTempDirFolder =
-          Directory('${_appTempDir.path}/${PsConfig.tmpImageFolderName}');
+      _appTempDirFolder = Directory('${_appTempDir.path}/${PsConfig.tmpImageFolderName}');
+    }
 
       if (!_appTempDirFolder.existsSync()) {
         await _appTempDirFolder.create(recursive: true);
@@ -381,7 +388,7 @@ class Utils {
     return resource;
   }
 
-  static int isAppleSignInAvailable = 0;
+  static int isAppleSignInAvailable = 1;
   static Future<void> checkAppleSignInAvailable() async {
     final bool _isAvailable = await TheAppleSignIn.isAvailable();
 
@@ -439,7 +446,7 @@ class Utils {
       //   _fcm.requestNotificationPermissions(const IosNotificationSettings());
       // }
       // _fcm.subscribeToTopic('broadcast');
-      if (Platform.isIOS) {
+      if (defaultTargetPlatform == TargetPlatform.iOS ) {
         FirebaseMessaging.instance.requestPermission(
             alert: true,
             announcement: false,
@@ -449,7 +456,7 @@ class Utils {
             provisional: false,
             sound: true);
       }
-
+      if(!kIsWeb )
       FirebaseMessaging.instance.subscribeToTopic('broadcast');
     }
   }

@@ -1,6 +1,5 @@
 import 'package:flutterrestaurant/db/common/ps_dao.dart' show PsDao;
 import 'package:flutterrestaurant/viewobject/postal_address.dart';
-import 'package:flutterrestaurant/viewobject/shipping_area.dart';
 import 'package:sembast/sembast.dart';
 
 class PostalAddressDao extends PsDao<PostalAddress> {

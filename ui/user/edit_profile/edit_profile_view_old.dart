@@ -20,7 +20,6 @@ import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/profile_update_view_holder.dart';
-import 'package:flutterrestaurant/viewobject/shipping_area.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -172,7 +171,7 @@ class _EditProfileViewState extends State<EditProfileView>
                                 borderColor: userAddressController.text == '' ? PsColors.discountColor : PsColors.mainColor,
                                 isMandatory: true,
                                 onTap: () async {
-                                  final isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
+                                  final Future<bool> isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
                                   isAValidPostcode.whenComplete(() async {
                                     if(await isAValidPostcode) {
                                       final Object? result = await Navigator.pushNamed(
@@ -186,7 +185,7 @@ class _EditProfileViewState extends State<EditProfileView>
                                           userCountryController.text = selectedAddress.country!;
                                         });
                                         //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
-                                        LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
+                                        final LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
                                         userProvider!.setUserLatLng(coordinates);
 
                                       }

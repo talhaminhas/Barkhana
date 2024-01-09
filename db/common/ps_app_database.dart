@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -33,6 +34,7 @@ class PsAppDatabase {
     if (_dbOpenCompleter == null) {
       _dbOpenCompleter = Completer<Database>();
       // Calling _openDatabase will also complete the completer with database instance
+      if (!kIsWeb)
       _openDatabase();
     }
     // If the database is already opened, awaiting the future will happen instantly.

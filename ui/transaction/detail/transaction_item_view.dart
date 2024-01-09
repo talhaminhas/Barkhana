@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
@@ -77,11 +76,11 @@ class _ItemWidget extends StatelessWidget {
     }
     String formattedAddOnPrices = '';
     if(transaction.productAddonPrice! != '') {
-      List<String> priceList = transaction.productAddonPrice!.split('#');
-      List<String> formattedPrices = priceList.map((price) {
+      final List<String> priceList = transaction.productAddonPrice!.split('#');
+      final List<String> formattedPrices = priceList.map((String price) {
         print(price);
-        double priceValue = double.parse(price);
-        String formattedPrice = priceValue.toStringAsFixed(2);
+        final double priceValue = double.parse(price);
+        final String formattedPrice = priceValue.toStringAsFixed(2);
         return formattedPrice;
       }).toList();
       formattedAddOnPrices = formattedPrices.join('#');
@@ -116,7 +115,7 @@ class _ItemWidget extends StatelessWidget {
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: <Widget>[
                         Expanded(
                           child: Text(
                             transaction.productName ?? '-',
@@ -180,7 +179,7 @@ class _ItemWidget extends StatelessWidget {
             if(transaction.productAddonName! != '')
               _CustomizedAndAddOnTextWidget(
                 addOnNames: '${transaction.productAddonName!.replaceAll('#', ' :\n')} :',
-                addOnPrices: '£ ${formattedAddOnPrices!.replaceAll('#', '\n£ ')}',
+                addOnPrices: '£ ${formattedAddOnPrices.replaceAll('#', '\n£ ')}',
                 title:
                 '${Utils.getString(context, 'transaction_detail__add_on')} :',
               ),

@@ -4,7 +4,6 @@ import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/language/language_provider.dart';
 import 'package:flutterrestaurant/repository/language_repository.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_dropdown_base_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/language.dart';

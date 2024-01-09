@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
-import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/category/category_provider.dart';
 import 'package:flutterrestaurant/repository/category_repository.dart';
-import 'package:flutterrestaurant/ui/category/item/category_vertical_list_item.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/category_parameter_holder.dart';
-import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_list_intent_holder.dart';
-import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';
-import 'package:flutterrestaurant/viewobject/holder/touch_count_parameter_holder.dart';
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
-import 'package:flutterrestaurant/ui/dashboard/home/home_dashboard_view.dart';
+
 import '../../../config/ps_colors.dart';
 import '../../../provider/shop_info/shop_info_provider.dart';
 import '../../../repository/shop_info_repository.dart';
-import '../../../viewobject/shop_info.dart';
 
 class CategoryListView extends StatefulWidget {
   /*const CategoryListView({

@@ -14,7 +14,6 @@ import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/privacy_policy_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:provider/provider.dart';
-import 'package:the_apple_sign_in/apple_sign_in_button.dart' as apple;
 
 import '../../../constant/ps_constants.dart';
 import '../../dashboard/core/drawer_view.dart';
@@ -119,7 +118,7 @@ class _LoginViewState extends State<LoginView> {
                 ),*/
                 /*const SizedBox(
                   height: PsDimens.space8,
-                ),
+                ),*/
                 if (showPhoneLogin)
                   _LoginWithPhoneWidget(
                     onPhoneSignInSelected: widget.onPhoneSignInSelected,
@@ -129,7 +128,7 @@ class _LoginViewState extends State<LoginView> {
                   _LoginWithFbWidget(
                       userProvider: provider,
                       onFbSignInSelected: widget.onFbSignInSelected),
-                if (showGoogleLogin)
+                if (showGoogleLogin && !Platform.isIOS)
                   _LoginWithGoogleWidget(
                       userProvider: provider,
                       onGoogleSignInSelected: widget.onGoogleSignInSelected),
@@ -137,7 +136,6 @@ class _LoginViewState extends State<LoginView> {
                   _LoginWithAppleIdWidget(
                       onAppleIdSignInSelected: widget.onGoogleSignInSelected),
                 _spacingWidget,
-                _spacingWidget,*/
                 _ForgotPasswordAndRegisterWidget(
                   provider: provider,
                   animationController: widget.animationController!,
@@ -309,7 +307,7 @@ class __CardWidgetState extends State<_TextFieldAndSignInButtonWidget> {
     return Column(
       children: <Widget>[
         Card(
-          elevation: 0.3,
+          //elevation: 0.3,
           margin: const EdgeInsets.only(
               left: PsDimens.space32, right: PsDimens.space32),
           child: Column(
@@ -468,8 +466,8 @@ class __LoginWithPhoneWidgetState extends State<_LoginWithPhoneWidget> {
         titleText: Utils.getString(context, 'login__phone_signin'),
         icon: Icons.phone,
         colorData: widget.provider.isCheckBoxSelect
-            ? PsColors.mainColor
-            : PsColors.mainColor,
+            ? PsColors.greenColor
+            : PsColors.greenColor,
         onPressed: () async {
           if (widget.provider.isCheckBoxSelect) {
             if (widget.onPhoneSignInSelected != null) {
@@ -540,6 +538,21 @@ class _LoginWithAppleIdWidget extends StatelessWidget {
     final UserProvider _userProvider =
         Provider.of<UserProvider>(context, listen: false);
     return Container(
+      margin: const EdgeInsets.only(
+          left: PsDimens.space32,
+          top: PsDimens.space8,
+          right: PsDimens.space32),
+      child: PSButtonWithIconWidget(
+        titleText: 'Sign in with apple',
+        icon: FontAwesome.apple,
+        colorData: PsColors.black,
+        onPressed: () async {
+          await _userProvider.loginWithAppleId(
+              context, onAppleIdSignInSelected);
+        },
+      ),
+    );
+    /*return Container(
         margin: const EdgeInsets.only(
             left: PsDimens.space32,
             top: PsDimens.space8,
@@ -554,7 +567,7 @@ class _LoginWithAppleIdWidget extends StatelessWidget {
                   context, onAppleIdSignInSelected);
             },
           ),
-        ));
+        ));*/
   }
 }
 

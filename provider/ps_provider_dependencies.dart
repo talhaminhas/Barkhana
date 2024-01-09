@@ -69,7 +69,6 @@ import '../db/schedule_header_dao.dart';
 import '../db/search_result_dao.dart';
 import '../repository/schedule_header_repository.dart';
 import '../repository/search_result_repository.dart';
-import '../ui/dashboard/core/drawer_view.dart';
 
 List<SingleChildWidget> providers = <SingleChildWidget>[
   ...independentProviders,

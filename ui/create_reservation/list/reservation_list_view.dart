@@ -16,7 +16,6 @@ import 'package:provider/single_child_widget.dart';
 import '../../../constant/ps_dimens.dart';
 import '../../../utils/utils.dart';
 import '../../../viewobject/common/ps_value_holder.dart';
-import '../../common/ps_admob_banner_widget.dart';
 
 class ReservationListView extends StatefulWidget {
   const ReservationListView(

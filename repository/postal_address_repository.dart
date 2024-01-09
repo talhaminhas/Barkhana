@@ -2,12 +2,8 @@ import 'dart:async';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/api/ps_api_service.dart';
-import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/db/postal_address_dao.dart';
-import 'package:flutterrestaurant/db/shipping_area_dao.dart';
 import 'package:flutterrestaurant/viewobject/postal_address.dart';
-import 'package:flutterrestaurant/viewobject/shipping_area.dart';
-import 'package:sembast/sembast.dart';
 
 import '../viewobject/address.dart';
 import 'Common/ps_repository.dart';

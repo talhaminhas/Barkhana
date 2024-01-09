@@ -11,7 +11,6 @@ import 'package:flutterrestaurant/repository/basket_repository.dart';
 import 'package:flutterrestaurant/repository/shop_info_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/confirm_dialog_view.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
@@ -150,7 +149,6 @@ class _BasketListViewState extends State<BasketListView>
                                         PsConst.REQUEST_CODE__DASHBOARD_BASKET_FRAGMENT
                                     }
                                 )*/
-                                    ;
                                 dashboardViewKey.currentState?.selectedProductDetailHolder = holder;
                                 dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
                                     Utils.getString(context, 'product_detail__title'),
@@ -320,7 +318,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.center,
             end: Alignment.topCenter,
-            colors: [
+            colors: <Color>[
 
               PsColors.backgroundColor.withOpacity(0.7),
               PsColors.backgroundColor.withOpacity(0.7),
@@ -378,7 +376,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                   child:Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
+                    children: <Widget>[
                       Text(
                         '${Utils.getString(context, 'checkout__price')} '
                             '$currencySymbol ${Utils.getPriceFormat(totalPrice.toString(),psValueHolder)}',
@@ -546,6 +544,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
             ),
             const SizedBox(height: PsDimens.space8),
           ],
-        ))));
+        )
+            )));
   }
 }

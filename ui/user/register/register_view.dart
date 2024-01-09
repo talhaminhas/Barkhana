@@ -370,11 +370,11 @@ class __TextFieldWidgetState extends State<_TextFieldWidget> {
           _dividerWidget,
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [
+            children: <Widget>[
               Text(Utils.getString(context, 'register__show__password')),
               Checkbox(
                 value: _showPassword,
-                onChanged: (value) {
+                onChanged: (bool? value) {
                   setState(() {
                     _showPassword = value ?? false;
                   });

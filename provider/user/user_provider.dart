@@ -6,10 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
-import 'package:flutterrestaurant/api/ps_api_service.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/main.dart';
@@ -594,7 +593,7 @@ late  StreamController<PsResource<User>> userListStream;
               appleId: user.uid,
               userName: user.displayName!,
               userEmail: email!,
-              profilePhotoUrl: user.photoURL!,
+              profilePhotoUrl: user.photoURL != null ? user.photoURL! : '',
               deviceToken: psValueHolder.deviceToken!,
               isDeliveryBoy: PsConst.ZERO);
 
@@ -777,9 +776,10 @@ late  StreamController<PsResource<User>> userListStream;
   }
 
   Future<fb_auth.User?> _getFirebaseUserWithGoogleId() async {
+
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      //for not select any google acc
+
       if (googleUser == null) {
         return null;
       }
@@ -796,8 +796,9 @@ late  StreamController<PsResource<User>> userListStream;
           (await _firebaseAuth.signInWithCredential(credential)).user;
       print('signed in' + user!.displayName!);
       return user;
-    } on Exception {
-      print('not select google account');
+    } catch (e) {
+      // Handle the exception here
+      print('Error: $e');
       return null;
     }
   }
@@ -853,6 +854,7 @@ late  StreamController<PsResource<User>> userListStream;
     /// Check User is Accept Terms and Conditions
     ///
     if (isCheckBoxSelect) {
+
       ///
       /// Check Connection
       ///
@@ -862,8 +864,8 @@ late  StreamController<PsResource<User>> userListStream;
         ///
         final FacebookLoginUserHolder? facebookLoginUserHolder =
             await _getFirebaseUserWithFacebookId(context);
-
         if (facebookLoginUserHolder != null ) {
+
           ///
           /// Got Firebase User
           ///
@@ -946,7 +948,7 @@ late  StreamController<PsResource<User>> userListStream;
 
   Future<FacebookLoginUserHolder?> _getFirebaseUserWithFacebookId(
       BuildContext context) async {
-    /*final LoginResult result = await FacebookAuth.instance.login();
+    final LoginResult result = await FacebookAuth.instance.login();
     final String token = result.accessToken!.token;
     // Get User Info Based on the Access Token
     final dynamic graphResponse = await http.get(Uri.parse(
@@ -974,9 +976,9 @@ late  StreamController<PsResource<User>> userListStream;
 
         return null;
       }
-    } else {*/
+    } else {
       return null;
-    //}
+    }
   }
 
   Future<PsResource<User>?> _submitLoginWithFacebookId(

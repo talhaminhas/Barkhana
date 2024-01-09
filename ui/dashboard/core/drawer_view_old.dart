@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+//import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/services.dart';
 //import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
-import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
@@ -28,10 +24,8 @@ import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/repository/shop_info_repository.dart';
 import 'package:flutterrestaurant/repository/user_repository.dart';
 import 'package:flutterrestaurant/ui/basket/list/basket_list_view.dart';
-import 'package:flutterrestaurant/ui/category/list/category_list_view.dart';
 import 'package:flutterrestaurant/ui/collection/header_list/collection_header_list_view.dart';
 import 'package:flutterrestaurant/ui/common/dialog/confirm_dialog_view.dart';
-import 'package:flutterrestaurant/ui/common/dialog/share_app_dialog.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/contact/contact_us_view.dart';
 import 'package:flutterrestaurant/ui/create_reservation/entry/create_reservation_view.dart';
@@ -46,7 +40,6 @@ import 'package:flutterrestaurant/ui/search/home_item_search_view.dart';
 import 'package:flutterrestaurant/ui/search_item/search_item_list_view.dart';
 import 'package:flutterrestaurant/ui/setting/setting_view.dart';
 import 'package:flutterrestaurant/ui/subcategory/list/sub_category_grid_view.dart';
-import 'package:flutterrestaurant/ui/subcategory/list/sub_category_list_view.dart';
 import 'package:flutterrestaurant/ui/transaction/detail/transaction_item_list_view.dart';
 import 'package:flutterrestaurant/ui/transaction/list/transaction_list_view.dart';
 import 'package:flutterrestaurant/ui/user/forgot_password/forgot_password_view.dart';
@@ -58,6 +51,7 @@ import 'package:flutterrestaurant/ui/user/register/register_view.dart';
 import 'package:flutterrestaurant/ui/user/verify/verify_email_view.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/basket.dart';
+import 'package:flutterrestaurant/viewobject/category.dart' as restaurant;
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_detail_intent_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/product_parameter_holder.dart';
@@ -65,13 +59,10 @@ import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:flutterrestaurant/viewobject/category.dart' as restaurant;
-import '../../../api/api_token_refresher.dart';
+
 import '../../../provider/basket/basket_provider.dart';
 import '../../../provider/product/product_provider.dart';
-import '../../../provider/transaction/transaction_header_provider.dart';
 import '../../../viewobject/transaction_header.dart';
-import '../../app_loading/app_loading_view.dart';
 import '../../gallery/grid/gallery_grid_view.dart';
 import '../../product/detail/product_detail_view.dart';
 import '../../product/list_with_filter/product_list_with_filter_container.dart';
@@ -136,7 +127,7 @@ class _HomeViewState extends State<DashboardView>
   Future<void> initDynamicLinks(BuildContext context) async {
     Future<dynamic>.delayed(const Duration(seconds: 3));
     String itemId = '';
-    if (!isResumed) {
+    /*if (!isResumed) {
       final PendingDynamicLinkData? data =
           await FirebaseDynamicLinks.instance.getInitialLink();
 
@@ -161,7 +152,7 @@ class _HomeViewState extends State<DashboardView>
       }
     }
 
-    FirebaseDynamicLinks.instance.onLink;
+    FirebaseDynamicLinks.instance.onLink;*/
 
     // FirebaseDynamicLinks.instance.onLink(
     //     onSuccess: (PendingDynamicLinkData? dynamicLink) async {
@@ -348,7 +339,7 @@ class _HomeViewState extends State<DashboardView>
      }
      //print(dashboardViewKey.currentState);
      if(controllersStack.last[title] != index)
-       controllersStack.add({title: index});
+       controllersStack.add(<String, int>{title: index});
      print('Navigator Stack: $controllersStack');
      //print(controllers);
      setState(() {
@@ -357,7 +348,7 @@ class _HomeViewState extends State<DashboardView>
      });
    });
  }
- List<Map<String, int>> controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];// to keep track of controller before basket page.
+ List<Map<String, int>> controllersStack = <Map<String, int>>[<String, int>{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];// to keep track of controller before basket page.
  restaurant.Category? selectedCategory;
  //List<Widget> controllers = [];
  ProductParameterHolder? selectedProductParameterHolder;
@@ -960,7 +951,7 @@ class _HomeViewState extends State<DashboardView>
                   )
                   return GestureDetector(
                       onTap: () {
-                        controllersStack.add({appBarTitle:_currentIndex});
+                        controllersStack.add(<String, int>{appBarTitle:_currentIndex});
                         updateSelectedIndexWithAnimation(Utils.getString(
                             context,
                             Utils.getString(context, 'home__bottom_app_bar_basket_list')),
@@ -979,7 +970,7 @@ class _HomeViewState extends State<DashboardView>
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
+                                    children: <Widget>[
                                       FittedBox(
                                           child:
                                           Container(
@@ -1106,7 +1097,7 @@ class _HomeViewState extends State<DashboardView>
                         );
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: PsColors.discountColor.withAlpha(29),
+                          backgroundColor: PsColors.discountColor.withAlpha(29),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(PsDimens.space8), // Set the border radius for rounded corners
                           ),
@@ -1184,7 +1175,7 @@ class _HomeViewState extends State<DashboardView>
                   onTap: (int index) {
                     final dynamic _returnValue =
                         getIndexFromBottomNavigationIndex(index);
-                      controllersStack = [{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];
+                      controllersStack = <Map<String, int>>[<String, int>{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];
                     updateSelectedIndexWithAnimation(
                         _returnValue[0], _returnValue[1]);
                   },

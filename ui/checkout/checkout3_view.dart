@@ -1,14 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_braintree/flutter_braintree.dart';
+//import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:flutterrestaurant/repository/token_repository.dart';
-import 'package:flutterrestaurant/viewobject/holder/global_transaction_status.dart';
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-//import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'dart:convert';
-import 'dart:io';
+import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf/shelf_io.dart' as io;
+import 'package:webview_flutter/webview_flutter.dart';
+
 import '../../api/common/ps_resource.dart';
 import '../../api/common/ps_status.dart';
 import '../../api/ps_url.dart';
@@ -33,10 +35,6 @@ import '../../viewobject/holder/intent_holder/schedule_checkout_intent_holder.da
 import '../../viewobject/schedule_header.dart';
 import '../../viewobject/transaction_header.dart';
 import '../common/dialog/error_dialog.dart';
-import '../common/ps_textfield_widget.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import 'package:shelf/shelf.dart' as shelf;
-import 'package:shelf/shelf_io.dart' as io;
 
 class Checkout3View extends StatefulWidget {
   const Checkout3View(
@@ -147,9 +145,9 @@ class _Checkout3ViewState extends State<Checkout3View> {
       // Remove the "hppResponse=" prefix from the string
       hppResponse = hppResponse.replaceFirst('hppResponse=', '');
       tokenPostRequest.jsonResponse = '{' + hppResponse + '}';
-      final Map<String, dynamic>? jsonResponse = await widget.tokenRepository!.getGlobalTransactionStatus(tokenPostRequest, context);
-      print('''payment response from server${jsonResponse!['status']},${jsonResponse!['error']}''');
-      if(jsonResponse!['status'] == true)//payment successfully
+      final Map<String, dynamic>? jsonResponse = await widget.tokenRepository.getGlobalTransactionStatus(tokenPostRequest, context);
+      print('''payment response from server${jsonResponse!['status']},${jsonResponse['error']}''');
+      if(jsonResponse['status'] == true)//payment successfully
           {
         callCardNow(widget.basketProvider!, widget.userProvider!, widget.transactionSubmitProvider!);
       }
@@ -188,13 +186,13 @@ class _Checkout3ViewState extends State<Checkout3View> {
       TransactionHeaderProvider transactionHeaderProvider)
   {
     Navigator.pushNamed(context, RoutePaths.globalWebview,
-        arguments:{
+        arguments:<String, Object>{
           'token': token,
           'onHppResponse': (String hppResponse) async {
             globalTokenPost.jsonResponse = '{' + hppResponse + '}';
             final Map<String, dynamic>? jsonResponse = await tokenRepository.getGlobalTransactionStatus(globalTokenPost, context);
-            print('''payment response from server${jsonResponse!['status']},${jsonResponse!['error']}''');
-            if(jsonResponse!['status'] == true)//payment successfully
+            print('''payment response from server${jsonResponse!['status']},${jsonResponse['error']}''');
+            if(jsonResponse['status'] == true)//payment successfully
               {
                 callCardNow(basketProvider, userProvider, transactionHeaderProvider);
             }
@@ -927,7 +925,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
     //         basketProvider.checkoutCalculationHelper.totalPriceFormattedString,
     //     enableGooglePay: true);
     // print('${Utils.getString(context, 'checkout__payment_response')} $data');
-    final BraintreeDropInRequest request = BraintreeDropInRequest(
+    /*final BraintreeDropInRequest request = BraintreeDropInRequest(
       clientToken: clientNonce,
       collectDeviceData: true,
       googlePaymentRequest: BraintreeGooglePaymentRequest(
@@ -940,9 +938,9 @@ class _Checkout3ViewState extends State<Checkout3View> {
         amount: basketProvider.checkoutCalculationHelper.totalPrice.toString(),
         displayName: userProvider.user.data!.userName,
       ),
-    );
+    );*/
     
-    final BraintreeDropInResult? result = await BraintreeDropIn.start(request);
+    /*final BraintreeDropInResult? result = await BraintreeDropIn.start(request);
     if (result != null) {
       print('Nonce: ${result.paymentMethodNonce.nonce}');
     } else {
@@ -999,13 +997,13 @@ class _Checkout3ViewState extends State<Checkout3View> {
 
           if (_apiStatus.status == PsStatus.SUCCESS) {
             print(_apiStatus.data);
-            /*await basketProvider.deleteWholeBasketList();
+            *//*await basketProvider.deleteWholeBasketList();
 
             // Navigator.pop(context, true);
             await Navigator.pushNamed(context, RoutePaths.checkoutSuccess,
                 arguments: CheckoutStatusIntentHolder(
                   transactionHeader: _apiStatus.data!,
-                ));*/
+                ));*//*
           } else {
             PsProgressDialog.dismissDialog();
 
@@ -1040,7 +1038,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
               message: Utils.getString(context, 'error_dialog__no_internet'),
             );
           });
-    }
+    }*/
   }
 
   @override
@@ -1066,7 +1064,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
             //return SingleChildScrollView(
               child:
             return Column(
-                children: [
+                children: <Widget>[
                   Expanded(
                       child:
                       WebView(
@@ -1078,16 +1076,16 @@ class _Checkout3ViewState extends State<Checkout3View> {
                         onPageFinished: (String url) async{
                           if (webController != null) {
                             tokenPostRequest = GlobalTokenPost(
-                              userEmail: userProvider?.user.data!.userEmail,
-                              userPhone: userProvider?.user.data!.userPhone,
-                              userAddress1: userProvider?.user.data!.address,
+                              userEmail: userProvider.user.data!.userEmail,
+                              userPhone: userProvider.user.data!.userPhone,
+                              userAddress1: userProvider.user.data!.address,
                               userAddress2: '',
-                              userCity: userProvider?.user.data!.userCity,
-                              userPostcode: userProvider?.user.data!.userPostcode,
-                              userTotal: basketProvider?.checkoutCalculationHelper.totalPrice.toString(),
+                              userCity: userProvider.user.data!.userCity,
+                              userPostcode: userProvider.user.data!.userPostcode,
+                              userTotal: basketProvider.checkoutCalculationHelper.totalPrice.toString(),
                               jsonResponse: '0',// zero means posting to get token, if it is assigned with a response then server will return transaction result
                             );
-                            token = await widget.tokenRepository?.postGlobalToken(tokenPostRequest,context);
+                            token = await widget.tokenRepository.postGlobalToken(tokenPostRequest,context);
                             if (token != null) {
                               print(token!);
                               webController!.runJavascript('''

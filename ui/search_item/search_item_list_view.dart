@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
@@ -11,7 +12,6 @@ import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/repository/search_history_repository.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
-import 'package:flutterrestaurant/ui/search/search_sub_category_view_all/search_sub_category_view_all.dart';
 import 'package:flutterrestaurant/ui/search_item/search_item_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
@@ -24,7 +24,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:dio/dio.dart';
+
 import '../../api/common/ps_status.dart';
 import '../../provider/basket/basket_provider.dart';
 import '../../provider/product/search_result_provider.dart';
@@ -36,8 +36,6 @@ import '../../viewobject/basket_selected_attribute.dart';
 import '../../viewobject/category.dart';
 import '../../viewobject/holder/intent_holder/product_list_intent_holder.dart';
 import '../../viewobject/sub_category.dart';
-import '../common/dialog/choose_attribute_dialog.dart';
-import '../common/dialog/warning_dialog_view.dart';
 import '../common/ps_frame_loading_widget.dart';
 import '../common/ps_search_textfield_widget.dart';
 import '../product/item/product_vertical_list_item.dart';
@@ -299,7 +297,7 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                             fadeAnimation: fadeAnimation,
                             animationController: animationController,
                             productList: itemList!,
-                            provider: searchResultProvider!,
+                            provider: searchResultProvider,
                             keyword: inputSearchController.text.trim(),
                           ),
                         ],
@@ -307,7 +305,7 @@ class _SearchHistoryListViewState extends State<SearchItemListView>
                     ),
                   );
                 } else {
-                  return PSProgressIndicator(searchResultProvider!.searchResult.status);
+                  return PSProgressIndicator(searchResultProvider.searchResult.status);
                 }
               }
               )
@@ -664,13 +662,13 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                   return Shimmer.fromColors(
                       baseColor: PsColors.grey,
                       highlightColor: PsColors.white,
-                      child: Row(children: const <Widget>[
+                      child: const Row(children: <Widget>[
                         PsFrameUIForLoading(),
                       ]));
                 } else {
                   final Product product =
                       widget.provider.searchResult.data!.products![index];
-                  Basket? basketPrd = basketProvider!.basketList.data!.firstWhere((item) => item.id == product.id, orElse: () => Basket());
+                  final Basket? basketPrd = basketProvider.basketList.data!.firstWhere((Basket item) => item.id == product.id, orElse: () => Basket());
                   return Container(
                     margin: const EdgeInsets.all(PsDimens.space4),
                       child:AnimatedBuilder(
@@ -765,9 +763,9 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
                           '${product.id}$colorId${basketSelectedAddOn.getSelectedaddOnIdByHeaderId()}${basketSelectedAttribute.getSelectedAttributeIdByHeaderId()}';
                           basket = Basket(
                               id: id,
-                              productId: product!.id,
+                              productId: product.id,
                               qty: productQuantity,
-                              shopId: psValueHolder!.shopId,
+                              shopId: psValueHolder.shopId,
                               basketPrice: product.unitPrice,
                               basketOriginalPrice: totalOriginalPrice == 0.0
                                   ? product.originalPrice
@@ -784,11 +782,11 @@ class _CustomItemResultListViewState extends State<CustomItemResultListView>
 
                           if(productQuantity == '0')
                           {
-                            basketProvider!.deleteBasketByProduct(
-                                basket!);
+                            basketProvider.deleteBasketByProduct(
+                                basket);
                           }
                           else
-                            await basketProvider!.updateBasket(basket!);
+                            await basketProvider.updateBasket(basket);
 
                           //reloadGrid();
                         },

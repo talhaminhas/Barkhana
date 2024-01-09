@@ -29,8 +29,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-import '../../api/api_token_refresher.dart';
-import '../../api/ps_api_service.dart';
 import '../../main.dart';
 import '../../viewobject/common/language.dart';
 
@@ -366,6 +364,7 @@ class AppLoadingView extends StatelessWidget {
     clearAllDataRepository = Provider.of<ClearAllDataRepository>(context);
     languageRepository = Provider.of<LanguageRepository>(context);
     valueHolder = Provider.of<PsValueHolder?>(context);
+
 
     if (valueHolder == null) {
       return Container();

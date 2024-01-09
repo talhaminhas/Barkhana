@@ -6,13 +6,10 @@ import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/ui/dashboard/core/drawer_view.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/api_token.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constant/route_paths.dart';
 import '../db/common/ps_shared_preferences.dart';
 import '../provider/app_info/app_info_provider.dart';
-import '../ui/common/dialog/error_dialog.dart';
 import '../ui/common/ps_toast.dart';
 import 'common/ps_resource.dart';
 
@@ -41,21 +38,24 @@ class ApiTokenRefresher  extends WidgetsBindingObserver{
     ApiToken? responseToken;
     if (PsSharedPreferences.instance.getApiToken() == null)
       {
+
         responseToken = await getApiToken(PsConst.API_GUEST_EMAIL, PsConst.API_GUEST_PASSWORD);
       }
     else {
+
       responseToken = await _refreshApiToken();
     }
 
     if(responseToken != null) {
       //print(responseToken.expired);
       //print(responseToken.expiry);
-      if (responseToken?.expired == 'true' && Utils.isUserLoggedIn(context!)) {
+      if (responseToken.expired == 'true' && Utils.isUserLoggedIn(context!)) {
           callLogout(
               provider!,
               PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT,
               context!);
       }
+
       PsSharedPreferences.instance.replaceApiToken(responseToken.token!);
       isExpired = false;
       _resetTimer(const Duration(minutes: PsConst.API_TOKEN_UPDATE_DURATION));
@@ -63,6 +63,7 @@ class ApiTokenRefresher  extends WidgetsBindingObserver{
       //print('api token new: ${PsSharedPreferences.instance.getApiToken()}');
     }
     else{
+
       print('failed to update retrying');
       _resetTimer(const Duration(seconds: PsConst.API_TOKEN_RETRY_DURATION));
     }
@@ -75,13 +76,13 @@ class ApiTokenRefresher  extends WidgetsBindingObserver{
     await appInfoProvider.replaceLoginUserName('');
     await FirebaseAuth.instance.signOut();
     if(dashboardViewKey.currentState != null) {
-      Navigator.of(context).popUntil((route) =>
+      Navigator.of(context).popUntil((Route route) =>
       route.settings.name == RoutePaths.home);
       dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(
           Utils.getString(context, 'home__drawer_menu_menu'),
           PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT);
     }
-    PsToast().showToast(Utils.getString(context!, 'user_logged__out'));
+    PsToast().showToast(Utils.getString(context, 'user_logged__out'));
   }
 
   Future<dynamic> getApiToken(String email, String password) async {
@@ -95,9 +96,11 @@ class ApiTokenRefresher  extends WidgetsBindingObserver{
           .getApiToken(jsonMap);
       return apiTokenResource.data;
     }
+
     PsToast().showToast(Utils.getString(context!, 'error_dialog__no_internet'));
     return null;
   }
+
   Future<dynamic> _refreshApiToken() async {
     if (await Utils.checkInternetConnectivity()) {
       final Map<String, dynamic> jsonMap = <String, dynamic>{};

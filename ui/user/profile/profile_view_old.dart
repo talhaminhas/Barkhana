@@ -232,17 +232,17 @@ class __ProfileDetailWidgetState extends State<_ProfileDetailWidget> {
                     child: Column(
                       children: <Widget>[
                         _ImageAndTextWidget(userProvider: provider),
-                        if(provider!.user.data!.userPostcode != '')
+                        if(provider.user.data!.userPostcode != '')
                         _dividerWidget,
                         Container(
                           alignment: Alignment.center,
                             margin: const EdgeInsets.all(PsDimens.space10),
-                            child: provider!.user.data!.userPostcode != '' ?
+                            child: provider.user.data!.userPostcode != '' ?
                             Text(
-                              '${provider!.user.data!.address!}, '
-                                  '${provider!.user.data!.userCity!}, '
-                                  '${provider!.user.data!.userCountry!}, '
-                                  '(${provider!.user.data!.userPostcode!.trim()}).',
+                              '${provider.user.data!.address!}, '
+                                  '${provider.user.data!.userCity!}, '
+                                  '${provider.user.data!.userCountry!}, '
+                                  '(${provider.user.data!.userPostcode!.trim()}).',
                               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                                 /*color: PsColors.textPrimaryLightColor,*/
                               ),
@@ -314,13 +314,12 @@ class _JoinDateWidget extends StatelessWidget {
 }
 
 class _FavAndSettingWidget extends StatelessWidget {
-  const _FavAndSettingWidget({
-    @required this.userProvider,
+  _FavAndSettingWidget({
     required this.callLogoutCallBack,
     });
 
-  final UserProvider? userProvider;
-  final Function callLogoutCallBack;
+  UserProvider? userProvider;
+  Function callLogoutCallBack;
   @override
   Widget build(BuildContext context) {
     const Widget _sizedBoxWidget = SizedBox(

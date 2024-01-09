@@ -85,7 +85,7 @@ class NewDialog extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.center,
-                colors: [
+                colors: <Color>[
                   PsColors.mainColor.withOpacity(0.9),
                   PsColors.backgroundColor.withOpacity(0.6),
                 ],

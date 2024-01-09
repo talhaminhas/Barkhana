@@ -6,7 +6,6 @@ import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/provider/subcategory/sub_category_provider.dart';
 import 'package:flutterrestaurant/repository/sub_category_repository.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/subcategory/item/sub_category_vertical_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
@@ -108,7 +107,7 @@ class _SubCategoryListViewState extends State<SubCategoryListView>
                                     return Shimmer.fromColors(
                                         baseColor: PsColors.grey,
                                         highlightColor: PsColors.white,
-                                        child: Column(children: const <Widget>[
+                                        child: const Column(children: <Widget>[
                                           FrameUIForLoading(),
                                           FrameUIForLoading(),
                                           FrameUIForLoading(),

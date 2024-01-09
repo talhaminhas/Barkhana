@@ -3,12 +3,9 @@ import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/provider/common/ps_provider.dart';
 import 'package:flutterrestaurant/repository/postal_address_repository.dart';
-import 'package:flutterrestaurant/repository/shipping_area_repository.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/api_status.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:flutterrestaurant/viewobject/postal_address.dart';
-import 'package:flutterrestaurant/viewobject/shipping_area.dart';
 
 import '../../viewobject/address.dart';
 

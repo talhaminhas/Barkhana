@@ -9,9 +9,6 @@ import 'package:flutterrestaurant/repository/basket_repository.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:provider/provider.dart';
 
-import '../../../provider/shop_info/shop_info_provider.dart';
-import '../../../repository/shop_info_repository.dart';
-import '../../../viewobject/common/ps_value_holder.dart';
 import 'category_list_view.dart';
 
 class CategoryListViewContainerView extends StatefulWidget {

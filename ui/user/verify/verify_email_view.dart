@@ -80,8 +80,8 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                         onProfileSelected: widget.onProfileSelected,
                         userId: widget.userId,
                       ),
-                      Column(
-                        children: const <Widget>[
+                      const Column(
+                        children: <Widget>[
                           SizedBox(
                             height: PsDimens.space16,
                           ),

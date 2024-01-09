@@ -107,7 +107,7 @@ class _CategoryFilterListViewState extends State<CategoryFilterListView>
                         return Shimmer.fromColors(
                             baseColor: PsColors.grey,
                             highlightColor: PsColors.white,
-                            child: Column(children: const <Widget>[
+                            child: const Column(children: <Widget>[
                               PsFrameUIForLoading(),
                               PsFrameUIForLoading(),
                               PsFrameUIForLoading(),

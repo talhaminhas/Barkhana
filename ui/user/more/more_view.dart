@@ -7,7 +7,6 @@ import 'package:flutterrestaurant/provider/user/user_provider.dart';
 import 'package:flutterrestaurant/repository/user_repository.dart';
 import 'package:flutterrestaurant/ui/common/dialog/confirm_dialog_view.dart';
 import 'package:flutterrestaurant/ui/common/dialog/error_dialog.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/api_status.dart';

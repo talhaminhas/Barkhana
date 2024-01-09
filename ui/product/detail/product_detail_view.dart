@@ -50,9 +50,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../dashboard/core/drawer_view.dart';
-import 'views/description_tile_view.dart';
-import 'views/detail_info_tile_view.dart';
-import 'views/terms_and_policy_tile_view.dart';
 
 class ProductDetailView extends StatefulWidget {
   const ProductDetailView(
@@ -128,7 +125,7 @@ class _ProductDetailState extends State<ProductDetailView>
   @override
   void dispose() {
     controller!.dispose();
-    _scrollController!.dispose();
+    _scrollController.dispose();
     periodicTimer?.cancel();
     super.dispose();
   }
@@ -1481,7 +1478,7 @@ class __HeaderBoxWidgetState extends State<_HeaderBoxWidget> {
                       height: PsDimens.space12,
                     ),*/
                     Row(
-                      children: [
+                      children: <Widget>[
                         Expanded(
                             child: Text(
                               widget.productDetail.productDetail.data!
@@ -1867,7 +1864,7 @@ class __HeaderRatingWidgetState extends State<_HeaderRatingWidget> {
               ],
             ),
           ),
-          Expanded(
+          /*Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.max,
@@ -1910,7 +1907,7 @@ class __HeaderRatingWidgetState extends State<_HeaderRatingWidget> {
                 ),
               ],
             ),
-          ),
+          ),*/
         ],
       );
     } else {

@@ -12,7 +12,6 @@ import 'package:flutterrestaurant/repository/product_repository.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_multi_provider.dart';
 import 'package:flutterrestaurant/ui/common/dialog/choose_attribute_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/product/item/product_vertical_list_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';

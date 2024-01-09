@@ -1,8 +1,6 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
-import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/provider/basket/basket_provider.dart';
 import 'package:flutterrestaurant/repository/basket_repository.dart';
@@ -101,24 +99,56 @@ class _ImageAndTextWidget extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    flex: 4, // Adjust the flex value as needed to control the width ratio
+                    flex: 4,
                     child: Padding(
-                      padding: const EdgeInsets.all(PsDimens.space8),
-                      child: AspectRatio(
-                          aspectRatio: 1/1, // Adjust the aspect ratio as needed
-                          child: Container(
-                            height: double.infinity,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(PsDimens.space8),
-                              child: PsNetworkImage(
-                                //height: double.infinity,
-                                photoKey: '',
-                                defaultPhoto: basket.product!.defaultPhoto!,
-                                boxfit: BoxFit.cover,
+                        padding: const EdgeInsets.all(PsDimens.space8),
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              height: double.infinity,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(PsDimens.space8),
+                                child: PsNetworkImage(
+                                  //height: double.infinity,
+                                  photoKey: '',
+                                  defaultPhoto: basket.product!.defaultPhoto!,
+                                  boxfit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                          )
-                      ),
+                            if(basket.product!.isDiscount == '1')
+                            Positioned(
+                              top: 10,
+                              left: 0,
+                              child:Container(
+                                decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    /*border: Border.all(
+                                            color: PsColors.white, // Adjust the border color
+                                            width: 2.0, // Adjust the border width
+                                          ),*/
+                                    borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.elliptical(50, 50),
+                                      topRight: Radius.elliptical(50, 50),
+                                    )
+                                ),
+                                padding: const EdgeInsets.only(
+                                  right: PsDimens.space10,
+                                  left: PsDimens.space6,
+                                  top: PsDimens.space6,
+                                  bottom: PsDimens.space6,
+                                ),
+                                child: const Text(
+                                  'Discounted',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      // child:
                     ),
                   ),
                   Expanded(
@@ -134,27 +164,72 @@ class _ImageAndTextWidget extends StatelessWidget {
                                     fit: BoxFit.scaleDown,
                                     alignment: Alignment.topLeft,*/
                             child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start, // Align children to the top
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
                                   Text(
-                                    basket.product!.name!,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context).textTheme.headlineSmall,
-                                    maxLines: 2,
+                                      basket.product!.name!,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.headlineSmall,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  const Divider(
+                                    height: PsDimens.space10,
                                   ),
                                   //_AttributeAndColorWidget(basket: basket),
                                   _AddOnWidget(basket: basket, psValueHolder: psValueHolder,),
-                                  const SizedBox(
+                                  /*const SizedBox(
                                     height: PsDimens.space6,
+                                  ),*/
+                                  if(basket.product!.discountAmount! != '0')
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        '${Utils.getString(context, 'Discount:')} ',
+                                        style: Theme.of(context).textTheme.titleMedium,
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        ' ${basket.product!.currencySymbol} '
+                                            '${Utils.getPriceFormat(basket.product!.discountAmount!, psValueHolder)}',
+                                        style: Theme.of(context).textTheme.titleMedium,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    '${Utils.getString(context, 'basket_list__price')}  ${basket.product!.currencySymbol} ${Utils.getPriceFormat(basket.basketPrice!, psValueHolder)}',
-                                    style: Theme.of(context).textTheme.titleMedium,
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        '${Utils.getString(context, 'basket_list__price')} ',
+                                        style: Theme.of(context).textTheme.titleMedium,
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                            ' ${basket.product!.currencySymbol} ${Utils.getPriceFormat(basket.basketPrice!, psValueHolder)}',
+                                        style: Theme.of(context).textTheme.titleMedium,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    '${Utils.getString(context, 'basket_list__sub_total')} ${basket.product!.currencySymbol} ${Utils.getPriceFormat(subTotalPrice.toString(), psValueHolder)}',
-                                    style: Theme.of(context).textTheme.titleLarge,
+
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        '${Utils.getString(context, 'basket_list__sub_total')}',
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                              color: PsColors.discountColor
+                                          ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                            ' ${basket.product!.currencySymbol} ${Utils.getPriceFormat(subTotalPrice.toString(), psValueHolder)}',
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          color: PsColors.discountColor
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Divider(
+                                    height: PsDimens.space10,
                                   ),
                                 ]),
                             //)
@@ -167,7 +242,7 @@ class _ImageAndTextWidget extends StatelessWidget {
                             height: PsDimens.space52,
                             child:
                             Row(
-                              children: [
+                              children: <Widget>[
                                 _IconAndTextWidget(
                                   basket: basket,
                                   basketProvider: basketProvider,
@@ -489,10 +564,17 @@ class _AddOnWidget extends StatelessWidget {
     return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
   }
 
-  String getSelectedAddOn() {
+  String getAddOnNames() {
     final List<String> addOnName = <String>[];
     for (BasketSelectedAddOn addOn in basket.basketSelectedAddOnList!) {
-      addOnName.add(addOn.name! + ': ${basket.product!.currencySymbol} ${Utils.getPriceFormat(addOn.price.toString(), psValueHolder)}');
+      addOnName.add(addOn.name! + ': ');
+    }
+    return addOnName.join('\n').toString();
+  }
+  String getAddOnPrices() {
+    final List<String> addOnName = <String>[];
+    for (BasketSelectedAddOn addOn in basket.basketSelectedAddOnList!) {
+      addOnName.add('${basket.product!.currencySymbol} ${Utils.getPriceFormat(addOn.price.toString(), psValueHolder)}');
     }
     return addOnName.join('\n').toString();
   }
@@ -502,8 +584,7 @@ class _AddOnWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        if (basket.basketSelectedAttributeList!.isNotEmpty &&
-            basket.selectedColorValue != null)
+        if (basket.basketSelectedAttributeList!.isNotEmpty )
           Text(
             '${Utils.getString(context, 'basket_list__attributes')}',
             style: Theme.of(context).textTheme.bodyMedium,
@@ -511,7 +592,7 @@ class _AddOnWidget extends StatelessWidget {
           )
         else
           Container(),
-        if (basket.selectedColorValue != null)
+        /*if (basket.selectedColorValue != null)
           Container(
             margin: const EdgeInsets.all(PsDimens.space10),
             width: PsDimens.space20,
@@ -523,15 +604,33 @@ class _AddOnWidget extends StatelessWidget {
             ),
           )
         else
-          Container(),
+          Container(),*/
         if (basket.basketSelectedAddOnList!.isNotEmpty)
-          /*Flexible(
-            child: */Text(
-              '${getSelectedAddOn().toString()}',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.left,
-            )
-          //)
+          Expanded(
+              child: Column(
+                children: <Widget>[
+
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        '${getAddOnNames().toString()}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.left,
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${getAddOnPrices().toString()}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.left,
+                      )
+                    ],
+                  ),
+                  const Divider(
+                    height: PsDimens.space10,
+                  ),
+                ],
+              )
+          )
         else
           Container(),
       ],

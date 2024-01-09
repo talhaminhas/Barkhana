@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
-import 'package:flutterrestaurant/utils/utils.dart';
 
 class PSButtonWidget extends StatefulWidget {
   const PSButtonWidget(
@@ -50,12 +49,13 @@ class _PSButtonWidgetState extends State<PSButtonWidget> {
       width: MediaQuery.of(context).size.width,
       height: 40,
       decoration: ShapeDecoration(
-        shape: widget.hasShape ? const BeveledRectangleBorder(
+        shape: /*widget.hasShape ? const BeveledRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(7.0)),
-        ): RoundedRectangleBorder(
+        ): */RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7.0),
         ),
-        color: _gradient == null ? _color : null,
+        color: PsColors.mainColor,
+        /*_gradient == null ? _color : null,
         gradient: _gradient,
         shadows: <BoxShadow>[
           if (widget.hasShadow)
@@ -66,7 +66,7 @@ class _PSButtonWidgetState extends State<PSButtonWidget> {
                 offset: const Offset(0, 4),
                 blurRadius: 8.0,
                 spreadRadius: 3.0),
-        ],
+        ],*/
       ),
       child: Material(
         color: PsColors.transparent,
@@ -163,32 +163,40 @@ class _PSButtonWithIconWidgetState extends State<PSButtonWithIconWidget> {
         ],*/
       ),
       child: Material(
-        color: PsColors.transparent,
+        color: _color,
         type: MaterialType.card,
         clipBehavior: Clip.antiAlias,
-        shape: const BeveledRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(PsDimens.space8))),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // You can adjust the radius as needed
+        ),
         child: InkWell(
           onTap: widget.onPressed as void Function()?,
           highlightColor: PsColors.mainDarkColor,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: widget.iconAlignment,
+          child: Stack(
             children: <Widget>[
-              if (widget.icon != null) Icon(widget.icon, color: PsColors.white),
               if (widget.icon != null)
-                const SizedBox(
-                  width: PsDimens.space8,
+                Positioned(
+                  left: 5, bottom: 8, top: 8,
+                    child: Container(
+                  margin: const EdgeInsets.only(left: 8),
+                  child: Icon(widget.icon, color: PsColors.white),
+                )),
+              Positioned.fill(
+                child: Center(
+                  child: Text(
+                    widget.titleText.toUpperCase(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .labelLarge!
+                        .copyWith(color: PsColors.white),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              Text(
-                widget.titleText.toUpperCase(),
-                style: Theme.of(context)
-                    .textTheme
-                    .labelLarge!
-                    .copyWith(color: PsColors.white),
               ),
             ],
           ),
+
+
         ),
       ),
     );

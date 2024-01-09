@@ -20,7 +20,6 @@ import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/profile_update_view_holder.dart';
-import 'package:flutterrestaurant/viewobject/shipping_area.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -135,153 +134,119 @@ class _EditProfileViewState extends State<EditProfileView>
                   bindDataFirstTime = false;
                 }
 
-                return SingleChildScrollView(
-                  child: Container(
-                    color: PsColors.backgroundColor,
-                    padding: const EdgeInsets.only(
-                        left: PsDimens.space8, right: PsDimens.space8),
-                    child: Column(
-                      children: <Widget>[
-                        _ImageWidget(userProvider: userProvider!),
-                        _UserFirstCardWidget(
-                          userNameController: userNameController,
-                          emailController: emailController,
-                          phoneController: phoneController,
-                          aboutMeController: aboutMeController,
-                        ),
-                        Container(
-                          margin: const EdgeInsets.all(PsDimens.space12),
-                          child:  Divider(
-                            thickness: 1,
-                            height: 1,
-                            color: PsColors.mainColor,
+                return Stack(
+                    children: <Widget>[
+                      SingleChildScrollView(
+                        child: Container(
+                          color: PsColors.backgroundColor,
+                          padding: const EdgeInsets.only(
+                              left: PsDimens.space8, right: PsDimens.space8),
+                          child: Column(
+                            children: <Widget>[
+                              _ImageWidget(userProvider: userProvider!),
+                              _UserFirstCardWidget(
+                                userNameController: userNameController,
+                                emailController: emailController,
+                                phoneController: phoneController,
+                                aboutMeController: aboutMeController,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.all(PsDimens.space12),
+                                child:  Divider(
+                                  thickness: 1,
+                                  height: 1,
+                                  color: PsColors.mainColor,
+                                ),
+                              ),
+                              PsTextFieldWidget(
+                                titleText: Utils.getString(context, 'edit_profile__postcode'),
+                                textAboutMe: false,
+                                hintText: Utils.getString(context, 'edit_profile__postcode'),
+                                textEditingController: userPostcodeController,
+                                onChanged: resetAddress,
+                                isMandatory: true,
+                              ),
+
+                              PsDropdownBaseWithControllerWidget(
+                                  title: Utils.getString(context, 'edit_profile__address'),
+                                  textEditingController: userAddressController,
+                                  borderColor: userAddressController.text == '' ? PsColors.discountColor : PsColors.mainColor,
+                                  isMandatory: true,
+                                  onTap: () async {
+                                    final Future<bool> isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
+                                    isAValidPostcode.whenComplete(() async {
+                                      if(await isAValidPostcode) {
+                                        final Object? result = await Navigator.pushNamed(
+                                            context, RoutePaths.postalAddressList,
+                                            arguments: userPostcodeController.text);
+                                        if (result != null) {
+                                          final Address selectedAddress = result as Address;
+                                          setState(() {
+                                            userAddressController.text = selectedAddress.line_1!;
+                                            userCityController.text = selectedAddress.townOrCity!;
+                                            userCountryController.text = selectedAddress.country!;
+                                          });
+                                          //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
+                                          final LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
+                                          userProvider!.setUserLatLng(coordinates);
+
+                                        }
+                                      }
+                                      else{
+                                        Fluttertoast.showToast(
+                                            msg:
+                                            Utils.getString(context, 'checkout1_view__please_enter_postcode'),
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.CENTER,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: PsColors.black,
+                                            textColor: PsColors.white);
+                                      }
+                                    });
+
+                                  }),
+                              PsTextFieldWidget(
+                                  titleText: Utils.getString(context, 'edit_profile__city'),
+                                  textAboutMe: false,
+                                  hintText: Utils.getString(context, 'edit_profile__city'),
+                                  textEditingController: userCityController,
+                                  //onChanged: checkFields,
+                                  isReadonly: true,
+                                  isMandatory: true),
+                              PsTextFieldWidget(
+                                  titleText: Utils.getString(context, 'edit_profile__country'),
+                                  textAboutMe: false,
+                                  hintText: Utils.getString(context, 'edit_profile__country'),
+                                  textEditingController: userCountryController,
+                                  isReadonly: true,
+                                  onChanged: checkFields,
+                                  isMandatory: true),
+                              const SizedBox(
+                                height: 120,
+                              )
+                            ],
                           ),
                         ),
-                        PsTextFieldWidget(
-                          titleText: Utils.getString(context, 'edit_profile__postcode'),
-                          textAboutMe: false,
-                          hintText: Utils.getString(context, 'edit_profile__postcode'),
-                          textEditingController: userPostcodeController,
-                          onChanged: resetAddress,
-                          isMandatory: true,
-                        ),
-
-                        PsDropdownBaseWithControllerWidget(
-                            title: Utils.getString(context, 'edit_profile__address'),
-                            textEditingController: userAddressController,
-                            borderColor: userAddressController.text == '' ? PsColors.discountColor : PsColors.mainColor,
-                            isMandatory: true,
-                            onTap: () async {
-                              final isAValidPostcode = PsApiService.getPostcodeStatus(userPostcodeController.text);
-                              isAValidPostcode.whenComplete(() async {
-                                if(await isAValidPostcode) {
-                                  final Object? result = await Navigator.pushNamed(
-                                      context, RoutePaths.postalAddressList,
-                                      arguments: userPostcodeController.text);
-                                  if (result != null) {
-                                    final Address selectedAddress = result as Address;
-                                    setState(() {
-                                      userAddressController.text = selectedAddress.line_1!;
-                                      userCityController.text = selectedAddress.townOrCity!;
-                                      userCountryController.text = selectedAddress.country!;
-                                    });
-                                    //print(selectedAddress.latitude! +' ' + selectedAddress.longitude!);
-                                    LatLng coordinates = LatLng(double.parse(selectedAddress.latitude!), double.parse(selectedAddress.longitude!));
-                                    userProvider!.setUserLatLng(coordinates);
-
-                                  }
-                                }
-                                else{
-                                  Fluttertoast.showToast(
-                                      msg:
-                                      Utils.getString(context, 'checkout1_view__please_enter_postcode'),
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: PsColors.black,
-                                      textColor: PsColors.white);
-                                }
-                              });
-
-                            }),
-                        PsTextFieldWidget(
-                            titleText: Utils.getString(context, 'edit_profile__city'),
-                            textAboutMe: false,
-                            hintText: Utils.getString(context, 'edit_profile__city'),
-                            textEditingController: userCityController,
-                            //onChanged: checkFields,
-                            isReadonly: true,
-                            isMandatory: true),
-                        PsTextFieldWidget(
-                            titleText: Utils.getString(context, 'edit_profile__country'),
-                            textAboutMe: false,
-                            hintText: Utils.getString(context, 'edit_profile__country'),
-                            textEditingController: userCountryController,
-                            isReadonly: true,
-                            onChanged: checkFields,
-                            isMandatory: true),
-
-
-                        /*PsTextFieldWidget(
-                          titleText:
-                              Utils.getString(context, 'edit_profile__address'),
-                          textAboutMe: false,
-                          hintText:
-                              Utils.getString(context, 'edit_profile__address'),
-                          textEditingController: userAddressController,
-                        ),
-                        PsTextFieldWidget(
-                          titleText:
-                          Utils.getString(context, 'City'),
-                          textAboutMe: false,
-                          hintText:
-                          Utils.getString(context, 'City'),
-                          textEditingController: userCityController,
-                        ),
-                        PsTextFieldWidget(
-                          titleText:
-                          Utils.getString(context, 'Country'),
-                          textAboutMe: false,
-                          hintText:
-                          Utils.getString(context, 'Country'),
-                          textEditingController: userCountryController,
-                        ),*/
-                        /*PsDropdownBaseWithControllerWidget(
-                            title: Utils.getString(context, 'checkout1__area'),
-                            textEditingController: shippingAreaController,
-                            onTap: () async {
-                              final dynamic result = await Navigator.pushNamed(
-                                  context, RoutePaths.areaList);
-
-                              if (result != null && result is ShippingArea) {
-                                setState(() {
-                                  shippingAreaController.text = result.areaName!;
-                                  userProvider!.selectedArea = result;
-                                });
-                              }
-                            }),
-                        const SizedBox(
-                          height: PsDimens.space8,
-                        ),*/
-                        _TwoButtonWidget(
-                          userProvider: userProvider!,
-                          userNameController: userNameController,
-                          emailController: emailController,
-                          phoneController: phoneController,
-                          aboutMeController: aboutMeController,
-                          userAddressController: userAddressController,
-                          shippingAreaController: shippingAreaController,
-                          userCityController: userCityController,
-                          userCountryController: userCountryController,
-                          userPostcodeController: userPostcodeController,
-                        ),
-                        const SizedBox(
-                          height: PsDimens.space20,
-                        )
-                      ],
-                    ),
-                  ),
-                );
+                      ),
+                      Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child:
+                          _TwoButtonWidget(
+                            userProvider: userProvider!,
+                            userNameController: userNameController,
+                            emailController: emailController,
+                            phoneController: phoneController,
+                            aboutMeController: aboutMeController,
+                            userAddressController: userAddressController,
+                            shippingAreaController: shippingAreaController,
+                            userCityController: userCityController,
+                            userCountryController: userCountryController,
+                            userPostcodeController: userPostcodeController,
+                          )
+                      ),
+                    ]);
               } else {
                 return Stack(
                   children: <Widget>[
@@ -401,7 +366,6 @@ class _TwoButtonWidget extends StatelessWidget {
                         });
                   } else {
                     PsProgressDialog.dismissDialog();
-
                     showDialog<dynamic>(
                         context: context,
                         barrierColor: Colors.transparent,
@@ -411,7 +375,8 @@ class _TwoButtonWidget extends StatelessWidget {
                           );
                         });
                   }
-                } else {
+                }
+                else {
                   showDialog<dynamic>(
                       context: context,
                       barrierColor: Colors.transparent,

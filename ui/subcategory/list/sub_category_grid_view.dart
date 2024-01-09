@@ -6,16 +6,13 @@ import 'package:flutterrestaurant/api/common/ps_status.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
-import 'package:flutterrestaurant/constant/route_paths.dart';
 import 'package:flutterrestaurant/provider/subcategory/sub_category_provider.dart';
 import 'package:flutterrestaurant/repository/sub_category_repository.dart';
-import 'package:flutterrestaurant/ui/common/ps_admob_banner_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
 import 'package:flutterrestaurant/ui/subcategory/item/sub_cateagory_grid_item.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/category.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
-import 'package:flutterrestaurant/viewobject/holder/intent_holder/product_list_intent_holder.dart';
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -144,7 +141,7 @@ class _ModelGridViewState extends State<SubCategoryGridView>
                                           baseColor: PsColors.grey,
                                           highlightColor: PsColors.white,
                                           child:
-                                              Column(children: const <Widget>[
+                                              const Column(children: <Widget>[
                                             FrameUIForLoading(),
                                             FrameUIForLoading(),
                                             FrameUIForLoading(),

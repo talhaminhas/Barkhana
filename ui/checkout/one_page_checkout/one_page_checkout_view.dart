@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_braintree/flutter_braintree.dart';
+//import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:flutterrestaurant/viewobject/holder/profile_update_view_holder.dart';
 import 'package:flutterwave_standard/flutterwave.dart';
 import 'package:intl/intl.dart';
@@ -295,7 +295,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
           psValueHolder: valueHolder,
           shippingPriceStringFormatting: userProvider!.user.data!.area!.price!);
     }
-    final BraintreeDropInRequest request = BraintreeDropInRequest(
+    /*final BraintreeDropInRequest request = BraintreeDropInRequest(
       clientToken: tokenResource.data!.message,
       collectDeviceData: true,
       googlePaymentRequest: BraintreeGooglePaymentRequest(
@@ -311,16 +311,16 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
             : basketProvider!.checkoutCalculationHelper.totalPrice.toString(),
         displayName: userProvider!.user.data!.userName,
       ),
-    );
+    );*/
 
-    final BraintreeDropInResult? result = await BraintreeDropIn.start(request);
-    if (result != null) {
+    /*final BraintreeDropInResult? result = await BraintreeDropIn.start(request);*/
+    /*if (result != null) {
       print('Nonce: ${result.paymentMethodNonce.nonce}');
     } else {
       print('Selection was canceled.');
-    }
+    }*/
 
-    if (await Utils.checkInternetConnectivity()) {
+    /*if (await Utils.checkInternetConnectivity()) {
       if (result?.paymentMethodNonce.nonce != null) {
         await PsProgressDialog.showDialog(context);
 
@@ -416,7 +416,7 @@ class _OnePageCheckoutViewState extends State<OnePageCheckoutView> {
               message: Utils.getString(context, 'error_dialog__no_internet'),
             );
           });
-    }
+    }*/
   }
 
   dynamic payCashOnDeliveryScheduleOrder() async {

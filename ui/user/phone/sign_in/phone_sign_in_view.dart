@@ -78,7 +78,9 @@ class _PhoneSignInViewState extends State<PhoneSignInView>
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          _HeaderIconAndTextWidget(),
+                          const SizedBox(
+                            height: PsDimens.space32,
+                          ),
                           _CardWidget(
                             nameController: nameController,
                             phoneController: phoneController,
@@ -237,10 +239,10 @@ class _CardWidget extends StatelessWidget {
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: '+959123456789',
+                      hintText: 'Phone Number',
                       hintStyle: Theme.of(context)
                           .textTheme
-                          .labelLarge!
+                          .bodyMedium!
                           .copyWith(color: PsColors.textPrimaryLightColor),
                       icon: Icon(Icons.phone,
                           color: Theme.of(context).iconTheme.color)),
@@ -289,7 +291,7 @@ class __SendButtonWidgetState extends State<_SendButtonWidget> {
     };
     final PhoneCodeSent? smsCodeSent = (String verId, [int? forceCodeResend]) {
       verificationId = verId;
-      print('code has been send');
+      print('code has been sent');
       PsProgressDialog.dismissDialog();
 
       if (widget.phoneSignInSelected != null) {
@@ -321,7 +323,7 @@ class __SendButtonWidgetState extends State<_SendButtonWidget> {
           });
     };
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: widget.phoneController.text,
+        phoneNumber: '+44${widget.phoneController.text.substring(1)}',
         codeAutoRetrievalTimeout: autoRetrieve,
         codeSent: smsCodeSent!,
         timeout: const Duration(minutes: 2),
@@ -332,6 +334,10 @@ class __SendButtonWidgetState extends State<_SendButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
+    bool validatePhoneNumber(String phoneNumber ){
+      final RegExp phoneRegExp = RegExp(r'^[0-9]{11}$');
+      return phoneRegExp.hasMatch(phoneNumber);
+    }
     return Container(
       margin: const EdgeInsets.only(
           left: PsDimens.space32, right: PsDimens.space32),
@@ -346,7 +352,9 @@ class __SendButtonWidgetState extends State<_SendButtonWidget> {
           } else if (widget.phoneController.text.isEmpty) {
             callWarningDialog(context,
                 Utils.getString(context, 'warning_dialog__input_phone'));
-          } else {
+          } else if( !validatePhoneNumber(widget.phoneController.text))
+            callWarningDialog(context,'Invalid Phone Number!');
+          else {
             await PsProgressDialog.showDialog(context);
             await verifyPhone();
           }

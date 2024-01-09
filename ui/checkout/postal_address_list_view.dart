@@ -7,10 +7,10 @@ import 'package:flutterrestaurant/ui/checkout/postal_address_list_item.dart';
 import 'package:flutterrestaurant/ui/common/base/ps_widget_with_appbar.dart';
 import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
+import 'package:flutterrestaurant/viewobject/address.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../api/common/ps_status.dart';
 import '../../api/ps_api_service.dart';
 import '../../config/ps_colors.dart';
 import '../../viewobject/postal_address.dart';
@@ -79,7 +79,7 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
 
     repo1 = Provider.of<PostalAddressRepository>(context);
     psValueHolder = Provider.of<PsValueHolder>(context);
-    PostalAddress postalAddress = PostalAddress(postcode: '',latitude: '',longitude: '',shopId: '',addresses: []);
+    PostalAddress postalAddress = PostalAddress(postcode: '',latitude: '',longitude: '',shopId: '',addresses: <Address>[]);
     print(
         '............................Build UI Again ............................');
 
@@ -122,7 +122,7 @@ class _PostalAddressListViewState extends State<PostalAddressListView>
                           return Shimmer.fromColors(
                               baseColor: PsColors.grey,
                               highlightColor: PsColors.white,
-                              child: Column(children: const <Widget>[
+                              child: const Column(children: <Widget>[
                                 PsFrameUIForLoading(),
                                 PsFrameUIForLoading(),
                                 PsFrameUIForLoading(),
