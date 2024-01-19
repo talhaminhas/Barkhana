@@ -27,16 +27,14 @@ class PsConfig {
   ///
   static const String ps_core_url =
   //'https://5ccc-81-150-185-121.ngrok-free.app/Barkhana';
-  //'http://81.108.145.98:88/Barkhana';
-  'http://192.168.1.172:8080/Barkhana';
+  'http://81.150.185.121:88/Barkhana';
+  //'http://192.168.1.172:8080/Barkhana';
   static const String ps_app_url = ps_core_url + '/index.php/';
 
   static const String ps_app_image_url = ps_core_url + '/uploads/';
-
   static const String ps_app_image_thumbs_url = ps_core_url + '/uploads/';
 
    static const String GOOGLE_PLAY_STORE_URL = 'https://play.google.com/store/apps';
-
    static const String APPLE_APP_STORE_URL = 'https://www.apple.com/app-store';
 
   ///

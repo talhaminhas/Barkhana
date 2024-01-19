@@ -25,8 +25,7 @@ class RegisterView extends StatefulWidget {
   _RegisterViewState createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView>
-    with SingleTickerProviderStateMixin {
+class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
   AnimationController? animationController;
 
   UserRepository? repo1;

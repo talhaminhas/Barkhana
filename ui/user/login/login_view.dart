@@ -369,7 +369,7 @@ class __CardWidgetState extends State<_TextFieldAndSignInButtonWidget> {
           ),
         ),
         const SizedBox(
-          height: PsDimens.space20,
+          height: PsDimens.space8,
         ),
         Container(
           margin: const EdgeInsets.only(

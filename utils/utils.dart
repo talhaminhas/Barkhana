@@ -48,6 +48,7 @@ class Utils {
       return '';
     }
   }
+
   static bool? checkEmailFormat(String ?email) {
     bool? emailFormat;
     if (email != '') {

@@ -107,6 +107,7 @@ abstract class PsApi {
 
       await PSApp.apiTokenRefresher.updateToken();
     }
+    print(jsonMap);
     print('post url: ${PsConfig.ps_app_url}$url');
     final Client client = http.Client();
     try {
