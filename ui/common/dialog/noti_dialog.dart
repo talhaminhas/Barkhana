@@ -88,9 +88,11 @@ class NewDialog extends StatelessWidget {
                                         .copyWith(color: PsColors.white)),
                               ],
                             )),
+
                         const SizedBox(
                           height: PsDimens.space20,
                         ),
+
                         Container(
                           padding: const EdgeInsets.only(
                               left: PsDimens.space16,
