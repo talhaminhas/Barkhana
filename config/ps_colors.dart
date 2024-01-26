@@ -99,6 +99,7 @@ class PsColors {
   static const Color _c_apple_login_color = Color(0xFF111111);
   static const Color _c_discount_color = Color(0xFFFF4D4D);
 
+
   static const Color _c_rating_color = Colors.yellow;
 
   static const Color ps_ctheme__color_about_us = Colors.cyan;

@@ -261,7 +261,7 @@ late  StreamSubscription<PsResource<List<TransactionHeader>>> subscription;
       contactName: user.userName!,
       contactPhone: user.userPhone!,
       contactEmail: user.userEmail!,
-      contactAddress: user.address!,
+      contactAddress: user.address! +', '+ user.userPostcode!,
       contactAreaId: user.area!.id!,
       transLat: user.userLat!,
       transLng: user.userLng!,

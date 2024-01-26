@@ -182,7 +182,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
                 _categoryProvider ??= CategoryProvider(
                     repo: repo1!,
                     psValueHolder: valueHolder,
-                    limit: int.parse(valueHolder!.categoryLoadingLimit!));
+                    limit: int.parse(valueHolder!.categoryLoadingLimit ?? '5'));
                 _categoryProvider!.loadCategoryList(/*categoryIconList.toMap()*/);
                 return _categoryProvider!;
               }),
