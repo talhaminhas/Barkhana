@@ -54,7 +54,7 @@ class _PSButtonWidgetState extends State<PSButtonWidget> {
         ): */RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(7.0),
         ),
-        color: PsColors.mainColor,
+        color: _color,
         /*_gradient == null ? _color : null,
         gradient: _gradient,
         shadows: <BoxShadow>[

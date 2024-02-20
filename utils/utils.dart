@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
@@ -18,6 +19,7 @@ import 'package:flutterrestaurant/db/common/ps_shared_preferences.dart';
 import 'package:flutterrestaurant/provider/common/notification_provider.dart';
 import 'package:flutterrestaurant/ui/common/dialog/chat_noti_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/noti_dialog.dart';
+import 'package:flutterrestaurant/ui/transaction/detail/transaction_item_list_view.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/holder/noti_register_holder.dart';
@@ -31,6 +33,7 @@ import 'package:provider/provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../ui/transaction/list/transaction_list_view.dart';
 import '../viewobject/common/language.dart';
 
 class Utils {
@@ -87,13 +90,14 @@ class Utils {
   }
 
   static String getPriceTwoDecimal(String? price) {
-    if(price != null){
-      return PsConst.priceTwoDecimalFormat.format(double.parse(price));
-    }else{
+    if (price != null) {
+      final double parsedPrice = double.tryParse(price) ?? 0.0;
+      return PsConst.priceTwoDecimalFormat.format(parsedPrice);
+    } else {
       return '';
     }
-    
   }
+
 
   static bool isLightMode(BuildContext context) {
     if(!kIsWeb)
@@ -226,7 +230,8 @@ class Utils {
 
   static String getDateFormat(String dateTime, PsValueHolder psValueHolder) {
     final DateTime date = DateTime.parse(dateTime);
-    return DateFormat(psValueHolder.dateFormat).format(date);
+    final String formattedDate = DateFormat("dd-MM-yyyy hh:mm a").format(date);
+    return formattedDate;
   }
 
   static Future<bool> checkInternetConnectivity() async {
@@ -370,7 +375,6 @@ class Utils {
       PsResource<List<T>>? resource) {
     final Map<String, String> _keyMap = HashMap<String, String>();
     final List<T> _tmpDataList = <T>[];
-
     if (resource != null && resource.data != null) {
       for (T obj in resource.data!) {
         if (obj is PsObject) {
@@ -399,21 +403,32 @@ class Utils {
       BuildContext context, String payload) async {
     // ignore: unnecessary_null_comparison
     if (context != null) {
-      showDialog<dynamic>(
+      /*showDialog<dynamic>(
           context: context,
           barrierColor: PsColors.transparent,
           builder: (_) {
             return ChatNotiDialog(
                 description: '$payload',
-                /*leftButtonText: Utils.getString(context, 'chat_noti__cancel'),*/
+                *//*leftButtonText: Utils.getString(context, 'chat_noti__cancel'),*//*
                 rightButtonText: Utils.getString(context, 'chat_noti__cancel'),
                 onAgreeTap: () {
-                  /*Navigator.popAndPushNamed(
+                  *//*Navigator.popAndPushNamed(
                     context,
                     RoutePaths.notiList,
-                  );*/
+                  );*//*
                 });
-          });
+          });*/
+      showToast('$payload',
+        context: context,
+        animation: StyledToastAnimation.slideFromTop,
+        reverseAnimation: StyledToastAnimation.slideFromTop,
+        position: const StyledToastPosition(align: Alignment.topCenter, offset: 50.0),
+        animDuration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 3),
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.elasticOut,
+        backgroundColor: PsColors.mainColor,
+      );
     }
   }
 
@@ -421,22 +436,50 @@ class Utils {
       BuildContext context, String payload) async {
     // ignore: unnecessary_null_comparison
     if (context != null) {
-      showDialog<dynamic>(
+     /* showDialog<dynamic>(
           context: context,
           barrierColor: PsColors.transparent,
           builder: (_) {
             return ChatNotiDialog(
                 description: '$payload',
-                /*leftButtonText: Utils.getString(context, 'chat_noti__cancel'),*/
+                *//*leftButtonText: Utils.getString(context, 'chat_noti__cancel'),*//*
                 rightButtonText: Utils.getString(context, 'chat_noti__cancel'),
                 onAgreeTap: () {
                   //Navigator.of(context).popUntil(ModalRoute.withName(RoutePaths.transactionList));
-                  /*Navigator.pushNamed(
+                  *//*Navigator.pushNamed(
                     context,
                     RoutePaths.transactionList,
-                  );*/
+                  );*//*
                 });
-          });
+          });*/
+      showToastWidget(
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(color: PsColors.mainColor),
+            borderRadius: BorderRadius.circular(5.0),
+            color: PsColors.mainColor, // Background color
+          ),
+          padding: const EdgeInsets.all(8.0),
+          margin: const EdgeInsets.all(15.0),
+          child: Text(
+            '$payload',
+            textAlign: TextAlign.left, // Text alignment
+            style: const TextStyle(
+              color: Colors.white,
+
+            ),
+          ),
+        ),
+        context: context,
+        animation: StyledToastAnimation.slideFromTop,
+        reverseAnimation: StyledToastAnimation.slideFromTop,
+        position: const StyledToastPosition(align: Alignment.topCenter, offset: 50.0),
+        animDuration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 4),
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.elasticOut,
+      );
     }
   }
 
@@ -480,6 +523,8 @@ class Utils {
 
     // On Open
     FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
+      orderListRefreshKey.currentState?.show();
+      orderDetailRefreshKey.currentState?.show();
       final Map<String, dynamic> message = event.data;
       print('onMessage: $message');
       print(event);

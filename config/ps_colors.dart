@@ -23,6 +23,7 @@ class PsColors {
   static Color mainDividerColor = _d_divider_color;
   static Color whiteColorWithBlack = Colors.black;
   static Color greenColor= Colors.green;
+  static Color disableBackground= const Color(0x00e3e8e5);
 
   ///
   /// Base Color

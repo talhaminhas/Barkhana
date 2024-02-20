@@ -179,7 +179,7 @@ class _ItemWidget extends StatelessWidget {
             if(transaction.productAddonName! != '')
               _CustomizedAndAddOnTextWidget(
                 addOnNames: '${transaction.productAddonName!.replaceAll('#', ' :\n')} :',
-                addOnPrices: '£ ${formattedAddOnPrices.replaceAll('#', '\n£ ')}',
+                addOnPrices: '+ £${formattedAddOnPrices.replaceAll('#', '\n£ ')}',
                 title:
                 '${Utils.getString(context, 'transaction_detail__add_on')} :',
               ),
@@ -194,7 +194,7 @@ class _ItemWidget extends StatelessWidget {
                 children: <Widget>[
                   _TransactionNoTextWidget(
                     transationInfoText:
-                    '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.discountAmount.toString(), valueHolder)}',
+                    '- ${transaction.currencySymbol}${Utils.getPriceFormat(transaction.discountAmount.toString(), valueHolder)}',
                     title: '${Utils.getString(context, 'transaction_detail__discount_avaiable_amount')} :',
                   ),
                   /*_TransactionNoTextWidget(
@@ -207,7 +207,7 @@ class _ItemWidget extends StatelessWidget {
 
             _TransactionNoTextWidget(
               transationInfoText:
-              '${transaction.currencySymbol}  ${Utils.getPriceFormat(transaction.originalPrice!,valueHolder)}',
+              '${transaction.currencySymbol}${Utils.getPriceFormat(transaction.originalPrice!,valueHolder)}',
               title:
               '${Utils.getString(context, 'transaction_detail__price')} :',
             ),
@@ -215,7 +215,7 @@ class _ItemWidget extends StatelessWidget {
             _dividerWidget,
             _TransactionNoTextWidget(
               transationInfoText:
-                  ' ${transaction.currencySymbol} ${Utils.getPriceFormat(balancePrice.toString(),valueHolder)}',
+                  ' ${transaction.currencySymbol}${Utils.getPriceFormat(balancePrice.toString(),valueHolder)}',
               title:
                   '${Utils.getString(context, 'transaction_detail__sub_total')} :',
             ),

@@ -57,6 +57,7 @@ class _LoginViewState extends State<LoginView> {
       height: PsDimens.space28,
     );
 
+
     repo1 = Provider.of<UserRepository>(context);
     psValueHolder = Provider.of<PsValueHolder>(context);
 
@@ -132,10 +133,10 @@ class _LoginViewState extends State<LoginView> {
                   _LoginWithGoogleWidget(
                       userProvider: provider,
                       onGoogleSignInSelected: widget.onGoogleSignInSelected),
-                if (Utils.isAppleSignInAvailable == 1 && Platform.isIOS)
+                /*if (Utils.isAppleSignInAvailable == 1 && Platform.isIOS)
                   _LoginWithAppleIdWidget(
                       onAppleIdSignInSelected: widget.onGoogleSignInSelected),
-                _spacingWidget,
+                _spacingWidget,*/
                 _ForgotPasswordAndRegisterWidget(
                   provider: provider,
                   animationController: widget.animationController!,
@@ -304,6 +305,8 @@ class __CardWidgetState extends State<_TextFieldAndSignInButtonWidget> {
         right: PsDimens.space16,
         top: PsDimens.space4,
         bottom: PsDimens.space4);
+    emailController.text = 'talhaminhas00@gmail.com';
+    passwordController.text = '61B811f6';
     return Column(
       children: <Widget>[
         Card(

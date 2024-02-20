@@ -81,7 +81,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
     if (!foundation.kIsWeb)
     if (Platform.isAndroid) {
       _rateMyApp.init().then((_) {
-        if (_rateMyApp.shouldOpenDialog) {
+        /*if (_rateMyApp.shouldOpenDialog) {
           _rateMyApp.showStarRateDialog(
             context,
             title: Utils.getString(context, 'home__menu_drawer_rate_this_app'),
@@ -148,7 +148,7 @@ class _HomeDashboardViewWidgetState extends State<HomeDashboardViewWidget> {
             ),
             starRatingOptions: const StarRatingOptions(),
           );
-        }
+        }*/
       });
     }
   }
@@ -726,6 +726,7 @@ class __HomeCategoryHorizontalListWidgetState
         }*/
 
         return Container(
+
             //animation: widget.animationController,
             child: HomeTabbarProductListView(categoryProvider: categoryProvider,
                 shopInfo: widget.shopInfoProvider!.shopInfo.data!,

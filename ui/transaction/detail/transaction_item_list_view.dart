@@ -24,6 +24,7 @@ import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../provider/basket/basket_provider.dart';
 import '../../../provider/product/product_provider.dart';
@@ -34,6 +35,8 @@ import '../../../viewobject/basket_selected_add_on.dart';
 import '../../../viewobject/holder/intent_holder/product_detail_intent_holder.dart';
 import '../../common/dialog/confirm_dialog_view.dart';
 import '../../dashboard/core/drawer_view.dart';
+GlobalKey<RefreshIndicatorState> orderDetailRefreshKey =
+GlobalKey<RefreshIndicatorState>();
 
 class TransactionItemListView extends StatefulWidget {
    TransactionItemListView({
@@ -63,6 +66,8 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
   //BasketSelectedAddOn basketSelectedAddOn = BasketSelectedAddOn();
   ProductDetailProvider? productDetailProvider;
   ProductRepository? productRepo;
+  TransactionHeaderProvider? transactionHeaderProvider;
+  TransactionHeaderRepository? transactionHeaderRepository;
 
   @override
   void dispose() {
@@ -110,6 +115,7 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
     valueHolder = Provider.of<PsValueHolder>(context, listen: false);
     basketRepository = Provider.of<BasketRepository>(context);
     productRepo = Provider.of<ProductRepository>(context);
+    transactionHeaderRepository = Provider.of<TransactionHeaderRepository>(context);
     final String loginUserId = Utils.checkUserLoginId(valueHolder!);
 
     return WillPopScope(
@@ -133,6 +139,7 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                       repo: repo1!, psValueHolder: valueHolder);
                   provider.loadTransactionDetailList(widget.transaction);
                   _transactionDetailProvider = provider;
+
                   return provider;
                 }),
             ChangeNotifierProvider<BasketProvider>(
@@ -149,32 +156,17 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                 if (provider.transactionDetailList.data != null &&
                     provider
                         .transactionDetailList.data!.isNotEmpty) {
-                  print(provider.transactionDetailList.data!.length);
                   widget.transaction.transStatus =
                       provider.transactionDetailList.data![0].transStatus;
-
+                  widget.transaction.updatedDate =
+                      provider.transactionDetailList.data![0].transHeader!.updatedDate!;
                 }
 
             return Scaffold(
               key: scaffoldKey,
-              /*appBar: AppBar(
-                systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarIconBrightness:
-                      Utils.getBrightnessForAppBar(context),
-                ),
-                iconTheme: Theme.of(context)
-                    .iconTheme
-                    .copyWith(color: PsColors.mainColor),
-                title: Text(
-                  Utils.getString(context, 'transaction_detail__title'),
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.bold, color: PsColors.mainColor),
-                ),
-                elevation: 0,
-              ),*/
               body: Stack(children: <Widget>[
                 RefreshIndicator(
+                  key: orderDetailRefreshKey,
                   child: CustomScrollView(
                       controller: _scrollController,
                       scrollDirection: Axis.vertical,
@@ -186,12 +178,151 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                               valueHolder: valueHolder!,
                               scaffoldKey: scaffoldKey),
                         ),
-                        if (widget.transaction.pickAtShop == PsConst.ONE)
-                          SliverToBoxAdapter(child: _SelfPickUpWidget())
-                        else
-                          SliverToBoxAdapter(
-                            child: Container(),
+                        if (widget.transaction.pickAtShop != PsConst.ONE &&
+                            provider.transactionDetailList.data!.isNotEmpty &&
+                            provider.transactionDetailList.data![0].deliveryBoy!.userId != ''
+                        )
+                        SliverToBoxAdapter( child:
+                        Container(
+                          padding: const EdgeInsets.only(
+                              top: PsDimens.space10,
+                              right: PsDimens.space10,
+                              left: PsDimens.space10,
+                              bottom: PsDimens.space4),
+                          margin: const EdgeInsets.only(
+                              top: PsDimens.space10,
+                              right: PsDimens.space16,
+                              left: PsDimens.space16,
+                              bottom: PsDimens.space4),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: PsColors.mainColor, // Border color
+                              width: 2.0,          // Border width
+                            ),
+                            borderRadius: BorderRadius.circular(10.0), // Rounded corners
                           ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Row(
+                                      children: <Widget>[
+                                        const SizedBox(
+                                          width: PsDimens.space8,
+                                        ),
+                                        Icon(
+                                          Icons.directions_bike_rounded,
+                                          color: Theme.of(context).iconTheme.color,
+                                        ),
+                                        const SizedBox(
+                                          width: PsDimens.space8,
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                  'Delivery Boy Details',
+                                                  textAlign: TextAlign.left,
+                                                  style: Theme.of(context).textTheme.titleMedium),
+                                              const SizedBox(
+                                                height: PsDimens.space4,
+                                              ),
+                                              Text(
+                                                  provider.transactionDetailList.data![0].deliveryBoy!.userName!,
+                                                textAlign: TextAlign.left,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(fontWeight: FontWeight.normal),
+                                              ),
+                                              const SizedBox(
+                                                height: PsDimens.space4,
+                                              ),
+                                              Text(
+                                                  provider.transactionDetailList.data![0].deliveryBoy!.userPhone!,
+                                                textAlign: TextAlign.left,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(fontWeight: FontWeight.normal),
+                                              ),
+                                            ],
+                                          )
+                                        ),
+                                        Container(
+                                            width: PsDimens.space60,
+                                            height: PsDimens.space60,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                              border: Border.all(width: 2.0, color: PsColors.mainColor),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(6.0),
+                                              child: PsNetworkCircleImage(
+                                                photoKey: '',
+                                                imagePath:
+                                                provider.transactionDetailList.data![0].deliveryBoy!.userProfilePhoto!,
+                                                boxfit: BoxFit.cover,
+                                                onTap: () {},
+                                              ),
+                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              const Divider(
+                                height: 1,
+                                thickness: 1,
+                              ),
+                              Padding (
+                                  padding: const EdgeInsets.only(
+                                      bottom: 5, top:5
+                                  ),
+                                  child:Container(
+                                    height: 45,
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: () async {
+                                        try {//
+                                          if (await canLaunch('tel://${provider.transactionDetailList.data![0].deliveryBoy!.userPhone!}')) {
+                                            await launch('tel://${provider.transactionDetailList.data![0].deliveryBoy!.userPhone!}');
+                                          } else {
+                                            throw 'Could not launch Phone Number';
+                                          }
+                                        } catch (e) {
+                                          print('Error: $e');
+                                          // Handle the error appropriately (e.g., show a message to the user)
+                                        }
+                                      },
+
+                                      style: ElevatedButton.styleFrom(
+                                        primary: PsColors.mainColor,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(8.0)), // Set your desired border radius
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Call Delivery Boy',
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                      //),
+                                    ),
+                                  )
+                              ),
+                            ],
+                          ),
+                        ),),
                         SliverToBoxAdapter(
                           child: _TransactionNoWidget(
                               transaction: widget.transaction,
@@ -283,6 +414,8 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                           )*/
                       ]),
                   onRefresh: () {
+                    setState(() {
+                    });
                     return provider.resetTransactionDetailList(widget.transaction);
                     //return widget.provider.resetTransactionList();
                   },
@@ -558,13 +691,7 @@ class _OrderStatusWidget extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: <Widget>[
-                    const SizedBox(
-                      width: PsDimens.space8,
-                    ),
-                    Icon(
-                      Icons.offline_pin,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
+
                     const SizedBox(
                       width: PsDimens.space8,
                     ),
@@ -574,6 +701,25 @@ class _OrderStatusWidget extends StatelessWidget {
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.titleMedium),
                     ),
+                    if(transaction.pickAtShop == '1')
+                      Text(
+                        'Self Pick Up',
+                        textAlign: TextAlign.right,
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: Colors.blue,
+                        ),
+                      )
+                    else
+                      Text(
+                        'Delivery',
+                        textAlign: TextAlign.right,
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: Colors.purple,
+                        ),
+                    ),
+                    const SizedBox(
+                      width: PsDimens.space8,
+                    ),
                   ],
                 ),
               ),
@@ -582,8 +728,46 @@ class _OrderStatusWidget extends StatelessWidget {
           ),
         ),
         _dividerWidget,
-        if (transaction.pickAtShop == PsConst.ZERO)
+        if (transaction.transStatus!.ordering == '0' || transaction.transStatus!.ordering == '5') 
           Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(PsDimens.space8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                        child: Row(
+                          children: <Widget>[
+                            const SizedBox(
+                              width: PsDimens.space8,
+                            ),
+                            Expanded(
+                              child: Text(
+                                  'Order Status :',
+                                  textAlign: TextAlign.left,
+                                  style: Theme.of(context).textTheme.titleMedium),
+                            ),
+                              Text(
+                                transaction.transStatus!.title!,
+                                textAlign: TextAlign.right,
+                                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  color: Utils.hexToColor(transaction.transStatus!.colorValue),
+                                ),
+                              ),
+                            const SizedBox(
+                              width: PsDimens.space8,
+                            ),
+                          ],
+                        ),
+                      ),
+                      //_contentCopyIconWidget,
+                    ],
+                  ),
+                ),
+                _dividerWidget,
+              ])
+        else Column(
             children: <Widget>[
               const SizedBox(
                 height: PsDimens.space12,
@@ -599,8 +783,6 @@ class _OrderStatusWidget extends StatelessWidget {
               ),*/
             ],
           )
-        else
-          Container()
       ],
     ));
   }
@@ -642,6 +824,8 @@ class _TransactionStatusListWidget extends StatelessWidget {
                 for (int index = 0; index < provider.transactionStatusList.data!.length; index++)
                   if (provider.transactionStatusList.data != null &&
                       provider.transactionStatusList.data!.isNotEmpty)
+                    if (!(provider.transactionStatusList.data![index].ordering == '4' &&
+                        transaction.pickAtShop == '1'))
                     _ColorCircleWidget(
                       psValueHolder: psValueHolder,
                       statusTitle: provider.transactionStatusList.data![index].title!,
@@ -722,7 +906,7 @@ class _ColorCircleWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           const SizedBox(
-            width: PsDimens.space8,
+            width: PsDimens.space10,
           ),
           Container(
             child: Row(
@@ -774,7 +958,7 @@ class _ColorCircleWidget extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 const SizedBox(
-                  width: PsDimens.space8,
+                  width: PsDimens.space10,
                 ),
                 Visibility(
                     visible: statusLength.toString() != statusOrdering,
@@ -886,21 +1070,21 @@ class _TransactionNoWidget extends StatelessWidget {
             ),
             _TransactionNoTextWidget(
               transationInfoText:
-                  '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.totalItemAmount!,valueHolder)}',
+                  '${transaction.currencySymbol}${Utils.getPriceFormat(transaction.totalItemAmount!,valueHolder)}',
               title:
                   '${Utils.getString(context, 'transaction_detail__total_item_price')} :',
             ),
             _TransactionNoTextWidget(
               transationInfoText: transaction.discountAmount == '0'
                   ? '-'
-                  : '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.discountAmount!,valueHolder)}',
+                  : '- ${transaction.currencySymbol}${Utils.getPriceFormat(transaction.discountAmount!,valueHolder)}',
               title:
                   '${Utils.getString(context, 'transaction_detail__discount')} :',
             ),
             _TransactionNoTextWidget(
               transationInfoText: transaction.cuponDiscountAmount == '0'
                   ? '-'
-                  : '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.cuponDiscountAmount!,valueHolder)}',
+                  : '- ${transaction.currencySymbol}${Utils.getPriceFormat(transaction.cuponDiscountAmount!,valueHolder)}',
               title:
                   '${Utils.getString(context, 'transaction_detail__coupon_discount')} :',
             ),
@@ -910,7 +1094,7 @@ class _TransactionNoWidget extends StatelessWidget {
             _dividerWidget,
             _TransactionNoTextWidget(
               transationInfoText:
-                  '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.subTotalAmount!,valueHolder)}',
+                  '${transaction.currencySymbol}${Utils.getPriceFormat(transaction.subTotalAmount!,valueHolder)}',
               title:
                   '${Utils.getString(context, 'transaction_detail__sub_total')} :',
             ),
@@ -922,7 +1106,7 @@ class _TransactionNoWidget extends StatelessWidget {
             ),*/
             _TransactionNoTextWidget(
               transationInfoText:
-                  '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.shippingAmount!,valueHolder)}',
+                  '+ ${transaction.currencySymbol}${Utils.getPriceFormat(transaction.shippingAmount!,valueHolder)}',
               title:
                   '${Utils.getString(context, 'checkout__delivery_cost')} :',
             ),
@@ -957,7 +1141,7 @@ class _TransactionNoWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${transaction.currencySymbol} ${Utils.getPriceFormat(transaction.balanceAmount!, valueHolder)}' ,
+                      '${transaction.currencySymbol}${Utils.getPriceFormat(transaction.balanceAmount!, valueHolder)}' ,
                       style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                           fontWeight: FontWeight.normal,
                           color: PsColors.discountColor

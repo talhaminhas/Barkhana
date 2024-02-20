@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterrestaurant/api/api_token_refresher.dart';
@@ -21,12 +21,18 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:theme_manager/theme_manager.dart';
+
 import 'config/ps_colors.dart';
 import 'config/ps_config.dart';
 import 'db/common/ps_shared_preferences.dart';
+import 'firebase_options.dart';
 
 
 Future<void> main() async {
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    if (kReleaseMode) exit(1);
+  };
   // add this, and it should be the first line in main method
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -38,14 +44,9 @@ Future<void> main() async {
     await prefs.setString('codeC', '');
     await prefs.setString('codeL', '');
   }
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //MobileAds.instance.initialize();
-
-  //FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-
   if (!kIsWeb)
   if (Platform.isIOS) {
     FirebaseMessaging.instance.requestPermission(
@@ -58,7 +59,6 @@ Future<void> main() async {
         sound: true
     );
   }
-
   /// Update the iOS foreground notification presentation options to allow
   /// heads up notifications.
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
@@ -91,15 +91,16 @@ Future<void> main() async {
         ?.createNotificationChannel(androidNotificationChannel);
   }
   _createNotificationChannel('Channel ID', 'name', 'description');*/
-  if(!kIsWeb) {
+ /* if(!kIsWeb) {
     final String? fcmToken = await FirebaseMessaging.instance.getToken();
     print('fcmToken: $fcmToken');
-  }
+  }*/
   //GoogleApiAvailability.makeGooglePlayServicesAvailable();
   //check is apple signin is available
   if(!kIsWeb)
     await Utils.checkAppleSignInAvailable();
   await EasyLocalization.ensureInitialized();
+
   runApp(
       EasyLocalization(
       path: 'assets/langs',
@@ -209,8 +210,17 @@ class _PSAppState extends State<PSApp> {
               loadBrightnessOnStart: true,
               themedWidgetBuilder: (BuildContext context, ThemeData theme) {
                 return MaterialApp(
+                  builder: (context, widget) {
+                    Widget error = const Text('...loading...');
+                    if (widget is Scaffold || widget is Navigator) {
+                      error = Scaffold(body: Center(child: error));
+                    }
+                    ErrorWidget.builder = (errorDetails) => error;
+                    if (widget != null) return widget;
+                    throw StateError('widget is null');
+                  },
                   debugShowCheckedModeBanner: false,
-                  title: 'Panacea-Soft',
+                  title: 'IT Retail-Software',
                   theme: theme,
                   themeMode: ThemeMode.system,
                   initialRoute: '/',

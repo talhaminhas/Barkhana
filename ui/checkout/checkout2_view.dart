@@ -210,10 +210,9 @@ class _Checkout2ViewState extends State<Checkout2View> {
       userProvider = Provider.of<UserProvider>(context,
           listen: false);// Listen : False is important.
       provider = Provider.of<DeliveryCostProvider>(context, listen: false); 
-
+      couponController.text = couponDiscountProvider!.couponCode;
       final BasketProvider basketProvider =
           Provider.of<BasketProvider>(context);
-
       return SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -228,7 +227,7 @@ class _Checkout2ViewState extends State<Checkout2View> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const SizedBox(
-                    height: PsDimens.space16,
+                    height: PsDimens.space10,
                   ),
                   Container(
                     margin: const EdgeInsets.only(
@@ -240,13 +239,10 @@ class _Checkout2ViewState extends State<Checkout2View> {
                     ),
                   ),
                   const SizedBox(
-                    height: PsDimens.space16,
+                    height: PsDimens.space10,
                   ),
                   const Divider(
                     height: 2,
-                  ),
-                  const SizedBox(
-                    height: PsDimens.space16,
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -257,22 +253,43 @@ class _Checkout2ViewState extends State<Checkout2View> {
                         hintText:
                             Utils.getString(context, 'checkout__coupon_code'),
                         textEditingController: couponController,
+                        isReadonly: couponDiscountProvider!.couponDiscount != '0.0',
                         showTitle: false,
                       )),
                       Container(
                         width: 80,
                         margin: const EdgeInsets.only(right: PsDimens.space8),
                         child: PSButtonWidget(
-                          titleText: Utils.getString(
-                              context, 'checkout__claim_button_name'),
+                          titleText: couponDiscountProvider!.couponDiscount == '0.0' ?
+                          Utils.getString(
+                              context, 'checkout__claim_button_name') :
+                          'Remove',
+                          colorData: couponDiscountProvider!.couponDiscount == '0.0' ?
+                              PsColors.mainColor : PsColors.discountColor
+                          ,
                           onPressed: () async {
                             if (couponController.text.isNotEmpty) {
+                              if(couponDiscountProvider!.couponDiscount != '0.0')
+                                {
+                                  setState(() {
+                                    couponDiscountProvider!.couponDiscount = '0.0';
+                                    couponDiscountProvider!.couponCode = '';
+                                  });
+                                  showDialog<dynamic>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return const SuccessDialog(
+                                          message: 'Coupon removed successfully.',
+                                        );
+                                      });
+                                  return;
+                                }
                               final CouponDiscountParameterHolder
                                   couponDiscountParameterHolder =
                                   CouponDiscountParameterHolder(
                                 couponCode: couponController.text,
                               );
-
+                              couponDiscountProvider!.couponCode = couponController.text;
                               final PsResource<CouponDiscount> _apiStatus =
                                   await couponDiscountProvider!
                                       .postCouponDiscount(
@@ -342,8 +359,7 @@ class _Checkout2ViewState extends State<Checkout2View> {
                                       );
                                     });
 
-                                couponController.clear();
-                                print(_apiStatus.data!.couponAmount);
+                                //couponController.clear();
                                 setState(() {
                                   couponDiscountProvider!.couponDiscount =
                                       _apiStatus.data!.couponAmount!;
@@ -353,7 +369,8 @@ class _Checkout2ViewState extends State<Checkout2View> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return ErrorDialog(
-                                        message: _apiStatus.message,
+                                        message: _apiStatus.message != '' ? _apiStatus.message
+                                        : 'Please Enter A Valid Coupon.',
                                       );
                                     });
                               }
@@ -374,18 +391,15 @@ class _Checkout2ViewState extends State<Checkout2View> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: PsDimens.space16,
-                  ),
                   Container(
                     margin: const EdgeInsets.only(
                         left: PsDimens.space16, right: PsDimens.space16),
                     child: Text(
-                        Utils.getString(context, 'checkout__description'),
+                        'If you have any redeemable code, please use it here.',
                         style: Theme.of(context).textTheme.bodyMedium),
                   ),
                   const SizedBox(
-                    height: PsDimens.space16,
+                    height: PsDimens.space10,
                   ),
                 ],
               ),
@@ -580,66 +594,62 @@ class _OrderSummaryWidget extends StatelessWidget {
             ),
             _OrderSummeryTextWidget(
               transationInfoText:
-                  '${basketList[0].product!.currencySymbol} ${basketProvider.checkoutCalculationHelper.totalOriginalPriceFormattedString}',
+                  '${basketList[0].product!.currencySymbol}${basketProvider.checkoutCalculationHelper.totalOriginalPriceFormattedString}',
               title:
                   '${Utils.getString(context, 'checkout__total_item_price')} :',
             ),
+            if(basketProvider.checkoutCalculationHelper.totalDiscountFormattedString != '0.00')
             _OrderSummeryTextWidget(
               transationInfoText:
-                  '$currencySymbol ${basketProvider.checkoutCalculationHelper.totalDiscountFormattedString}',
+                  '- $currencySymbol${basketProvider.checkoutCalculationHelper.totalDiscountFormattedString}',
               title: '${Utils.getString(context, 'checkout__discount')} :',
             ),
+            if(couponDiscount != '0.0')
             _OrderSummeryTextWidget(
-              transationInfoText: couponDiscount == '-'
-                  ? '-'
-                  : '$currencySymbol ${basketProvider.checkoutCalculationHelper.couponDiscountFormattedString}',
+              transationInfoText:
+              '- $currencySymbol${basketProvider.checkoutCalculationHelper.couponDiscountFormattedString}',
               title:
                   '${Utils.getString(context, 'checkout__coupon_discount')} :',
             ),
-            _spacingWidget,
-            _dividerWidget,
-            _OrderSummeryTextWidget(
-              transationInfoText: basketProvider
-                  .checkoutCalculationHelper.subTotalPriceFormattedString
-                  .toString(),
-              title: '${Utils.getString(context, 'checkout__sub_total')} :',
-            ),
-            /*_OrderSummeryTextWidget(
-              transationInfoText:
-                  '$currencySymbol ${basketProvider.checkoutCalculationHelper.taxFormattedString}',
-              title:
-                  '${Utils.getString(context, 'checkout__tax')} (${psValueHolder.overAllTaxLabel} %) :',
-            ),*/
-            if (provider.deliveryCost.data == null || 
-                provider.deliveryCost.data!.totalCost == '0.0' || 
-                shopInfoProvider.shopInfo.data!.isArea == PsConst.ONE)
+            if (provider.deliveryCost.data != null &&
+                provider.deliveryCost.data!.totalCost != '0.0' /*||
+                shopInfoProvider.shopInfo.data!.isArea == PsConst.ONE*/)
+            Column(children: [
+              _spacingWidget,
+              _dividerWidget,
               _OrderSummeryTextWidget(
-                transationInfoText:
-                    '$currencySymbol ${double.parse(userProvider.selectedArea!.price! == '' ? '0.0' : userProvider.selectedArea!.price!)}',
-                title: '${Utils.getString(context, 'checkout__delivery_cost')} :',
-              )
-            else 
-              _OrderSummeryTextWidget(
-                transationInfoText:
-                    '$currencySymbol ${double.parse(provider.deliveryCost.data!.totalCost!)}',
-                title: '${Utils.getString(context, 'checkout__delivery_cost')} :',
+                transationInfoText: '£' + basketProvider
+                    .checkoutCalculationHelper.subTotalPriceFormattedString
+                    .toString(),
+                title: '${Utils.getString(context, 'checkout__sub_total')} :',
               ),
-            /*_OrderSummeryTextWidget(
-            transationInfoText:
-                '$currencySymbol ${basketProvider.checkoutCalculationHelper.shippingTaxFormattedString}',
-            title:
-                '${Utils.getString(context, 'checkout__shipping_tax')} (${psValueHolder.shippingTaxLabel} %) :',
-            ),*/
+              if (provider.deliveryCost.data == null ||
+                  provider.deliveryCost.data!.totalCost == '0.0' /*||
+                shopInfoProvider.shopInfo.data!.isArea == PsConst.ONE*/)
+                _OrderSummeryTextWidget(
+                  transationInfoText:
+                  '+ $currencySymbol${double.parse(userProvider.selectedArea!.price! == '' ? '0.0' : userProvider.selectedArea!.price!)}',
+                  title: '${Utils.getString(context, 'checkout__delivery_cost')} :',
+                )
+              else
+                _OrderSummeryTextWidget(
+                  transationInfoText:
+                  '+ $currencySymbol${double.parse(provider.deliveryCost.data!.totalCost!)}',
+                  title: '${Utils.getString(context, 'checkout__delivery_cost')} :',
+                ),
+            ],),
+
             _spacingWidget,
             _dividerWidget,
             _OrderSummeryTextWidget(
               transationInfoText:
-                  '$currencySymbol ${basketProvider.checkoutCalculationHelper.totalPriceFormattedString}',
+                  '$currencySymbol${basketProvider.checkoutCalculationHelper.totalPriceFormattedString}',
               title:
                   '${Utils.getString(context, 'transaction_detail__total')} :',
               textColor: PsColors.discountColor,
             ),
             _spacingWidget,
+            _dividerWidget,
           ],
         ));
   }

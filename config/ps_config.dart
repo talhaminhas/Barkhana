@@ -27,8 +27,8 @@ class PsConfig {
   ///
   static const String ps_core_url =
   //'https://5ccc-81-150-185-121.ngrok-free.app/Barkhana';
-  'http://81.150.185.121:88/Barkhana';
-  //'http://192.168.1.172:8080/Barkhana';
+  //'http://81.150.185.121:88/Barkhana';
+  'http://192.168.1.172:8080/Barkhana';
   static const String ps_app_url = ps_core_url + '/index.php/';
 
   static const String ps_app_image_url = ps_core_url + '/uploads/';
@@ -75,7 +75,7 @@ class PsConfig {
   /// 2) Declare at pubspec.yaml
   /// 3) Update your font family name at below
   ///
-  static const String ps_default_font_family = 'Times New Roman';
+  static const String ps_default_font_family = 'Product Sans';
 
   /// Default Language
 // static const ps_default_language = 'en';

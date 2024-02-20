@@ -191,7 +191,7 @@ class _ImageAndTextWidget extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        ' ${basket.product!.currencySymbol} '
+                                        ' ${basket.product!.currencySymbol}'
                                             '${Utils.getPriceFormat(basket.product!.discountAmount!, psValueHolder)}',
                                         style: Theme.of(context).textTheme.titleMedium,
                                       ),
@@ -205,7 +205,7 @@ class _ImageAndTextWidget extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                            ' ${basket.product!.currencySymbol} ${Utils.getPriceFormat(basket.basketPrice!, psValueHolder)}',
+                                            ' ${basket.product!.currencySymbol}${Utils.getPriceFormat(basket.basketPrice!, psValueHolder)}',
                                         style: Theme.of(context).textTheme.titleMedium,
                                       ),
                                     ],
@@ -221,7 +221,7 @@ class _ImageAndTextWidget extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                            ' ${basket.product!.currencySymbol} ${Utils.getPriceFormat(subTotalPrice.toString(), psValueHolder)}',
+                                            ' ${basket.product!.currencySymbol}${Utils.getPriceFormat(subTotalPrice.toString(), psValueHolder)}',
                                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                           color: PsColors.discountColor
                                         ),
@@ -574,7 +574,7 @@ class _AddOnWidget extends StatelessWidget {
   String getAddOnPrices() {
     final List<String> addOnName = <String>[];
     for (BasketSelectedAddOn addOn in basket.basketSelectedAddOnList!) {
-      addOnName.add('${basket.product!.currencySymbol} ${Utils.getPriceFormat(addOn.price.toString(), psValueHolder)}');
+      addOnName.add('${basket.product!.currencySymbol}${Utils.getPriceFormat(addOn.price.toString(), psValueHolder)}');
     }
     return addOnName.join('\n').toString();
   }

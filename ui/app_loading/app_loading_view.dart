@@ -367,7 +367,9 @@ class AppLoadingView extends StatelessWidget {
 
 
     if (valueHolder == null) {
-      return Container();
+      return Container(
+
+      );
     }
     // final dynamic data = EasyLocalizationProvider.of(context).data;
     return

@@ -75,6 +75,8 @@ class CheckoutCalculationHelper {
           couponDiscountString != '') {
         couponDiscount = double.parse(couponDiscountString);
         subTotalPrice = subTotalPrice - couponDiscount;
+        if (subTotalPrice < 0)
+          subTotalPrice = 0;
       }
 
       // Tax Calculation

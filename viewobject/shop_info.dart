@@ -107,6 +107,7 @@ class ShopInfo extends PsObject<ShopInfo> {
       this.multiPageCheckout,
       this.checkoutWithWhatsApp,
       this.branch,
+        this.orderPreparingTime
       });
   String? id;
   String? shippingId;
@@ -206,6 +207,7 @@ class ShopInfo extends PsObject<ShopInfo> {
   String? onePageCheckout;
   String? multiPageCheckout;
   String? checkoutWithWhatsApp;
+  String? orderPreparingTime;
   List<ShopBranch>? branch;
   
 
@@ -316,6 +318,7 @@ class ShopInfo extends PsObject<ShopInfo> {
           onePageCheckout: dynamicData['one_page_checkout'],
           multiPageCheckout: dynamicData['multi_page_checkout'],
           checkoutWithWhatsApp: dynamicData['checkout_with_whatsapp'],
+        orderPreparingTime: dynamicData['order_preparing_time'],
           branch: ShopBranch().fromMapList(dynamicData['grocery_branch']),
           );
     } else {
@@ -424,6 +427,7 @@ class ShopInfo extends PsObject<ShopInfo> {
       data['one_page_checkout'] = object.onePageCheckout;
       data['multi_page_checkout'] = object.multiPageCheckout;
       data['checkout_with_whatsapp'] = object.checkoutWithWhatsApp;
+      data['order_preparing_time'] = object.orderPreparingTime;
       data['grocery_branch'] = ShopBranch().toMapList(object.branch);
       return data;
     } else {

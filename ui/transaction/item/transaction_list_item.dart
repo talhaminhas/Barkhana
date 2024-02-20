@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
@@ -31,8 +32,19 @@ class TransactionListItem extends StatelessWidget {
           child: GestureDetector(
             onTap: onTap as void Function()?,
             child: Container(
-              color: PsColors.backgroundColor,
-              margin: const EdgeInsets.only(top: PsDimens.space8),
+              margin: const EdgeInsets.only(
+                  top: PsDimens.space10,
+                right: PsDimens.space16,
+                left:PsDimens.space16,
+              ),
+              decoration: BoxDecoration(
+                color: PsColors.backgroundColor,
+                border: Border.all(
+                  color: PsColors.mainColor, // Set your desired border color here
+                  width: 2.0, // Set the border width
+                ),
+                borderRadius: BorderRadius.circular(10.0), // Set the border radius
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -40,9 +52,7 @@ class TransactionListItem extends StatelessWidget {
                     transaction: transaction,
                     scaffoldKey: scaffoldKey,
                   ),
-                  const Divider(
-                    height: PsDimens.space1,
-                  ),
+
                   _TransactionTextWidget(
                     transaction: transaction,
                   ),
@@ -86,25 +96,51 @@ class _TransactionNoWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(
-          left: PsDimens.space12,
-          right: PsDimens.space4,
-          top: PsDimens.space4,
-          bottom: PsDimens.space4),
+          left: PsDimens.space14,
+          right: PsDimens.space14,
+          top: PsDimens.space8,
+          bottom: PsDimens.space8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const Icon(
+                  /*Text(
+                      transaction.transStatus!.title!,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium!
+                          .copyWith(
+                          fontSize: 20,
+                          color: Utils.hexToColor(transaction.transStatus!.colorValue!)
+                      )
+                  ),*/
+              Text(
+                  'Order No :',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleMedium!
+                      .copyWith(
+                      fontSize: 20,
+                      color: PsColors.mainColor
+                  )
+              ),
+              Expanded(
+                child: Text(
+                    transaction.transCode!,
+                    textAlign: TextAlign.right,
+                    style: Theme.of(context).textTheme.titleMedium!
+                        .copyWith(
+                        fontSize: 20,
+                        color: PsColors.mainColor
+                    )
+                ),
+              )
+             /* const Icon(
                 Icons.offline_pin,
                 size: PsDimens.space24,
               ),
               const SizedBox(
                 width: PsDimens.space8,
               ),
-              _textWidget,
+              _textWidget,*/
             ],
           ),
           /*IconButton(
@@ -128,8 +164,6 @@ class _TransactionNoWidget extends StatelessWidget {
               ));
             },
           ),*/
-        ],
-      ),
     );
   }
 }
@@ -190,7 +224,7 @@ class _TransactionTextWidget extends StatelessWidget {
               right: PsDimens.space12,
               left: PsDimens.space12),
           decoration: BoxDecoration(
-              color: Utils.hexToColor(transaction.transStatus!.colorValue!),
+              color: PsColors.mainColor,
               // border: Border.all(color: PsColors.mainLightShadowColor),
               borderRadius:
                   const BorderRadius.all(Radius.circular(PsDimens.space8))),
@@ -216,24 +250,100 @@ class _TransactionTextWidget extends StatelessWidget {
       return Column(
         children: <Widget>[
           Padding(
-            padding: _paddingEdgeInsetWidget,
-            child: _totalAmountTextWidget,
-          ),
-          Padding(
-            padding: _paddingEdgeInsetWidget,
-            child: _statusTextWidget,
+            padding: const EdgeInsets.only(left: PsDimens.space16, right: PsDimens.space16,),
+            child: Divider(
+              height: 2,
+              thickness: 2,
+              color: PsColors.mainColor,
+            ),
           ),
           Padding(
             padding: _paddingEdgeInsetWidget,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                _viewDetailTextWidget,
+                Text(
+                  'Order Status :',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontWeight: FontWeight.normal),
+                ),
+                Text(
+                  transaction.transStatus!.title!,
+                    style: Theme.of(context).textTheme.titleMedium!
+                        .copyWith(
+                        color: Utils.hexToColor(transaction.transStatus!.colorValue!)
+                    )
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: _paddingEdgeInsetWidget,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  Utils.getString(context, 'transaction_list__total_amount') + ' :',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontWeight: FontWeight.normal),
+                ),
+                Text(
+                  '${transaction.currencySymbol}${Utils.getPriceFormat(transaction.balanceAmount!,valueHolder)}',
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith( fontWeight: FontWeight.normal),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: _paddingEdgeInsetWidget,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Time :',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontWeight: FontWeight.normal),
+                ),
+                Text(
+                    DateFormat("hh:mm a").format(
+                    DateTime.parse(transaction.addedDate!)),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith( fontWeight: FontWeight.normal),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: _paddingEdgeInsetWidget,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Date :',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontWeight: FontWeight.normal),
+                ),
+                Text(
+                      DateFormat("dd-MM-yyyy").format(
+                      DateTime.parse(transaction.addedDate!)),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith( fontWeight: FontWeight.normal),
+                ),
               ],
             ),
           ),
           const SizedBox(
-            height: PsDimens.space8,
+            height: PsDimens.space16,
           )
         ],
       );

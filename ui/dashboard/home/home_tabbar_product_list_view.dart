@@ -503,10 +503,6 @@ class _HomeTabbarProductListViewState extends State<HomeTabbarProductListView>
                 ),
               ),
             ),*/
-
-            const SizedBox(
-              height: PsDimens.space8,
-            ),
             /*Flexible(
 
                 // this will host our Tab Views

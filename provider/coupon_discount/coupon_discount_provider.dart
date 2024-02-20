@@ -23,7 +23,7 @@ class CouponDiscountProvider extends PsProvider {
   CouponDiscountRepository? _repo;
   PsValueHolder psValueHolder;
   String couponDiscount = '0.0';
-
+  String couponCode = '';
   PsResource<CouponDiscount> _couponDiscount =
       PsResource<CouponDiscount>(PsStatus.NOACTION, '', null);
   PsResource<CouponDiscount> get user => _couponDiscount;

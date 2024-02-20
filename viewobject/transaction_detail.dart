@@ -1,6 +1,7 @@
 import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
+import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:flutterrestaurant/viewobject/transaction_status.dart';
-
+import 'package:flutterrestaurant/viewobject/user.dart';
 class TransactionDetail extends PsObject<TransactionDetail> {
   TransactionDetail(
       {this.id,
@@ -35,6 +36,8 @@ class TransactionDetail extends PsObject<TransactionDetail> {
       this.isRefundable,
       this.refundStatus,
         this.transStatus,
+        this.transHeader,
+        this.deliveryBoy
       });
   String? id;
   String? transactionsHeaderId;
@@ -68,6 +71,8 @@ class TransactionDetail extends PsObject<TransactionDetail> {
   String? isRefundable;
   String? refundStatus;
   TransactionStatus? transStatus;
+  TransactionHeader? transHeader;
+  User? deliveryBoy;
 
   @override
   String? getPrimaryKey() {
@@ -109,8 +114,9 @@ class TransactionDetail extends PsObject<TransactionDetail> {
           addedDateStr: dynamicData['added_date_str'],
           isRefundable: dynamicData['is_refundable'],
           refundStatus: dynamicData['refund_status'],
-        transStatus:
-        TransactionStatus().fromMap(dynamicData['transaction_status']),
+          transStatus: TransactionStatus().fromMap(dynamicData['transaction_status']),
+          deliveryBoy: User().fromMap(dynamicData['delivery_boy']),
+        transHeader: TransactionHeader().fromMap(dynamicData['transaction_header'])
       );
     } else {
       return null;
@@ -154,6 +160,10 @@ class TransactionDetail extends PsObject<TransactionDetail> {
       data['refund_status'] = object.refundStatus;
       data['transaction_status'] =
           TransactionStatus().toMap(object.transStatus);
+      data['delivery_boy'] =
+          User().toMap(object.deliveryBoy);
+      data['transaction_header'] =
+          TransactionHeader().toMap(object.transHeader);
       return data;
     } else {
       return null;

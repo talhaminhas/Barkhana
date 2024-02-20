@@ -103,6 +103,7 @@ class _HomeViewState extends State<DashboardView>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      print('drawer view resumed');
       isResumed = true;
       initDynamicLinks(context);
 
@@ -905,7 +906,7 @@ class _HomeViewState extends State<DashboardView>
               ),
             ),
             titleSpacing: 0,
-            elevation: 0,
+            elevation: 5,
             iconTheme: IconThemeData(color: PsColors.textPrimaryColor),
             toolbarTextStyle: TextStyle(color: PsColors.textPrimaryColor),
 
@@ -990,7 +991,7 @@ class _HomeViewState extends State<DashboardView>
                                                 child: Align(
                                                   /*alignment: Alignment.center,*/
                                                   child: Text(
-                                                    '${Utils.getString(context, 'checkout__price')} $currencySymbol ${totalPrice.toStringAsFixed(2)}',
+                                                    '${Utils.getString(context, 'checkout__price')} $currencySymbol${totalPrice.toStringAsFixed(2)}',
                                                     textAlign: TextAlign.left,
                                                     style: Theme.of(context)
                                                         .textTheme
@@ -1012,7 +1013,7 @@ class _HomeViewState extends State<DashboardView>
                                                   /*alignment: Alignment.center,*/
                                                   child: Text(
                                                     '${Utils.getString(context, 'checkout__savings')} '
-                                                        '$currencySymbol ${(totalOriginalPrice - totalPrice).toStringAsFixed(2)}',
+                                                        '$currencySymbol${(totalOriginalPrice - totalPrice).toStringAsFixed(2)}',
                                                     textAlign: TextAlign.left,
                                                     style: Theme.of(context)
                                                         .textTheme
@@ -1039,7 +1040,7 @@ class _HomeViewState extends State<DashboardView>
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: Icon(
-                                          Icons.shopping_basket,
+                                          Icons.shopping_basket_outlined,
                                           color: PsColors.mainColor,
                                         ),
                                       ),
@@ -1177,51 +1178,62 @@ class _HomeViewState extends State<DashboardView>
 
             ? Visibility(
           visible: true,
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: getBottomNavigationIndex(_currentIndex),
-            showUnselectedLabels: true,
-            backgroundColor: PsColors.backgroundColor,
-            selectedItemColor: PsColors.mainColor,
-            elevation: 10,
-            showSelectedLabels: true,
-            onTap: (int index) {
-              final dynamic _returnValue =
-              getIndexFromBottomNavigationIndex(index);
-              controllersStack = <Map<String, int>>[<String, int>{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];
-              updateSelectedIndexWithAnimation(
-                  _returnValue[0], _returnValue[1]);
-            },
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: const Icon(
-                  Icons.restaurant,
-                  size: 20,
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2), // Adjust the shadow color and opacity as needed
+                  spreadRadius: 3,
+                  blurRadius: 5,
+                  offset: const Offset(0, 0), // Adjust the offset to control the shadow position
                 ),
-                label: Utils.getString(context, 'home__drawer_menu_menu'),
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.search),
-                label: Utils.getString(
-                    context, 'home__bottom_app_bar_search'),
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.shopping_cart),
-                label: Utils.getString(context, 'home__bottom_app_bar_basket_list'),
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.favorite),
-                label: Utils.getString(
-                    context, 'home__bottom_app_bar_favorites'),
-              ),
+              ],
+            ),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              currentIndex: getBottomNavigationIndex(_currentIndex),
+              showUnselectedLabels: true,
+              backgroundColor: PsColors.backgroundColor,
+              selectedItemColor: PsColors.mainColor,
+              showSelectedLabels: true,
+              onTap: (int index) {
+                final dynamic _returnValue =
+                getIndexFromBottomNavigationIndex(index);
+                controllersStack = <Map<String, int>>[<String, int>{'Menu': PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT}];
+                updateSelectedIndexWithAnimation(
+                    _returnValue[0], _returnValue[1]);
+              },
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: const Icon(
+                    Icons.restaurant_outlined,
+                    size: 20,
+                  ),
+                  label: Utils.getString(context, 'home__drawer_menu_menu'),
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.search_outlined),
+                  label: Utils.getString(
+                      context, 'home__bottom_app_bar_search'),
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.shopping_basket_outlined),
+                  label: Utils.getString(context, 'home__bottom_app_bar_basket_list'),
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.favorite_border_outlined),
+                  label: Utils.getString(
+                      context, 'home__bottom_app_bar_favorites'),
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.person_outline),
+                  label: Utils.getString(
+                      context, 'home__bottom_app_bar_login'),
+                ),
+              ],
+            ),
+          )
 
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.person),
-                label: Utils.getString(
-                    context, 'home__bottom_app_bar_login'),
-              ),
-            ],
-          ),
         )
             : null,
         floatingActionButton: _currentIndex ==

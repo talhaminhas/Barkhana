@@ -78,6 +78,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
   // bool isClickPickUpButton = false;
   String? deliveryPickUpDate;
   String? deliveryPickUpTime;
+  String? orderTime;
   bool isWeeklyScheduleOrder = false;
   bool bindDataFirstTime = true;
   bool callDeliveryCost = true;
@@ -123,22 +124,20 @@ class _Checkout1ViewState extends State<Checkout1View> {
   */
 
   dynamic updateDeliveryClick() {
-    setState(() {});
-    if (userProvider!.isClickDeliveryButton) {
-      userProvider!.isClickDeliveryButton = false;
-      userProvider!.isClickPickUpButton = true;
-    } else {
+
+
+    if(userProvider!.isClickPickUpButton) {
+      setState(() {});
       userProvider!.isClickDeliveryButton = true;
       userProvider!.isClickPickUpButton = false;
     }
   }
 
   dynamic updatePickUpClick() {
-    setState(() {});
-    if (userProvider!.isClickPickUpButton) {
-      userProvider!.isClickPickUpButton = false;
-      userProvider!.isClickDeliveryButton = true;
-    } else {
+
+
+    if(userProvider!.isClickDeliveryButton) {
+      setState(() {});
       userProvider!.isClickPickUpButton = true;
       userProvider!.isClickDeliveryButton = false;
     }
@@ -183,11 +182,14 @@ class _Checkout1ViewState extends State<Checkout1View> {
     latestDate = '$dateTime';
     deliveryPickUpDate =
         DateFormat.yMMMEd('en_US').format(DateTime.parse(latestDate!));
-
     deliveryPickUpTime = DateFormat.Hm('en_US').format(DateTime.parse(latestDate!));
+    orderTime = deliveryPickUpDate! +' ' + deliveryPickUpTime!;
 
+    deliveryPickUpTime = DateFormat('h:mm a', 'en_US').format(DateTime.parse(latestDate!));
     orderTimeTextEditingController.text =
-        deliveryPickUpDate! + ' ' + deliveryPickUpTime!;
+        'Today, ' + deliveryPickUpTime!;
+
+
     // setState(() {});
   }
   void resetAddress(String text){
@@ -304,14 +306,31 @@ class _Checkout1ViewState extends State<Checkout1View> {
                       textEditingController: userPhoneController,
                       isMandatory: true,
                     ),
-
-                    /*_EditAndDeleteButtonWidget(
+                    RadioWidget(
+                      userProvider: userProvider,
+                      updateOrderByData: updateOrderByData,
+                      orderTimeTextEditingController:
+                      orderTimeTextEditingController,
+                      updateDateAndTime: updateDateAndTime,
+                      shopInfoProvider: shopInfoProvider!,
+                      // scheduleOrder: scheduleOrder!,
+                      latestDate: latestDate!, isWeeklySchedule: isWeeklyScheduleOrder,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(PsDimens.space12),
+                      child:  Divider(
+                        thickness: 1,
+                        height: 1,
+                        color: PsColors.mainColor,
+                      ),
+                    ),
+                    _EditAndDeleteButtonWidget(
                     userProvider: userProvider,
                     shopInfoProvider: shopInfoProvider!,
                     updateDeliveryClick: updateDeliveryClick,
                     updatePickUpClick: updatePickUpClick,
                     isClickDeliveryButton: userProvider.isClickDeliveryButton,
-                    isClickPickUpButton: userProvider.isClickPickUpButton),*/
+                    isClickPickUpButton: userProvider.isClickPickUpButton),
                     //const SizedBox(height: PsDimens.space8),
                     Container(
                       margin: const EdgeInsets.all(PsDimens.space12),
@@ -401,15 +420,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                               color: PsColors.mainColor,
                             ),
                           ),
-                          RadioWidget(
-                            userProvider: userProvider,
-                            updateOrderByData: updateOrderByData,
-                            orderTimeTextEditingController:
-                            orderTimeTextEditingController,
-                            updatDateAndTime: updateDateAndTime,
-                            // scheduleOrder: scheduleOrder!,
-                            latestDate: latestDate!, isWeeklySchedule: isWeeklyScheduleOrder,
-                          ),
+
                           /*CurrentLocationWidget(
                           provider: provider!,
                           shopInfoProvider: shopInfoProvider!,
@@ -485,7 +496,14 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                   basketList: widget.basketList)
                             else
                               _DefaultDeliveryCostWidget(),
-                          const SizedBox(height: PsDimens.space16),
+                          Container(
+                            margin: const EdgeInsets.all(PsDimens.space12),
+                            child:  Divider(
+                              thickness: 1,
+                              height: 1,
+                              color: PsColors.mainColor,
+                            ),
+                          ),
                         ],
                       )
                     else
@@ -561,6 +579,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
       userProvider.selectedArea!.id = '';
       userProvider.selectedArea!.price = '0.0';
       userProvider.selectedArea!.areaName = '';
+      provider.deliveryCost.data!.totalCost = '0.0';
     }
 
     if (await Utils.checkInternetConnectivity()) {
@@ -625,16 +644,18 @@ class RadioWidget extends StatefulWidget {
     required this.userProvider,
     required this.updateOrderByData,
     required this.orderTimeTextEditingController,
-    required this.updatDateAndTime,
+    required this.updateDateAndTime,
     // required this.scheduleOrder,
     required this.latestDate,
     required this.isWeeklySchedule,
+    required this.shopInfoProvider,
     // @required this.userId,
   });
+  final ShopInfoProvider shopInfoProvider;
   final UserProvider userProvider;
   final Function updateOrderByData;
   final TextEditingController orderTimeTextEditingController;
-  final Function updatDateAndTime;
+  final Function updateDateAndTime;
   // final List<ScheduleOrder> scheduleOrder;
   final String latestDate;
   final bool isWeeklySchedule;
@@ -650,7 +671,7 @@ class _RadioWidgetState extends State<RadioWidget> {
   Widget build(BuildContext context) {
     final PsValueHolder psValueHolder =
         Provider.of<PsValueHolder>(context, listen: false);
-
+    _showCalender = widget.userProvider.selectedRadioBtnName! == PsConst.ORDER_TIME_SCHEDULE;
     return Column(
       children: <Widget>[
         Container(
@@ -688,7 +709,7 @@ class _RadioWidgetState extends State<RadioWidget> {
                   });
                   final DateTime dateTime = DateTime.now().add(Duration(
                       minutes: int.parse(psValueHolder.defaultOrderTime!)));
-                  widget.updatDateAndTime(dateTime);
+                  widget.updateDateAndTime(dateTime);
                 },
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 activeColor: PsColors.mainColor,
@@ -716,10 +737,16 @@ class _RadioWidgetState extends State<RadioWidget> {
                   setState(() {
                     _showCalender = true;
                   });
-                  DatePicker.showDateTimePicker(context,
+                  DatePicker.showTime12hPicker(context,
+                      currentTime: DateTime.now().add(Duration(
+                          minutes: int.parse(widget.shopInfoProvider.shopInfo.data!.orderPreparingTime!)
+                      )),
                       showTitleActions: true, onChanged: (DateTime date) {},
                       onConfirm: (DateTime date) {
-                    final DateTime now = DateTime.now();
+                    final DateTime now = DateTime.now()
+                        .add(Duration(
+                        minutes: int.parse(widget.shopInfoProvider.shopInfo.data!.orderPreparingTime!)
+                    ));
                     if (DateTime(date.year, date.month, date.day, date.hour,
                                 date.minute, date.second)
                             .difference(DateTime(now.year, now.month, now.day,
@@ -738,7 +765,7 @@ class _RadioWidgetState extends State<RadioWidget> {
                     } else {
                       print('confirm $date');
                       setState(() {});
-                      widget.updatDateAndTime(date);
+                      widget.updateDateAndTime(date);
                     }
                   }, locale: LocaleType.en);
                 },
@@ -844,36 +871,45 @@ class _RadioWidgetState extends State<RadioWidget> {
                   decoration: InputDecoration(
                     suffixIcon: GestureDetector(
                         onTap: () {
-                          DatePicker.showDateTimePicker(context,
-                              showTitleActions: true,
-                              onChanged: (DateTime date) {},
-                              onConfirm: (DateTime date) {
-                            final DateTime now = DateTime.now();
-                            if (DateTime(date.year, date.month, date.day,
-                                        date.hour, date.minute, date.second)
-                                    .difference(DateTime(
-                                        now.year,
-                                        now.month,
-                                        now.day,
-                                        now.hour,
-                                        now.minute,
-                                        now.second))
-                                    .inDays <
-                                0) {
-                              showDialog<dynamic>(
+                          DatePicker.showTime12hPicker(
+                            context,
+                            showTitleActions: true,
+                            locale: LocaleType.en,
+                            currentTime: DateTime.now().add(Duration(
+                                minutes: int.parse(widget.shopInfoProvider.shopInfo.data!.orderPreparingTime!)
+                            )),
+                            /*minTime: DateTime.now().add(const Duration(minutes: 20)), // Set minimum date time
+                            maxTime:
+                            DateTime(
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day,
+                                23, 59, 59),*/
+                            onChanged: (DateTime date) {},
+                            onConfirm: (DateTime date) {
+                              final DateTime now = DateTime.now().
+                              add(Duration(
+                                  minutes: int.parse(
+                                      widget.shopInfoProvider.shopInfo.data!.orderPreparingTime!
+                                  ) -1
+                              ));
+                              if (date.isBefore(now)) {
+                                showDialog<dynamic>(
                                   context: context,
                                   barrierColor: PsColors.transparent,
                                   builder: (BuildContext context) {
-                                    return ErrorDialog(
-                                      message: Utils.getString(context,
-                                          'chekcout1__past_date_time_error'),
+                                    return const ErrorDialog(
+                                      message: 'Your Selected Time Is Invalid.'
                                     );
-                                  });
-                            } else {
-                              print('confirm $date');
-                              widget.updatDateAndTime(date);
-                            }
-                          }, locale: LocaleType.en);
+                                  },
+                                );
+                              } else {
+                                print('confirm $date');
+                                widget.updateDateAndTime(date);
+                              }
+                            },
+
+                          );
                         },
                         child: Icon(
                           FontAwesome5.calendar,
@@ -921,7 +957,7 @@ class _DeliveryCostWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
+        /*Padding(
           padding: const EdgeInsets.only(
               top: PsDimens.space16,
               left: PsDimens.space16,
@@ -932,7 +968,7 @@ class _DeliveryCostWidget extends StatelessWidget {
             textAlign: TextAlign.left,
             style: Theme.of(context).textTheme.titleMedium,
           ),
-        ),
+        ),*/
         if (provider.deliveryCost.data!.distance != null &&
             provider.deliveryCost.data!.distance != '')
           _DeliveryTextWidget(
@@ -1064,10 +1100,11 @@ class __EditAndDeleteButtonWidgetState
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.bottomCenter,
+      margin: EdgeInsets.only(left: 10,right: 10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+
         children: <Widget>[
-          const SizedBox(height: PsDimens.space12),
           SizedBox(
             width: double.infinity,
             height: PsDimens.space40,
@@ -1099,7 +1136,7 @@ class __EditAndDeleteButtonWidgetState
                       hasShape: false,
                       textColor: widget.isClickDeliveryButton
                           ? PsColors.white
-                          : PsColors.black,
+                          : PsColors.mainColor,
                       width: double.infinity,
                       colorData: widget.isClickDeliveryButton
                           ? PsColors.mainColor
@@ -1107,19 +1144,19 @@ class __EditAndDeleteButtonWidgetState
                       titleText:
                           Utils.getString(context, 'checkout1__delivery'),
                       onPressed: () async {
-                        if (widget.shopInfoProvider.shopInfo.data!
+                        /*if (widget.shopInfoProvider.shopInfo.data!
                                 .pickupEnabled ==
-                            '1') {
+                            '1') {*/
                           widget.updateDeliveryClick();
-                        }
+                        //}
                       },
                     ),
                   ),
                   const SizedBox(
                     width: PsDimens.space10,
                   ),
-                  if (widget.shopInfoProvider.shopInfo.data!.pickupEnabled ==
-                      '1')
+                  /*if (widget.shopInfoProvider.shopInfo.data!.pickupEnabled ==
+                      '1')*/
                     Expanded(
                       child: PSButtonWidget(
                         hasShadow: true,
@@ -1127,7 +1164,7 @@ class __EditAndDeleteButtonWidgetState
                         width: double.infinity,
                         textColor: widget.isClickPickUpButton
                             ? PsColors.white
-                            : PsColors.black,
+                            : PsColors.mainColor,
                         colorData: widget.isClickPickUpButton
                             ? PsColors.mainColor
                             : PsColors.white,

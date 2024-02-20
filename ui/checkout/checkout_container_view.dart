@@ -672,6 +672,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               });
         }
       } else if (viewNo == 1) {
+
         if (checkout1ViewState.userEmailController.text.isEmpty ||
             (!checkout1ViewState.userProvider.hasLatLng(valueHolder) &&
                 checkout1ViewState.addressController.text == '' &&
@@ -828,7 +829,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             // }
           // } else {
             orderDateAndTime =
-                checkout1ViewState.orderTimeTextEditingController.text;
+                checkout1ViewState.orderTime;
 
             // Open Time
             final String? mondayOpenDateAndTime =
@@ -1183,6 +1184,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                     });
               }
             } else if (days == 'Tue') {
+
               if (shopInfoProvider!
                       .shopInfo.data!.shopSchedules!.isTuesdayOpen ==
                   PsConst.ONE) {
@@ -1263,6 +1265,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                     });
               }
             } else if (days == 'Thu') {
+
               if (shopInfoProvider!
                       .shopInfo.data!.shopSchedules!.isThursdayOpen ==
                   PsConst.ONE) {
@@ -1426,6 +1429,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             }
           }
         } else {
+
           if (!await checkout1ViewState.checkIsDataChange(userProvider)) {
             isApiSuccess =
                 await checkout1ViewState.callUpdateUserProfile(context, userProvider, provider);

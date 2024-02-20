@@ -379,7 +379,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         '${Utils.getString(context, 'checkout__price')} '
-                            '$currencySymbol ${Utils.getPriceFormat(totalPrice.toString(),psValueHolder)}',
+                            '$currencySymbol${Utils.getPriceFormat(totalPrice.toString(),psValueHolder)}',
                         style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Container(
@@ -387,7 +387,7 @@ class _CheckoutButtonWidget extends StatelessWidget {
                       ),
                       Text(
                         '${Utils.getString(context, 'checkout__savings')} '
-                            '$currencySymbol ${(totalOriginalPrice - totalPrice).toStringAsFixed(2)}',
+                            '$currencySymbol${(totalOriginalPrice - totalPrice).toStringAsFixed(2)}',
                         style: Theme.of(context)
                             .textTheme
                             .titleSmall!.copyWith(

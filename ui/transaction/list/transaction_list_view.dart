@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
+import 'package:flutterrestaurant/constant/ps_dimens.dart';
 import 'package:flutterrestaurant/provider/transaction/transaction_header_provider.dart';
 import 'package:flutterrestaurant/repository/transaction_header_repository.dart';
 import 'package:flutterrestaurant/ui/common/ps_ui_widget.dart';
@@ -10,7 +11,8 @@ import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/utils.dart';
-
+GlobalKey<RefreshIndicatorState> orderListRefreshKey =
+GlobalKey<RefreshIndicatorState>();
 class TransactionListView extends StatefulWidget {
   const TransactionListView(
       {Key? key, required this.animationController, required this.scaffoldKey})
@@ -97,6 +99,7 @@ class _TransactionListViewState extends State<TransactionListView>
                 child: Stack(
                   children: <Widget>[
                     RefreshIndicator(
+                      key: orderListRefreshKey,
                       child: CustomScrollView(
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
@@ -108,6 +111,7 @@ class _TransactionListViewState extends State<TransactionListView>
                                 (BuildContext context, int index) {
                                   final int count =
                                       provider.transactionList.data!.length;
+
                                   return TransactionListItem(
                                     scaffoldKey: widget.scaffoldKey,
                                     animationController:
@@ -142,8 +146,12 @@ class _TransactionListViewState extends State<TransactionListView>
                                     provider.transactionList.data!.length,
                               ),
                             ),
+                            SliverToBoxAdapter(
+                              child: Container(height: PsDimens.space10,),
+                            )
                           ]),
                       onRefresh: () {
+
                         return provider.resetTransactionList();
                       },
                     ),

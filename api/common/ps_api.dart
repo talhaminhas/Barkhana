@@ -72,8 +72,8 @@ abstract class PsApi {
       final PsApiResponse psApiResponse = PsApiResponse(response);
 
       if (psApiResponse.isSuccessful()) {
+        //print(response.body);
         final dynamic hashMap = json.decode(response.body);
-
         if (!(hashMap is Map)) {
           final List<T> tList = <T>[];
           hashMap.forEach((dynamic data) {
@@ -157,8 +157,8 @@ abstract class PsApi {
 
   Future<PsResource<R>> postUploadImage<T extends PsObject<dynamic>, R>(
       T obj, String url, String userId, String platformName, File imageFile) async {
+    print('postUploadImage');
     if (PSApp.apiTokenRefresher.isExpired) {
-      print('postUploadImage');
       await PSApp.apiTokenRefresher.updateToken();
     }
     final Client client = http.Client();

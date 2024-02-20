@@ -46,8 +46,8 @@ class _PsTextFieldWidgetState extends State<PsTextFieldWidget> {
   void initState() {
     super.initState();
   }
-  Color borderColor = PsColors.mainColor;
-  Color color = PsColors.backgroundColor;
+
+
   bool validatePhoneNumber(String phoneNumber ){
     final RegExp phoneRegExp = RegExp(r'^[0-9]{11}$');
     return phoneRegExp.hasMatch(phoneNumber);
@@ -58,6 +58,8 @@ class _PsTextFieldWidgetState extends State<PsTextFieldWidget> {
   }
   @override
   Widget build(BuildContext context) {
+    Color borderColor = widget.isReadonly ? PsColors.baseLightColor :PsColors.mainColor;
+    Color color = widget.isReadonly ? PsColors.baseLightColor : PsColors.backgroundColor;
     final Widget _productTextWidget =
     Text(widget.titleText, style: Theme.of(context).textTheme.bodyLarge);
     return Column(
