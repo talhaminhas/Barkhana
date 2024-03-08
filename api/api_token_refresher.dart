@@ -11,6 +11,7 @@ import '../constant/route_paths.dart';
 import '../db/common/ps_shared_preferences.dart';
 import '../provider/app_info/app_info_provider.dart';
 import '../ui/common/ps_toast.dart';
+import '../ui/create_reservation/list/reservation_list_view.dart';
 import '../ui/transaction/detail/transaction_item_list_view.dart';
 import '../ui/transaction/list/transaction_list_view.dart';
 import 'common/ps_resource.dart';
@@ -29,6 +30,7 @@ class ApiTokenRefresher  extends WidgetsBindingObserver{
       {
         orderListRefreshKey.currentState?.show();
         orderDetailRefreshKey.currentState?.show();
+        reservationListRefreshKey.currentState?.show();
       }
   }
   late PsApiService _psApiService;

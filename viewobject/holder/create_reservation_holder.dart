@@ -10,6 +10,7 @@ class ReservationParameterHolder extends PsHolder<ReservationParameterHolder> {
       required this.userId,
       required this.userEmail,
       required this.userPhoneNumber,
+        required this.noOfPeople,
       required this.userName});
 
   final String reservationDate;
@@ -20,6 +21,7 @@ class ReservationParameterHolder extends PsHolder<ReservationParameterHolder> {
   final String userEmail;
   final String userPhoneNumber;
   final String userName;
+  final String noOfPeople;
 
   @override
   Map<String, dynamic> toMap() {
@@ -33,6 +35,7 @@ class ReservationParameterHolder extends PsHolder<ReservationParameterHolder> {
     map['user_email'] = userEmail;
     map['user_phone_no'] = userPhoneNumber;
     map['user_name'] = userName;
+    map['no_of_people'] = noOfPeople;
     return map;
   }
 
@@ -47,6 +50,7 @@ class ReservationParameterHolder extends PsHolder<ReservationParameterHolder> {
       userEmail: dynamicData['user_email'],
       userPhoneNumber: dynamicData['user_phone_no'],
       userName: dynamicData['user_name'],
+      noOfPeople: dynamicData['no_of_people'],
     );
   }
 
@@ -78,7 +82,9 @@ class ReservationParameterHolder extends PsHolder<ReservationParameterHolder> {
     if (userName != '') {
       key += userName;
     }
-
+    if (noOfPeople != '') {
+      key += noOfPeople;
+    }
     return key;
   }
 }

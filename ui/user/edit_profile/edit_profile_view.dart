@@ -635,14 +635,14 @@ class _UserFirstCardWidget extends StatelessWidget {
               textAboutMe: false,
               isPhoneNumber: false,
               textEditingController: userNameController),
-          PsTextFieldWidget(
+          /*PsTextFieldWidget(
               isMandatory: true,
               titleText: Utils.getString(context, 'edit_profile__email'),
               hintText: Utils.getString(context, 'edit_profile__email'),
               textAboutMe: false,
               isEmail: true,
               isPhoneNumber: false,
-              textEditingController: emailController),
+              textEditingController: emailController),*/
           PsTextFieldWidget(
               isMandatory: true,
               titleText: Utils.getString(context, 'edit_profile__phone'),

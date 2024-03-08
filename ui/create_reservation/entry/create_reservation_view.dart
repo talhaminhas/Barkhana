@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
@@ -12,6 +15,7 @@ import 'package:flutterrestaurant/ui/common/dialog/warning_dialog_view.dart';
 import 'package:flutterrestaurant/ui/common/ps_button_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_dropdown_base_with_controller_widget.dart';
 import 'package:flutterrestaurant/ui/common/ps_textfield_widget.dart';
+import 'package:flutterrestaurant/ui/create_reservation/list/reservation_list_view.dart';
 import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/api_status.dart';
@@ -22,6 +26,8 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 import '../../../config/ps_colors.dart';
+import '../../../provider/shop_info/shop_info_provider.dart';
+import '../../../repository/shop_info_repository.dart';
 
 class CreateReservationView extends StatefulWidget {
   const CreateReservationView({Key? key, required this.animationController})
@@ -34,6 +40,7 @@ class CreateReservationView extends StatefulWidget {
 class _CreateReservationViewState extends State<CreateReservationView> {
   ReservationRepository? reservationRepository;
   final TextEditingController userNameController = TextEditingController();
+  final TextEditingController noOfPeopleController = TextEditingController();
   final TextEditingController userEmailController = TextEditingController();
   final TextEditingController userPhoneController = TextEditingController();
   final TextEditingController reservationDateController =
@@ -41,6 +48,8 @@ class _CreateReservationViewState extends State<CreateReservationView> {
   final TextEditingController reservationTimeController =
       TextEditingController();
   final TextEditingController userNoteController = TextEditingController();
+  ShopInfoProvider? shopInfoProvider;
+  ShopInfoRepository? shopInfoRepository;
   String timePeriod = '';
   TimeOfDay? timePicked;
   DateTime? todayTime;
@@ -60,30 +69,47 @@ class _CreateReservationViewState extends State<CreateReservationView> {
     reservationRepository = Provider.of<ReservationRepository>(context);
     psValueHolder = Provider.of<PsValueHolder>(context);
     userRepository = Provider.of<UserRepository>(context);
+    shopInfoRepository = Provider.of<ShopInfoRepository>(context);
     const Widget _largeSpacingWidget = SizedBox(
-      height: PsDimens.space8,
+      height: PsDimens.space40,
     );
 
-    dynamic bindingTime(TimeOfDay todayTime, TimeOfDay timePicked) {
+    void bindingTime(TimeOfDay todayTime, TimeOfDay timePicked) {
+      setState(() {
+
+      });
+      // Determine AM or PM
       if (timePicked.period == DayPeriod.am) {
         timePeriod = 'AM';
       } else {
         timePeriod = 'PM';
       }
-      final String minute = timePicked.minute.toString() == PsConst.ZERO
-          ? '00'
-          : todayTime.minute.toString();
-      todayTime = timePicked.replacing(hour: timePicked.hour);
 
-      reservationTimeController.text = todayTime.hour.toString() +
-          ' : ' +
-          minute +
-          ' ' +
-          timePeriod.toString();
+      // Convert hour to 24-hour format
+      int hourIn24HourFormat = timePicked.hour;
+
+      // Format minute to always have two digits
+      final String minute = timePicked.minute.toString().padLeft(2, '0');
+
+      // Build the formatted time string in 24-hour format
+      reservationTimeController.text = '$hourIn24HourFormat : $minute';
     }
+
+
 
     return MultiProvider(
       providers: <SingleChildWidget>[
+        ChangeNotifierProvider<ShopInfoProvider>(
+            lazy: false,
+            create: (BuildContext context) {
+              shopInfoProvider = ShopInfoProvider(
+                  repo: shopInfoRepository!,
+                  psValueHolder: psValueHolder,
+                  ownerCode: 'CheckoutContainerView');
+              shopInfoProvider!.loadShopInfo();
+
+              return shopInfoProvider!;
+            }),
         ChangeNotifierProvider<CreateReservationProvider>(
           lazy: false,
           create: (BuildContext context) {
@@ -117,150 +143,202 @@ class _CreateReservationViewState extends State<CreateReservationView> {
           }
           return AnimatedBuilder(
               animation: widget.animationController,
-              child: SingleChildScrollView(
-                  child: Container(
-                padding: const EdgeInsets.all(PsDimens.space8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    PsDropdownBaseWithControllerWidget(
-                        title: Utils.getString(
-                            context, 'create_reservation__reservation_date'),
-                        textEditingController: reservationDateController,
-                        isMandatory: true,
-                        onTap: () async {
-                          final DateTime today = DateTime.now();
-                          Utils.psPrint('Today is ' + today.toString());
-                          dateTime = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: today,
-                              lastDate: DateTime(2025));
+              child: Stack(
+                children: <Widget>[
+                  SingleChildScrollView(
+                      child: Container(
+                        padding: const EdgeInsets.all(PsDimens.space8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            PsDropdownBaseWithControllerWidget(
+                                title: Utils.getString(
+                                    context, 'create_reservation__reservation_date'),
+                                textEditingController: reservationDateController,
+                                isMandatory: true,
+                                onTap: () async {
+                                  final DateTime today = DateTime.now();
+                                  //Utils.psPrint('Today is ' + today.toString());
+                                  dateTime = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: today,
+                                      lastDate: DateTime(2025),
 
-                          if (dateTime != null) {
-                            reservationProvider!.reservationDate =
-                                DateFormat('dd/MM/yyyy').format(dateTime!);
-
-                            Utils.psPrint('Today Date format is ' +
-                                reservationProvider!.reservationDate!);
-                          }
-
-                          reservationDateController.text =
-                              reservationProvider!.reservationDate!;
-                          reservationTimeController.text = '';
-                        }),
-                    PsDropdownBaseWithControllerWidget(
-                        title: Utils.getString(
-                            context, 'create_reservation__reservation_time'),
-                        textEditingController: reservationTimeController,
-                        isMandatory: true,
-                        onTap: () async {
-                          final TimeOfDay todayTime = TimeOfDay.now();
-                          if (
-                            //reservationDateController.text == null ||
-                              reservationDateController.text == '') {
-                            showDialog<dynamic>(
-                                context: context,
-                                barrierColor: PsColors.transparent,
-                                builder: (BuildContext context) {
-                                  return WarningDialog(
-                                    message: Utils.getString(context,
-                                        'create_reservation__warning_reservation_date'),
-                                    onPressed: () {},
                                   );
-                                });
-                          } else {
-                            if (dateTime!.day == DateTime.now().day) {
-                              final TimeOfDay todayTime = TimeOfDay.now();
 
-                              timePicked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                                builder: (BuildContext context, Widget? child) {
-                                  return MediaQuery(
-                                    data: MediaQuery.of(context)
-                                        .copyWith(alwaysUse24HourFormat: true),
-                                    child: child!,
-                                  );
-                                },
-                              );
+                                  if (dateTime != null) {
+                                    reservationProvider!.reservationDate =
+                                        DateFormat('yyyy-MM-dd').format(dateTime!);
 
-                              if (timePicked!.hour < TimeOfDay.now().hour ||
-                                  (timePicked!.hour <= TimeOfDay.now().hour &&
-                                      timePicked!.minute <
-                                          TimeOfDay.now().minute)) {
-                                reservationTimeController.text = '';
+                                    //Utils.psPrint('Today Date format is ' + reservationProvider!.reservationDate!);
+                                  }
+                                  setState(() {
+                                    reservationDateController.text =
+                                    reservationProvider!.reservationDate!;
+                                    reservationTimeController.text = '';
+                                  });
+                                }),
+                            PsDropdownBaseWithControllerWidget(
+                                title: Utils.getString(
+                                    context, 'create_reservation__reservation_time'),
+                                textEditingController: reservationTimeController,
+                                isMandatory: true,
+                                onTap: () async {
+                                  final TimeOfDay todayTime = TimeOfDay.now();
+                                  if (
+                                  //reservationDateController.text == null ||
+                                  reservationDateController.text == '') {
+                                    showDialog<dynamic>(
+                                        context: context,
+                                        barrierColor: PsColors.transparent,
+                                        builder: (BuildContext context) {
+                                          return WarningDialog(
+                                            message: Utils.getString(context,
+                                                'create_reservation__warning_reservation_date'),
+                                            onPressed: () {},
+                                          );
+                                        });
+                                  } else {
+                                    if (dateTime!.day == DateTime.now().day) {
+                                      final TimeOfDay todayTime = TimeOfDay.now();
 
-                                showDialog<dynamic>(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return ErrorDialog(
-                                        message: Utils.getString(context,
-                                            'create_reservation__error_selected_time'),
+                                      timePicked = await
+                                      showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.now(),
+                                        builder: (BuildContext context, Widget? child) {
+                                          return MediaQuery(
+                                            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+                                            child: child!,
+                                          );
+                                        },
                                       );
-                                    });
-                              } else {
-                                bindingTime(todayTime, timePicked!);
-                              }
-                            } else {
-                              timePicked = await showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                                builder: (BuildContext context, Widget? child) {
-                                  return MediaQuery(
-                                    data: MediaQuery.of(context)
-                                        .copyWith(alwaysUse24HourFormat: true),
-                                    child: child!,
-                                  );
-                                },
-                              );
-                              print('next day');
+                                      if (timePicked!.hour < TimeOfDay.now().hour ||
+                                          (timePicked!.hour <= TimeOfDay.now().hour &&
+                                              timePicked!.minute <
+                                                  TimeOfDay.now().minute)) {
+                                        setState(() {
+                                          reservationTimeController.text = '';
+                                        });
+                                        showDialog<dynamic>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return ErrorDialog(
+                                                message: Utils.getString(context,
+                                                    'create_reservation__error_selected_time'),
+                                              );
+                                            });
+                                      } else {
+                                        bindingTime(todayTime, timePicked!);
+                                      }
+                                    } else {
+                                      timePicked = await showTimePicker(
+                                        context: context,
+                                        initialTime: TimeOfDay.now(),
+                                        builder: (BuildContext context, Widget? child) {
+                                          return MediaQuery(
+                                            data: MediaQuery.of(context)
+                                                .copyWith(alwaysUse24HourFormat:false),
+                                            child: child!,
+                                          );
+                                        },
+                                      );
+                                        bindingTime(todayTime, timePicked!);
 
-                              bindingTime(todayTime, timePicked!);
-                            }
-                          }
-                        }),
-                    PsTextFieldWidget(
-                        titleText: Utils.getString(
-                            context, 'create_reservation__user_name'),
-                        textAboutMe: false,
-                        hintText: Utils.getString(
-                            context, 'create_reservation__user_name_hint'),
-                        textEditingController: userNameController,
-                        isMandatory: true),
-                    PsTextFieldWidget(
-                        titleText: Utils.getString(
-                            context, 'create_reservation__user_email'),
-                        textAboutMe: false,
-                        hintText: Utils.getString(
-                            context, 'create_reservation__user_email_hint'),
-                        textEditingController: userEmailController),
-                    PsTextFieldWidget(
-                        titleText: Utils.getString(
-                            context, 'create_reservation__user_phone'),
-                        textAboutMe: false,
-                        hintText: Utils.getString(
-                          context,
-                          'create_reservation__user_phone_hint',
+                                    }
+                                  }
+                                }),
+                            PsDropdownBaseWithControllerWidget(
+                                title: 'Number Of People',
+                                textEditingController: noOfPeopleController,
+                                isMandatory: true,
+                              onTap: () async {
+                                await showDialog(
+                                  barrierColor: Colors.transparent,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    int selectedNumber = int.tryParse(noOfPeopleController.text) ?? 1;
+                                    return AlertDialog(
+                                      backgroundColor: Colors.white,
+                                      content: Container(
+                                        width: 150,
+                                        height: 200,
+                                        child: ListView.builder(
+                                          itemCount: 50,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            final int number = index + 1;
+                                            return ListTile(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(5.0), ),
+                                              title: Center(child: Text('$number',
+                                                style: TextStyle(
+                                                  color: selectedNumber == number ? PsColors.white : PsColors.mainColor, // Set text color conditionally
+                                                ),
+                                              )), // Set text color to white
+                                              onTap: () {
+                                                setState(() {
+                                                  selectedNumber = number;
+                                                  noOfPeopleController.text = '$selectedNumber';
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              tileColor: selectedNumber == number
+                                                  ? PsColors.mainColor // Highlight selected number
+                                                  : PsColors.white,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+
+                                  },
+                                );
+                              },
+
+                            ),
+                            PsTextFieldWidget(
+                                titleText: Utils.getString(
+                                    context, 'create_reservation__user_name'),
+                                textAboutMe: false,
+                                hintText: Utils.getString(
+                                    context, 'create_reservation__user_name_hint'),
+                                textEditingController: userNameController,
+                                isMandatory: true),
+                            PsTextFieldWidget(
+                                titleText: Utils.getString(
+                                    context, 'create_reservation__user_email'),
+                                textAboutMe: false,
+                                hintText: Utils.getString(
+                                    context, 'create_reservation__user_email_hint'),
+                                textEditingController: userEmailController),
+                            PsTextFieldWidget(
+                                titleText: Utils.getString(
+                                    context, 'create_reservation__user_phone'),
+                                textAboutMe: false,
+                                hintText: Utils.getString(
+                                  context,
+                                  'create_reservation__user_phone_hint',
+                                ),
+                                keyboardType: TextInputType.phone,
+                                isPhoneNumber: true,
+                                textEditingController: userPhoneController,
+                                isMandatory: true),
+                            PsTextFieldWidget(
+                                titleText: Utils.getString(
+                                    context, 'create_reservation__user_note'),
+                                textAboutMe: false,
+                                height: PsDimens.space160,
+                                hintText: Utils.getString(
+                                    context, 'create_reservation__user_note_hint'),
+                                textEditingController: userNoteController),
+                            _largeSpacingWidget,
+                          ],
                         ),
-                        keyboardType: TextInputType.phone,
-                        isPhoneNumber: true,
-                        textEditingController: userPhoneController,
-                        isMandatory: true),
-                    PsTextFieldWidget(
-                        titleText: Utils.getString(
-                            context, 'create_reservation__user_note'),
-                        textAboutMe: false,
-                        height: PsDimens.space160,
-                        hintText: Utils.getString(
-                            context, 'create_reservation__user_note_hint'),
-                        textEditingController: userNoteController),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: PsDimens.space16,
-                          top: PsDimens.space16,
-                          right: PsDimens.space16,
-                          bottom: PsDimens.space40),
+                      )
+                  ),
+                  Positioned(
+                    bottom: 10, right: 20, left: 20,
                       child: PsButtonWidget(
                         provider: reservationProvider!,
                         userProvider: userProvider,
@@ -270,12 +348,12 @@ class _CreateReservationViewState extends State<CreateReservationView> {
                         userNoteTextController: userNoteController,
                         reservationDateController: reservationDateController,
                         reservationTimeController: reservationTimeController,
+                        noOfPeopleController: noOfPeopleController,
+                        shopInfoProvider : shopInfoProvider,
                       ),
-                    ),
-                    _largeSpacingWidget,
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
               builder: (BuildContext context, Widget? child) {
                 return FadeTransition(
                     opacity: animation,
@@ -302,27 +380,116 @@ class PsButtonWidget extends StatelessWidget {
       required this.reservationDateController,
       required this.reservationTimeController,
       required this.provider,
-      required this.userProvider});
+      required this.userProvider,
+        required this.noOfPeopleController,
+        required this.shopInfoProvider});
 
   final TextEditingController userNameTextController,
       userEmailTextController,
       userPhoneTextController,
       userNoteTextController,
       reservationDateController,
-      reservationTimeController;
+      reservationTimeController,
+      noOfPeopleController;
   final CreateReservationProvider provider;
   final UserProvider userProvider;
+  final ShopInfoProvider? shopInfoProvider;
+
+  bool isTimeInRange(String timeString, String startTime, String endTime) {
+    final DateTime time = DateFormat('HH : mm').parse(timeString);
+    final DateTime start = DateFormat('HH:mm').parse(startTime);
+    final DateTime end = DateFormat('HH:mm').parse(endTime);
+
+    return time.isAfter(start) && time.isBefore(end);
+  }
+  bool isValidTime(String dateString, String timeString) {
+    final DateTime dateTime = DateFormat('yyyy-MM-dd').parse(dateString);;
+    switch (dateTime.weekday) {
+      case 1:
+        if(shopInfoProvider!.shopInfo.data!.shopSchedules!.isMondayOpen! == '1')
+          return isTimeInRange(
+              timeString,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.mondayOpenHour!,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.mondayCloseHour!
+          );
+        else {
+          return false;
+        }
+      case 2:
+        if(shopInfoProvider!.shopInfo.data!.shopSchedules!.isTuesdayOpen! == '1')
+          return isTimeInRange(
+              timeString,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.tuesdayOpenHour!,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.tuesdayCloseHour!
+          );
+        else {
+          return false;
+        }
+      case 3:
+        if(shopInfoProvider!.shopInfo.data!.shopSchedules!.isWednesdayOpen! == '1')
+          return isTimeInRange(
+              timeString,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.wednesdayOpenHour!,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.wednesdayCloseHour!
+          );
+        else {
+          return false;
+        }
+      case 4:
+        if(shopInfoProvider!.shopInfo.data!.shopSchedules!.isThursdayOpen! == '1')
+          return isTimeInRange(
+            timeString,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.thursdayOpenHour!,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.thursdayCloseHour!
+          );
+        else {
+          return false;
+        }
+      case 5:
+        if(shopInfoProvider!.shopInfo.data!.shopSchedules!.isFridayOpen! == '1')
+          return isTimeInRange(
+              timeString,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.fridayOpenHour!,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.fridayCloseHour!
+          );
+        else {
+          return false;
+        }
+      case 6:
+        if(shopInfoProvider!.shopInfo.data!.shopSchedules!.isSaturdayOpen! == '1')
+          return isTimeInRange(
+              timeString,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.saturdayOpenHour!,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.saturdayCloseHour!
+          );
+        else {
+          return false;
+        }
+      case 7:
+        if(shopInfoProvider!.shopInfo.data!.shopSchedules!.isSundayOpen! == '1')
+          return isTimeInRange(
+              timeString,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.sundayOpenHour!,
+              shopInfoProvider!.shopInfo.data!.shopSchedules!.sundayCloseHour!
+          );
+        else {
+          return false;
+        }
+      default:
+        return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final PsValueHolder psValueHolder = Provider.of<PsValueHolder>(context);
-
     return PSButtonWidget(
         hasShadow: true,
         width: double.infinity,
         titleText: Utils.getString(context, 'contact_us__submit'),
         onPressed: () async {
           if (provider.reservationDate == null) {
+
             showDialog<dynamic>(
                 context: context,
                 barrierColor: PsColors.transparent,
@@ -334,8 +501,8 @@ class PsButtonWidget extends StatelessWidget {
                   );
                 });
           } else if (
-            //reservationTimeController.text == null ||
               reservationTimeController.text == '') {
+
             showDialog<dynamic>(
                 context: context,
                 barrierColor: PsColors.transparent,
@@ -346,7 +513,18 @@ class PsButtonWidget extends StatelessWidget {
                     onPressed: () {},
                   );
                 });
-          } else if (userNameTextController.text == '' 
+          }  else if (
+          noOfPeopleController.text == '') {
+            showDialog<dynamic>(
+                context: context,
+                barrierColor: PsColors.transparent,
+                builder: (BuildContext context) {
+                  return WarningDialog(
+                    message: 'Please Select Number Of People',
+                    onPressed: () {},
+                  );
+                });
+          } else if (userNameTextController.text == ''
           //||
               //userNameTextController.text == null
               ) {
@@ -374,9 +552,21 @@ class PsButtonWidget extends StatelessWidget {
                     onPressed: () {},
                   );
                 });
-          } else {
+          }
+          else if(!isValidTime(provider.reservationDate!, reservationTimeController.text)){
+            showDialog<dynamic>(
+                context: context,
+                barrierColor: PsColors.transparent,
+                builder: (BuildContext context) {
+                  return WarningDialog(
+                    message: 'Shop Is Closed At Selected Time.',
+                    onPressed: () {},
+                  );
+                });
+          }
+          else {
             if (await Utils.checkInternetConnectivity()) {
-              final ReservationParameterHolder contactUsParameterHolder =
+              final ReservationParameterHolder reservationParameterHolder =
                   ReservationParameterHolder(
                       reservationDate: provider.reservationDate!,
                       reservationTime: reservationTimeController.text,
@@ -387,27 +577,25 @@ class PsButtonWidget extends StatelessWidget {
                       userId: psValueHolder.loginUserId!,
                       userEmail: userProvider.user.data!.userEmail!,
                       userPhoneNumber: userProvider.user.data!.userPhone!,
-                      userName: userProvider.user.data!.userName!);
+                      userName: userProvider.user.data!.userName!,
+                      noOfPeople: noOfPeopleController.text!,
+                  );
 
               await PsProgressDialog.showDialog(context);
               final PsResource<ApiStatus> _apiStatus = await provider
-                  .postReservation(contactUsParameterHolder.toMap());
+                  .postReservation(reservationParameterHolder.toMap());
 
               if (_apiStatus.data != null) {
                 PsProgressDialog.dismissDialog();
-                print('Success');
-                reservationDateController.text = '';
-                reservationTimeController.text = '';
-                userEmailTextController.clear();
-                userPhoneTextController.clear();
-                userNameTextController.clear();
-                userNoteTextController.clear();
+                Navigator.pop(context);
+                reservationListRefreshKey.currentState?.show();
                 showDialog<dynamic>(
+                  barrierColor: Colors.transparent,
                     context: context,
                     builder: (BuildContext context) {
                       if (_apiStatus.data!.status == 'success') {
-                        return SuccessDialog(
-                          message: _apiStatus.data!.status,
+                        return const SuccessDialog(
+                          message: 'Reservation Request Has Been Submitted',
                         );
                       } else {
                         return ErrorDialog(

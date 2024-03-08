@@ -272,9 +272,9 @@ class PsConst {
 
   ////
   /// Colors
-  static const Color PENDING_COLOR = Color(0xFFFBC02D);
+  static const Color PENDING_COLOR = Color(0xFFE76D15);
   static const Color CANCEL_COLOR = Color(0xFF424242);
-  static const Color CONFIRM_COLOR = Color(0xFF448AFF);
-  static const Color REJECTE_COLOR = Color(0xFF388E3C);
-  static const Color COMPLETE_COLOR = Color(0xFFEF5350);
+  static const Color CONFIRM_COLOR = Color(0xFF009738);
+  static const Color REJECTE_COLOR = Color(0xFFEA1A1A);
+  static const Color COMPLETE_COLOR = Color(0xFF6210EA);
 }

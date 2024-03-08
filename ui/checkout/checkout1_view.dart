@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:flutterrestaurant/api/common/ps_resource.dart';
@@ -24,7 +25,6 @@ import 'package:flutterrestaurant/viewobject/holder/profile_update_view_holder.d
 import 'package:flutterrestaurant/viewobject/shipping_area.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
@@ -178,11 +178,13 @@ class _Checkout1ViewState extends State<Checkout1View> {
     super.dispose();
   }
   dynamic updateDateAndTime(DateTime dateTime) {
-   
+    dateTime = DateTime(dateTime.year, dateTime.month, dateTime.day,
+        dateTime.hour, dateTime.minute, DateTime.now().second);
     latestDate = '$dateTime';
     deliveryPickUpDate =
         DateFormat.yMMMEd('en_US').format(DateTime.parse(latestDate!));
-    deliveryPickUpTime = DateFormat.Hm('en_US').format(DateTime.parse(latestDate!));
+    deliveryPickUpTime = DateFormat.Hm('en_US').format(DateTime.parse(
+        latestDate!));
     orderTime = deliveryPickUpDate! +' ' + deliveryPickUpTime!;
 
     deliveryPickUpTime = DateFormat('h:mm a', 'en_US').format(DateTime.parse(latestDate!));
@@ -209,7 +211,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
     provider = Provider.of<DeliveryCostProvider>(context, listen: false);
 
     dateTime = DateTime.now()
-          .add(Duration(minutes: int.parse(valueHolder!.defaultOrderTime!)));
+          .add(Duration(minutes: int.parse(shopInfoProvider!.shopInfo.data?.orderPreparingTime ?? '0')));
 
 
     if (callDeliveryCost) {
@@ -288,7 +290,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                     const SizedBox(
                       height: PsDimens.space16,
                     ),
-                    PsTextFieldWidget(
+                    /*PsTextFieldWidget(
                       titleText: Utils.getString(context, 'edit_profile__email'),
                       textAboutMe: false,
                       hintText: Utils.getString(context, 'edit_profile__email'),
@@ -296,7 +298,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                       isMandatory: true,
                       onChanged: checkFields,
                       isEmail: true,
-                    ),
+                    ),*/
                     PsTextFieldWidget(
                       titleText: Utils.getString(context, 'edit_profile__phone'),
                       textAboutMe: false,
@@ -307,6 +309,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                       isMandatory: true,
                     ),
                     RadioWidget(
+                      psValueHolder: valueHolder!,
                       userProvider: userProvider,
                       updateOrderByData: updateOrderByData,
                       orderTimeTextEditingController:
@@ -333,7 +336,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                     isClickPickUpButton: userProvider.isClickPickUpButton),
                     //const SizedBox(height: PsDimens.space8),
                     Container(
-                      margin: const EdgeInsets.all(PsDimens.space12),
+                      margin: const EdgeInsets.only(top:PsDimens.space12, left:PsDimens.space12, right:PsDimens.space12),
                       child:  Divider(
                         thickness: 1,
                         height: 1,
@@ -343,6 +346,46 @@ class _Checkout1ViewState extends State<Checkout1View> {
                     if (userProvider.isClickDeliveryButton)
                       Column(
                         children: <Widget>[
+                          if (shopInfoProvider!.shopInfo.data!.isArea != null &&
+                              shopInfoProvider!.shopInfo.data!.isArea ==
+                                  PsConst.ONE)
+                            PsDropdownBaseWithControllerWidget(
+                                title: Utils.getString(context, 'checkout1__area'),
+                                textEditingController: shippingAreaController,
+                                isMandatory: true,
+                                onTap: () async {
+                                  final dynamic result = await Navigator.pushNamed(
+                                      context, RoutePaths.areaList);
+
+                                  if (result != null && result is ShippingArea) {
+                                    setState(() {
+                                      shippingAreaController.text =
+                                          result.areaName! +
+                                              ' (' +
+                                              result.currencySymbol! +
+                                              ' ' +
+                                              result.price! +
+                                              ')';
+                                      userProvider.selectedArea = result;
+                                    });
+                                  }
+                                }),
+                          if (shopInfoProvider!.shopInfo.data!.isArea ==
+                              PsConst.ZERO)
+                            if (provider!.deliveryCost.data != null)
+                              _DeliveryCostWidget(
+                                  provider: provider!,
+                                  basketList: widget.basketList)
+                            else
+                              _DefaultDeliveryCostWidget(),
+                          Container(
+                            margin: const EdgeInsets.all(PsDimens.space12),
+                            child:  Divider(
+                              thickness: 1,
+                              height: 1,
+                              color: PsColors.mainColor,
+                            ),
+                          ),
                           PsTextFieldWidget(
                             titleText: Utils.getString(context, 'edit_profile__postcode'),
                             textAboutMe: false,
@@ -413,7 +456,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                               onChanged: checkFields,
                              isMandatory: true),
                           Container(
-                            margin: const EdgeInsets.all(PsDimens.space12),
+                            margin: const EdgeInsets.only(right: 12, left: 12, bottom: 12),
                             child:  Divider(
                               thickness: 1,
                               height: 1,
@@ -464,46 +507,7 @@ class _Checkout1ViewState extends State<Checkout1View> {
                                     .copyWith(
                                         color: PsColors.textPrimaryLightColor),
                               ))),*/
-                          if (shopInfoProvider!.shopInfo.data!.isArea != null &&
-                              shopInfoProvider!.shopInfo.data!.isArea ==
-                                  PsConst.ONE)
-                            PsDropdownBaseWithControllerWidget(
-                                title: Utils.getString(context, 'checkout1__area'),
-                                textEditingController: shippingAreaController,
-                                isMandatory: true,
-                                onTap: () async {
-                                  final dynamic result = await Navigator.pushNamed(
-                                      context, RoutePaths.areaList);
 
-                                  if (result != null && result is ShippingArea) {
-                                    setState(() {
-                                      shippingAreaController.text =
-                                          result.areaName! +
-                                              ' (' +
-                                              result.currencySymbol! +
-                                              ' ' +
-                                              result.price! +
-                                              ')';
-                                      userProvider.selectedArea = result;
-                                    });
-                                  }
-                                }),
-                          if (shopInfoProvider!.shopInfo.data!.isArea ==
-                              PsConst.ZERO)
-                            if (provider!.deliveryCost.data != null)
-                              _DeliveryCostWidget(
-                                  provider: provider!,
-                                  basketList: widget.basketList)
-                            else
-                              _DefaultDeliveryCostWidget(),
-                          Container(
-                            margin: const EdgeInsets.all(PsDimens.space12),
-                            child:  Divider(
-                              thickness: 1,
-                              height: 1,
-                              color: PsColors.mainColor,
-                            ),
-                          ),
                         ],
                       )
                     else
@@ -648,9 +652,10 @@ class RadioWidget extends StatefulWidget {
     // required this.scheduleOrder,
     required this.latestDate,
     required this.isWeeklySchedule,
-    required this.shopInfoProvider,
+    required this.shopInfoProvider, required this.psValueHolder,
     // @required this.userId,
   });
+  final PsValueHolder psValueHolder;
   final ShopInfoProvider shopInfoProvider;
   final UserProvider userProvider;
   final Function updateOrderByData;
@@ -708,7 +713,7 @@ class _RadioWidgetState extends State<RadioWidget> {
                     _showCalender = false;
                   });
                   final DateTime dateTime = DateTime.now().add(Duration(
-                      minutes: int.parse(psValueHolder.defaultOrderTime!)));
+                      minutes: int.parse(widget.shopInfoProvider.shopInfo.data!.orderPreparingTime!)));
                   widget.updateDateAndTime(dateTime);
                 },
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -718,7 +723,7 @@ class _RadioWidgetState extends State<RadioWidget> {
                 child: Text(
                   Utils.getString(context, 'checkout1__asap') +
                       ' (' +
-                      psValueHolder.defaultOrderTime! +
+                      widget.shopInfoProvider.shopInfo.data!.orderPreparingTime! +
                       'mins)',
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
                   maxLines: 1,
@@ -1140,7 +1145,7 @@ class __EditAndDeleteButtonWidgetState
                       width: double.infinity,
                       colorData: widget.isClickDeliveryButton
                           ? PsColors.mainColor
-                          : PsColors.white,
+                          : PsColors.backgroundColor,
                       titleText:
                           Utils.getString(context, 'checkout1__delivery'),
                       onPressed: () async {
@@ -1167,7 +1172,7 @@ class __EditAndDeleteButtonWidgetState
                             : PsColors.mainColor,
                         colorData: widget.isClickPickUpButton
                             ? PsColors.mainColor
-                            : PsColors.white,
+                            : PsColors.backgroundColor,
                         titleText:
                             Utils.getString(context, 'checkout1__pick_up'),
                         onPressed: () async {

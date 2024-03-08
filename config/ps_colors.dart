@@ -84,8 +84,8 @@ class PsColors {
   ///
   ///
 
-  static const Color _c_main_color = Color(0xFFFFBC00);
-  static const Color _c_main_light_color = Color(0xFFFFF3D3);
+  static const Color _c_main_color = Color(0xFFB695F8);
+  static const Color _c_main_light_color = Color(0xFFEDE5FD);
   static const Color _c_main_dark_color = Color(0xFFDDA200);
 
   static const Color _c_white_color = Colors.white;

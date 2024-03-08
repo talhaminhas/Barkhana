@@ -20,6 +20,7 @@ class Reservation extends PsObject<Reservation> {
     this.shopInfo,
     this.reservationstatus,
     this.user,
+    this.noOfPeople,
   });
 
   String? id;
@@ -34,6 +35,7 @@ class Reservation extends PsObject<Reservation> {
   String? statusId;
   String? addedDate;
   String? addedDateStr;
+  String? noOfPeople;
   ShopInfo? shopInfo;
   ReservationStatus? reservationstatus;
   User? user;
@@ -59,6 +61,7 @@ class Reservation extends PsObject<Reservation> {
         statusId: dynamicData['status_id'],
         addedDate: dynamicData['added_date'],
         addedDateStr: dynamicData['added_date_str'],
+        noOfPeople: dynamicData['no_of_people'],
         shopInfo: ShopInfo().fromMap(dynamicData['shop']),
         reservationstatus:
             ReservationStatus().fromMap(dynamicData['reservation_status']),
@@ -86,6 +89,7 @@ class Reservation extends PsObject<Reservation> {
       data['added_date'] = object.addedDate;
       data['added_date_str'] = object.addedDateStr;
       data['shop'] = ShopInfo().toMap(object.shopInfo);
+      data['no_of_people'] = object.noOfPeople;
       data['reservation_status'] =
           ReservationStatus().toMap(object.reservationstatus);
       data['user'] = User().toMap(object.user as User);

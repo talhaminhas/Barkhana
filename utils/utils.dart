@@ -19,6 +19,7 @@ import 'package:flutterrestaurant/db/common/ps_shared_preferences.dart';
 import 'package:flutterrestaurant/provider/common/notification_provider.dart';
 import 'package:flutterrestaurant/ui/common/dialog/chat_noti_dialog.dart';
 import 'package:flutterrestaurant/ui/common/dialog/noti_dialog.dart';
+import 'package:flutterrestaurant/ui/create_reservation/list/reservation_list_view.dart';
 import 'package:flutterrestaurant/ui/transaction/detail/transaction_item_list_view.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_object.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
@@ -525,6 +526,7 @@ class Utils {
     FirebaseMessaging.onMessage.listen((RemoteMessage event) async {
       orderListRefreshKey.currentState?.show();
       orderDetailRefreshKey.currentState?.show();
+      reservationListRefreshKey.currentState?.show();
       final Map<String, dynamic> message = event.data;
       print('onMessage: $message');
       print(event);
@@ -704,7 +706,9 @@ class Utils {
     final dynamic data = message['notification'] ?? message;
     String notiMessage = '';
     if (Platform.isAndroid) {
+      print('yes1$data');
       notiMessage = data['message'];
+
       //notiMessage ??= '';
     } else if (Platform.isIOS) {
       notiMessage = data['body'];

@@ -36,8 +36,14 @@ class ReservationListItem extends StatelessWidget {
           child: GestureDetector(
             onTap: onTap as void Function()?,
             child: Container(
-              color: PsColors.backgroundColor,
-              margin: const EdgeInsets.only(top: PsDimens.space8),
+              margin: const EdgeInsets.only(top: 10, right:  20, left: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8), // Set the radius as needed
+                border: Border.all(
+                  color: PsColors.mainColor, // You can replace PsColors.borderColor with the color you desire
+                  width: 2.0, // Set the border width as needed
+                ),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -45,15 +51,22 @@ class ReservationListItem extends StatelessWidget {
                     reservation: reservation,
                     scaffoldKey: scaffoldKey,
                   ),
-                  const Divider(
-                    height: PsDimens.space1,
+                  Container(
+                    margin: const EdgeInsets.only(right: 20, left: 20),
+                    child: Divider(
+                      color: PsColors.mainColor,
+                      height: PsDimens.space2,
+                      thickness: 2,
+                    ),
                   ),
                   _TransactionTextWidget(
-                      reservation: reservation,
-                      updateReservationStatus: updateReservationStatus!),
+                    reservation: reservation,
+                    updateReservationStatus: updateReservationStatus!,
+                  ),
                 ],
               ),
             ),
+
           ),
           builder: (BuildContext context, Widget? child) {
             return FadeTransition(
@@ -84,14 +97,17 @@ class _TransactionNoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget _textWidget = Text(
-      "${Utils.getString(context, 'transaction_reservation')}",
+      reservation.resvDate!,
       textAlign: TextAlign.left,
-      style: Theme.of(context).textTheme.titleMedium,
+      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+        color: PsColors.mainColor, // Replace PsColors.yourDesiredColor with the color you want
+      ),
     );
+
     return Padding(
       padding: const EdgeInsets.only(
-          left: PsDimens.space12,
-          right: PsDimens.space4,
+          left: PsDimens.space20,
+          right: PsDimens.space20,
           top: PsDimens.space10,
           bottom: PsDimens.space10),
       child: Row(
@@ -101,9 +117,10 @@ class _TransactionNoWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              const Icon(
-                FontAwesome.book,
+              Icon(
+                Icons.calendar_month_outlined,
                 size: PsDimens.space24,
+                color: PsColors.mainColor,
               ),
               const SizedBox(
                 width: PsDimens.space8,
@@ -111,52 +128,29 @@ class _TransactionNoWidget extends StatelessWidget {
               _textWidget,
             ],
           ),
-          _TransactionStatusWidget(reservation: reservation),
+          Text(
+            reservation.reservationstatus!.title ?? '-',
+            style:
+            Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: reservation.reservationstatus!.id == '1'
+                  ? PsConst.PENDING_COLOR
+                  : reservation.reservationstatus!.id == '2'
+                  ? PsConst.CANCEL_COLOR
+                  : reservation.reservationstatus!.id == '3'
+                  ? PsConst.CONFIRM_COLOR
+                  : reservation.reservationstatus!.id == '4'
+                  ? PsConst.COMPLETE_COLOR
+                  : reservation.reservationstatus!.id == '5'
+                  ? PsConst.REJECTE_COLOR
+                  : PsColors.mainColor,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _TransactionStatusWidget extends StatelessWidget {
-  const _TransactionStatusWidget({
-    Key? key,
-    required this.reservation,
-  }) : super(key: key);
-
-  final Reservation reservation;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.only(
-          top: PsDimens.space4,
-          bottom: PsDimens.space4,
-          right: PsDimens.space12,
-          left: PsDimens.space12),
-      decoration: BoxDecoration(
-          color: reservation.reservationstatus!.id == '1'
-              ? PsConst.PENDING_COLOR
-              : reservation.reservationstatus!.id == '2'
-                  ? PsConst.CANCEL_COLOR
-                  : reservation.reservationstatus!.id == '3'
-                      ? PsConst.CONFIRM_COLOR
-                      : reservation.reservationstatus!.id == '4'
-                          ? PsConst.REJECTE_COLOR
-                          : reservation.reservationstatus!.id == '5'
-                              ? PsConst.COMPLETE_COLOR
-                              : PsConst.COMPLETE_COLOR,
-          borderRadius:
-              const BorderRadius.all(Radius.circular(PsDimens.space8))),
-      child: Text(
-        reservation.reservationstatus!.title ?? '-',
-        style:
-            Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
-      ),
-    );
-  }
-}
 
 class _TransactionTextWidget extends StatelessWidget {
   const _TransactionTextWidget(
@@ -171,9 +165,9 @@ class _TransactionTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const EdgeInsets _paddingEdgeInsetWidget = EdgeInsets.only(
-      left: PsDimens.space16,
-      right: PsDimens.space16,
-      top: PsDimens.space8,
+      left: PsDimens.space20,
+      right: PsDimens.space20,
+      top: PsDimens.space10,
     );
 
     final Widget _nameTextWidget = Row(
@@ -181,7 +175,14 @@ class _TransactionTextWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(
-          Utils.getString(context, 'transaction_name'),
+          'Name : ',
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(fontWeight: FontWeight.normal),
+        ),
+        Text(
+          '${reservation.userName}',
           style: Theme.of(context)
               .textTheme
               .bodyMedium!
@@ -189,34 +190,19 @@ class _TransactionTextWidget extends StatelessWidget {
         ),
       ],
     );
-
-    final Widget _userNameTextWidget = Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Container(
-          margin: const EdgeInsets.only(
-              left: PsDimens.space16,
-              right: PsDimens.space16,
-              top: PsDimens.space6,
-              bottom: PsDimens.space6),
-          child: Text(
-            '${reservation.userName}',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontWeight: FontWeight.normal),
-          ),
-        ),
-      ],
-    );
-
     final Widget _dateTextWidget = Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(
-          Utils.getString(context, 'transaction_date'),
+          'Time :' ,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(fontWeight: FontWeight.normal),
+        ),
+        Text(
+          '${reservation.resvTime}',
           style: Theme.of(context)
               .textTheme
               .bodyMedium!
@@ -224,34 +210,19 @@ class _TransactionTextWidget extends StatelessWidget {
         ),
       ],
     );
-
-    final Widget _userDateTextWidget = Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Container(
-          margin: const EdgeInsets.only(
-              left: PsDimens.space16,
-              right: PsDimens.space16,
-              top: PsDimens.space6,
-              bottom: PsDimens.space6),
-          child: Text(
-            '${reservation.resvDate} ${reservation.resvTime} ',
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(fontWeight: FontWeight.normal),
-          ),
-        ),
-      ],
-    );
-
-    final Widget _restaurnatTextWidget = Row(
+    final Widget _noOfPeopleTextWidget = Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(
-          Utils.getString(context, 'transaction_restaurant'),
+          'Number Of People :' ,
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(fontWeight: FontWeight.normal),
+        ),
+        Text(
+          '${reservation.noOfPeople}',
           style: Theme.of(context)
               .textTheme
               .bodyMedium!
@@ -264,77 +235,90 @@ class _TransactionTextWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(
-                  left: PsDimens.space16,
-                  right: 0.0,
-                  top: PsDimens.space6,
-                  bottom: PsDimens.space6),
-              child: const Icon(Icons.call,
-                  size: PsDimens.space18, color: Colors.yellow),
-            ),
-            //Container(
-            InkWell(
-              child: Text(
-                Utils.getString(context, 'transaction_call_restaurant'),
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.normal, color: Colors.yellow),
-              ),
-              onTap: () async {
-                if (await canLaunchUrl(Uri.parse(
-                    'tel://${reservation.shopInfo!.aboutPhone1}'))) {
-                  await launchUrl(Uri.parse('tel://${reservation.shopInfo!.aboutPhone1}'));
-                } else {
-                  throw 'Could not Call Phone Number 1';
-                }
-              },
-            ),
-            //),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            InkWell(
-                child: Text(
-                  //Utils.getString(context, 'transaction_cancel_booking'),
-                  reservation.reservationstatus!.id == '1'
-                      ? Utils.getString(context, 'transaction_cancel_booking')
-                      : reservation.reservationstatus!.id == '2'
-                          ? Utils.getString(context, '')
-                          : reservation.reservationstatus!.id == '3'
-                              ? Utils.getString(context, '')
-                              : reservation.reservationstatus!.id == '4'
-                                  ? Utils.getString(context, '')
-                                  : reservation.reservationstatus!.id == '5'
-                                      ? Utils.getString(context, '')
-                                      : Utils.getString(context, ''),
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.normal,
-                        decoration: TextDecoration.underline,
+        Visibility(
+            visible: reservation.reservationstatus!.id == '1',
+            child: Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                      child: Container(
+                        height: 50,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: PsColors.discountColor, // Replace PsColors.yourDesiredColor with your desired color
                       ),
-                ),
-                onTap: () async {
-                  showDialog<dynamic>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return ConfirmDialogView(
-                            description:
-                                Utils.getString(context, 'reservation_confirm'),
-                            leftButtonText: Utils.getString(
-                                context, 'app_info__cancel_button_name'),
-                            rightButtonText:
-                                Utils.getString(context, 'dialog__ok'),
-                            onAgreeTap: () async {
-                              Navigator.pop(context);
-                              updateReservationStatus();
+                      child: Text(
+                        'Cancel',
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white
+                        ),
+                      ),
+                      onPressed: () async {
+                        showDialog<dynamic>(
+                          barrierColor: Colors.transparent,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ConfirmDialogView(
+                                  description:
+                                  Utils.getString(context, 'reservation_confirm'),
+                                  leftButtonText: Utils.getString(
+                                      context, 'app_info__cancel_button_name'),
+                                  rightButtonText:
+                                  Utils.getString(context, 'dialog__ok'),
+                                  onAgreeTap: () async {
+                                    Navigator.pop(context);
+                                    updateReservationStatus();
+                                  });
                             });
-                      });
-                }),
-          ],
-        )
+                      }),
+              )
+
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  )
+                ],
+              ),
+            )),
+        Expanded(
+          child: Container(
+            height: 50,
+            child:
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: PsColors.mainColor, // Replace PsColors.yourDesiredColor with your desired color
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.only(right: 5,),
+                        child: const Icon(Icons.call,
+                            size: PsDimens.space18, color: Colors.white),
+                      ),
+                      Text(
+                        Utils.getString(context, 'transaction_call_restaurant'),
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            fontWeight: FontWeight.normal, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  onPressed: () async {
+                    if (await canLaunchUrl(Uri.parse(
+                        'tel://${reservation.shopInfo!.aboutPhone1}'))) {
+                      await launchUrl(Uri.parse('tel://${reservation.shopInfo!.aboutPhone1}'));
+                    } else {
+                      throw 'Could not Call Phone Number 1';
+                    }
+                  },
+                ),
+          ),
+        ),
+
+
+
       ],
     );
 
@@ -348,26 +332,18 @@ class _TransactionTextWidget extends StatelessWidget {
           ),
           Padding(
             padding: _paddingEdgeInsetWidget,
-            child: _userNameTextWidget,
-          ),
-          Padding(
-            padding: _paddingEdgeInsetWidget,
             child: _dateTextWidget,
           ),
           Padding(
             padding: _paddingEdgeInsetWidget,
-            child: _userDateTextWidget,
+            child: _noOfPeopleTextWidget,
           ),
           Padding(
-            padding: _paddingEdgeInsetWidget,
-            child: _restaurnatTextWidget,
-          ),
-          Padding(
-            padding: _paddingEdgeInsetWidget,
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
             child: _callRestaurnatTextWidget,
           ),
           const SizedBox(
-            height: PsDimens.space12,
+            height: 10,
           )
         ],
       );

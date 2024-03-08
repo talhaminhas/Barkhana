@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/services.dart';
 //import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/config/ps_config.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
@@ -712,22 +713,21 @@ class _HomeViewState extends State<DashboardView>
                             }),
                       ),*/
                   // ignore: unnecessary_null_comparison
-                  /* if (provider != null)
+                   if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
                       Visibility(
                         visible: true,
                         child: _DrawerMenuWidget(
-                            icon: FontAwesome.book,
-                            title: Utils.getString(
-                                context, 'home__menu_drawer_reservation_list'),
+                            icon:Icons.calendar_month_outlined,
+                            title: 'Reservations',
                             index: PsConst
                                 .REQUEST_CODE__MENU_USER_RESERVATION_LIST_FRAGMENT,
                             onTap: (String title, int index) {
                               Navigator.pop(context);
                               updateSelectedIndexWithAnimation(title, index);
                             }),
-                      ),*/
+                      ),
                   // ignore: unnecessary_null_comparison
 
                   const Divider(
@@ -901,13 +901,13 @@ class _HomeViewState extends State<DashboardView>
                 appBarTitle,
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: PsColors.textPrimaryColor,
+                  color: PsColors.mainColor,
                 ),
               ),
             ),
             titleSpacing: 0,
-            elevation: 5,
-            iconTheme: IconThemeData(color: PsColors.textPrimaryColor),
+            elevation: 0,
+            iconTheme: IconThemeData(color: PsColors.mainColor),
             toolbarTextStyle: TextStyle(color: PsColors.textPrimaryColor),
 
             systemOverlayStyle: SystemUiOverlayStyle(

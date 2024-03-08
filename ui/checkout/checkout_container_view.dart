@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:flutterrestaurant/api/ps_api_service.dart';
@@ -264,26 +265,32 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       alignment: const Alignment(0.0, 0.0),
                       children: <Widget>[
                         if (viewNo != 3)
-                        Container(
-                          margin:
-                              const EdgeInsets.only(right: PsDimens.space36),
-                          child: GestureDetector(
-                            child: Text(
-                                viewNo == 3
-                                    ? ''/*Utils.getString(context,
+                          GestureDetector(
+                            child:
+                            Container(
+                              //color: Colors.red,
+                              padding: const EdgeInsets.only(
+                                right: PsDimens.space36,
+                                left:  PsDimens.space32,
+                                top: PsDimens.space14,
+                                bottom: PsDimens.space14,
+                              ),
+                              child: Text(
+                                  viewNo == 3
+                                      ? ''/*Utils.getString(context,
                                         'basket_list__checkout_button_name')*/
-                                    : Utils.getString(
-                                        context, 'checkout_container__next'),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(color: PsColors.white)),
+                                      : Utils.getString(
+                                      context, 'checkout_container__next'),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: PsColors.white)),
+                            ),
                             onTap: () {
                               clickToNextCheck(userProvider!.user.data!,
                                   _closeCheckoutContainer, tokenProvider!);
                             },
                           ),
-                        ),
                         if (viewNo != 3)
                         Positioned(
                           right: 1,
@@ -310,6 +317,41 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
     final RegExp phoneRegExp = RegExp(r'^[0-9]{11}$');
     return phoneRegExp.hasMatch(phoneNumber);
   }
+  void parseOpenCloseTime(
+      String? openDateAndTime,
+      String? closeDateAndTime,
+      int? openHour,
+      int? openMin,
+      int? closeHour,
+      int? closeMin,
+      ) {
+    if (openDateAndTime != null && openDateAndTime != '') {
+      final List<String>? openDateAndTimeArray = openDateAndTime.split(' ');
+
+      if (openDateAndTimeArray != null && openDateAndTimeArray[0].contains(':')) {
+        final List<String>? openHourArray = openDateAndTimeArray[0].split(':');
+
+        if (openHourArray != null && openHourArray.isNotEmpty) {
+          openHour = int.parse(openHourArray[0]);
+          openMin = int.parse(openHourArray[1]);
+        }
+      }
+    }
+
+    if (closeDateAndTime != null && closeDateAndTime != '') {
+      final List<String>? closeDateAndTimeArray = closeDateAndTime.split(' ');
+
+      if (closeDateAndTimeArray != null && closeDateAndTimeArray[0].contains(':')) {
+        final List<String>? closeHourArray = closeDateAndTimeArray[0].split(':');
+
+        if (closeHourArray != null && closeHourArray.isNotEmpty) {
+          closeHour = int.parse(closeHourArray[0]);
+          closeMin = int.parse(closeHourArray[1]);
+        }
+      }
+    }
+  }
+
   dynamic clickToNextCheck(User user, Function _closeCheckoutContainer,
       TokenProvider tokenProvider) async {
     if (viewNo < maxViewNo) {
@@ -672,7 +714,6 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               });
         }
       } else if (viewNo == 1) {
-
         if (checkout1ViewState.userEmailController.text.isEmpty ||
             (!checkout1ViewState.userProvider.hasLatLng(valueHolder) &&
                 checkout1ViewState.addressController.text == '' &&
@@ -695,10 +736,11 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message:
-                      Utils.getString(context, 'warning_dialog__input_fields'),
+                  Utils.getString(context, 'warning_dialog__input_fields'),
                 );
               });
-        } else if(!validatePhoneNumber(checkout1ViewState.userPhoneController.text)){
+        } else
+        if (!validatePhoneNumber(checkout1ViewState.userPhoneController.text)) {
           showDialog<dynamic>(
               context: context,
               barrierColor: Colors.transparent,
@@ -769,7 +811,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                       Utils.getString(context, 'warning_dialog__input_phone'),
                 );
               });
-        } */else if (shopInfoProvider!.shopInfo.data!.isArea == PsConst.ONE &&
+        } */ else if (shopInfoProvider!.shopInfo.data!.isArea == PsConst.ONE &&
             (checkout1ViewState.userProvider.selectedArea == null ||
                 checkout1ViewState.userProvider.selectedArea.id == null ||
                 checkout1ViewState.userProvider.selectedArea.id == '') &&
@@ -779,7 +821,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               builder: (BuildContext context) {
                 return ErrorDialog(
                   message:
-                      Utils.getString(context, 'warning_dialog__select_area'),
+                  Utils.getString(context, 'warning_dialog__select_area'),
                 );
               });
         } else if (shopInfoProvider!.shopInfo.data!.isArea == PsConst.ZERO &&
@@ -792,44 +834,29 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                   message: Utils.getString(context, 'error_dialog__order'),
                 );
               });
-        } else if (!checkout1ViewState
-                .orderTimeTextEditingController.text.isEmpty &&
+        }
+        else if (!checkout1ViewState
+            .orderTimeTextEditingController.text.isEmpty &&
             shopInfoProvider!.shopInfo.data!.shopSchedules != null) {
-        
           String? orderDateAndTime;
 
-          //? Remove comment for Schedule Order
-          // weekDays = checkout1ViewState.getSelectedDayAndTime()[0];
-          // selectedTimes = checkout1ViewState.getSelectedDayAndTime()[1];
+          orderDateAndTime =checkout1ViewState.orderTime;
+          final DateTime currentDateTime = DateTime.now();
+            final DateTime shopAcceptDate = DateTime.parse(shopInfoProvider!.shopInfo.data!.acceptOrdersDate!);
 
-          // if (checkout1ViewState.isWeeklyScheduleOrder) {
-            // orderDateAndTime = '';
-            // if (weekDays != '' && selectedTimes != '') {
-            //   userProvider!.isClickWeeklyButton = true;
-            //   if (!await checkout1ViewState.checkIsDataChange(userProvider)) {
-            //     isApiSuccess = await checkout1ViewState.callUpdateUserProfile(
-            //         userProvider);
-            //     //chang checkout1 data
-            //     if (isApiSuccess) {
-            //       viewNo++;
-            //     } else {
-            //       //not chang checkout1 data
-            //       viewNo++;
-            //     }
-            //   }
-            // } else {
-            //   showDialog<dynamic>(
-            //       context: context,
-            //       builder: (BuildContext context) {
-            //         return ErrorDialog(
-            //           message: Utils.getString(
-            //               context, 'Select Order Day and Time.'),
-            //         );
-            //       });
-            // }
-          // } else {
-            orderDateAndTime =
-                checkout1ViewState.orderTime;
+            if (shopAcceptDate.isAfter(currentDateTime)) {
+              showDialog<dynamic>(
+                context: context,
+                builder: (BuildContext context) {
+                  return ErrorDialog(
+                    message: Utils.getString(
+                        context, 'Shop Is Not Accepting Orders'),
+                  );
+                },
+              );
+            }
+          else {
+
 
             // Open Time
             final String? mondayOpenDateAndTime =
@@ -849,30 +876,29 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
 
             if (mondayOpenDateAndTime != null && mondayOpenDateAndTime != '') {
               final List<String>? openDateAndTimeArray =
-                  mondayOpenDateAndTime.split(' ');
+              mondayOpenDateAndTime.split(' ');
 
               if (openDateAndTimeArray != null &&
                   openDateAndTimeArray[0].contains(':')) {
                 final List<String>? openHourArray =
-                    openDateAndTimeArray[0].split(':');
+                openDateAndTimeArray[0].split(':');
 
                 if (openHourArray != null && openHourArray.isNotEmpty) {
                   monOpenHour = int.parse(openHourArray[0]);
-                 
+
                   monOpenMin = int.parse(openHourArray[1]);
-                 
                 }
               }
             }
             if (tuesdayOpenDateAndTime != null &&
                 tuesdayOpenDateAndTime != '') {
               final List<String>? openDateAndTimeArray =
-                  tuesdayOpenDateAndTime.split(' ');
+              tuesdayOpenDateAndTime.split(' ');
 
               if (openDateAndTimeArray != null &&
                   openDateAndTimeArray[0].contains(':')) {
                 final List<String>? openHourArray =
-                    openDateAndTimeArray[0].split(':');
+                openDateAndTimeArray[0].split(':');
 
                 if (openHourArray != null && openHourArray.isNotEmpty) {
                   tuesOpenHour = int.parse(openHourArray[0]);
@@ -883,12 +909,12 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (wednesdayOpenDateAndTime != null &&
                 wednesdayOpenDateAndTime != '') {
               final List<String>? openDateAndTimeArray =
-                  wednesdayOpenDateAndTime.split(' ');
+              wednesdayOpenDateAndTime.split(' ');
 
               if (openDateAndTimeArray != null &&
                   openDateAndTimeArray[0].contains(':')) {
                 final List<String>? openHourArray =
-                    openDateAndTimeArray[0].split(':');
+                openDateAndTimeArray[0].split(':');
 
                 if (openHourArray != null && openHourArray.isNotEmpty) {
                   wedOpenHour = int.parse(openHourArray[0]);
@@ -899,12 +925,12 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (thursdayOpenDateAndTime != null &&
                 thursdayOpenDateAndTime != '') {
               final List<String>? openDateAndTimeArray =
-                  thursdayOpenDateAndTime.split(' ');
+              thursdayOpenDateAndTime.split(' ');
 
               if (openDateAndTimeArray != null &&
                   openDateAndTimeArray[0].contains(':')) {
                 final List<String>? openHourArray =
-                    openDateAndTimeArray[0].split(':');
+                openDateAndTimeArray[0].split(':');
 
                 if (openHourArray != null && openHourArray.isNotEmpty) {
                   thursOpenHour = int.parse(openHourArray[0]);
@@ -914,12 +940,12 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             }
             if (fridayOpenDateAndTime != null && fridayOpenDateAndTime != '') {
               final List<String>? openDateAndTimeArray =
-                  fridayOpenDateAndTime.split(' ');
+              fridayOpenDateAndTime.split(' ');
 
               if (openDateAndTimeArray != null &&
                   openDateAndTimeArray[0].contains(':')) {
                 final List<String>? openHourArray =
-                    openDateAndTimeArray[0].split(':');
+                openDateAndTimeArray[0].split(':');
 
                 if (openHourArray != null && openHourArray.isNotEmpty) {
                   friOpenHour = int.parse(openHourArray[0]);
@@ -930,13 +956,13 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (saturdayOpenDateAndTime != null &&
                 saturdayOpenDateAndTime != '') {
               final List<String>? openDateAndTimeArray =
-                  saturdayOpenDateAndTime.split(' ');
+              saturdayOpenDateAndTime.split(' ');
 
 
               if (openDateAndTimeArray != null &&
                   openDateAndTimeArray[0].contains(':')) {
                 final List<String>? openHourArray =
-                    openDateAndTimeArray[0].split(':');
+                openDateAndTimeArray[0].split(':');
 
                 if (openHourArray != null && openHourArray.isNotEmpty) {
                   satOpenHour = int.parse(openHourArray[0]);
@@ -946,12 +972,12 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             }
             if (sundayOpenDateAndTime != null && sundayOpenDateAndTime != '') {
               final List<String>? openDateAndTimeArray =
-                  sundayOpenDateAndTime.split(' ');
+              sundayOpenDateAndTime.split(' ');
 
               if (openDateAndTimeArray != null &&
                   openDateAndTimeArray[0].contains(':')) {
                 final List<String>? openHourArray =
-                    openDateAndTimeArray[0].split(':');
+                openDateAndTimeArray[0].split(':');
 
                 if (openHourArray != null && openHourArray.isNotEmpty) {
                   sunOpenHour = int.parse(openHourArray[0]);
@@ -979,35 +1005,35 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (mondayCloseDateAndTime != null &&
                 mondayCloseDateAndTime != '') {
               final List<String>? closeDateAndTimeArray =
-                  mondayCloseDateAndTime.split(' ');
-             print('Monday => $mondayOpenDateAndTime ~ $mondayCloseDateAndTime ');
+              mondayCloseDateAndTime.split(' ');
+              print(
+                  'Monday => $mondayOpenDateAndTime ~ $mondayCloseDateAndTime ');
 
 
               if (closeDateAndTimeArray != null &&
                   closeDateAndTimeArray[0].contains(':')) {
                 final List<String>? closeHourArray =
-                    closeDateAndTimeArray[0].split(':');
+                closeDateAndTimeArray[0].split(':');
 
                 if (closeHourArray != null && closeHourArray.isNotEmpty) {
                   monCloseHour = int.parse(closeHourArray[0]);
-                
+
                   monCloseMin = int.parse(closeHourArray[1]);
-                 
                 }
               }
             }
             if (tuesdayCloseDateAndTime != null &&
                 tuesdayCloseDateAndTime != '') {
               final List<String>? closeDateAndTimeArray =
-                  tuesdayCloseDateAndTime.split(' ');
-              print('Tuesday => $thursdayOpenDateAndTime ~ $tuesdayCloseDateAndTime ');
+              tuesdayCloseDateAndTime.split(' ');
+              print(
+                  'Tuesday => $thursdayOpenDateAndTime ~ $tuesdayCloseDateAndTime ');
 
-        
 
               if (closeDateAndTimeArray != null &&
                   closeDateAndTimeArray[0].contains(':')) {
                 final List<String>? closeHourArray =
-                    closeDateAndTimeArray[0].split(':');
+                closeDateAndTimeArray[0].split(':');
 
                 if (closeHourArray != null && closeHourArray.isNotEmpty) {
                   tuesCloseHour = int.parse(closeHourArray[0]);
@@ -1018,14 +1044,15 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (wednesdayCloseDateAndTime != null &&
                 wednesdayCloseDateAndTime != '') {
               final List<String>? closeDateAndTimeArray =
-                  wednesdayCloseDateAndTime.split(' ');
-              print('Wednesday => $wednesdayOpenDateAndTime ~ $wednesdayCloseDateAndTime ');
+              wednesdayCloseDateAndTime.split(' ');
+              print(
+                  'Wednesday => $wednesdayOpenDateAndTime ~ $wednesdayCloseDateAndTime ');
 
 
               if (closeDateAndTimeArray != null &&
                   closeDateAndTimeArray[0].contains(':')) {
                 final List<String>? closeHourArray =
-                    closeDateAndTimeArray[0].split(':');
+                closeDateAndTimeArray[0].split(':');
 
                 if (closeHourArray != null && closeHourArray.isNotEmpty) {
                   wedCloseHour = int.parse(closeHourArray[0]);
@@ -1036,14 +1063,15 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (thursdayCloseDateAndTime != null &&
                 thursdayCloseDateAndTime != '') {
               final List<String>? closeDateAndTimeArray =
-                  thursdayCloseDateAndTime.split(' ');
-              print('Thursday => $thursdayOpenDateAndTime ~ $thursdayCloseDateAndTime ');
+              thursdayCloseDateAndTime.split(' ');
+              print(
+                  'Thursday => $thursdayOpenDateAndTime ~ $thursdayCloseDateAndTime ');
 
 
               if (closeDateAndTimeArray != null &&
                   closeDateAndTimeArray[0].contains(':')) {
                 final List<String>? closeHourArray =
-                    closeDateAndTimeArray[0].split(':');
+                closeDateAndTimeArray[0].split(':');
 
                 if (closeHourArray != null && closeHourArray.isNotEmpty) {
                   thursCloseHour = int.parse(closeHourArray[0]);
@@ -1054,14 +1082,15 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (fridayCloseDateAndTime != null &&
                 fridayCloseDateAndTime != '') {
               final List<String>? closeDateAndTimeArray =
-                  fridayCloseDateAndTime.split(' ');
-              print('Friday => $fridayOpenDateAndTime ~ $fridayCloseDateAndTime ');
+              fridayCloseDateAndTime.split(' ');
+              print(
+                  'Friday => $fridayOpenDateAndTime ~ $fridayCloseDateAndTime ');
 
 
               if (closeDateAndTimeArray != null &&
                   closeDateAndTimeArray[0].contains(':')) {
                 final List<String>? closeHourArray =
-                    closeDateAndTimeArray[0].split(':');
+                closeDateAndTimeArray[0].split(':');
 
                 if (closeHourArray != null && closeHourArray.isNotEmpty) {
                   friCloseHour = int.parse(closeHourArray[0]);
@@ -1072,14 +1101,15 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (saturdayCloseDateAndTime != null &&
                 saturdayCloseDateAndTime != '') {
               final List<String>? closeDateAndTimeArray =
-                  saturdayCloseDateAndTime.split(' ');
-             print('Saturday => $saturdayOpenDateAndTime ~ $saturdayCloseDateAndTime ');
-             
+              saturdayCloseDateAndTime.split(' ');
+              print(
+                  'Saturday => $saturdayOpenDateAndTime ~ $saturdayCloseDateAndTime ');
+
 
               if (closeDateAndTimeArray != null &&
                   closeDateAndTimeArray[0].contains(':')) {
                 final List<String>? closeHourArray =
-                    closeDateAndTimeArray[0].split(':');
+                closeDateAndTimeArray[0].split(':');
 
                 if (closeHourArray != null && closeHourArray.isNotEmpty) {
                   satCloseHour = int.parse(closeHourArray[0]);
@@ -1090,14 +1120,15 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             if (sundayCloseDateAndTime != null &&
                 sundayCloseDateAndTime != '') {
               final List<String>? closeDateAndTimeArray =
-                  sundayCloseDateAndTime.split(' ');
-              print('Sunday => $sundayOpenDateAndTime ~ $sundayCloseDateAndTime ');
+              sundayCloseDateAndTime.split(' ');
+              print(
+                  'Sunday => $sundayOpenDateAndTime ~ $sundayCloseDateAndTime ');
 
 
               if (closeDateAndTimeArray != null &&
                   closeDateAndTimeArray.length > 1) {
                 final List<String>? closeHourArray =
-                    closeDateAndTimeArray[0].split(':');
+                closeDateAndTimeArray[0].split(':');
 
                 if (closeHourArray != null && closeHourArray.isNotEmpty) {
                   sunCloseHour = int.parse(closeHourArray[0]);
@@ -1105,17 +1136,16 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                 }
               }
             }
-
             //Split Date and Time
             if (orderDateAndTime != null &&
                 orderDateAndTime != '' &&
                 orderDateAndTime.contains(' ')) {
               final List<String>? orderDateAndTimeArray =
-                  orderDateAndTime.split(' ');
-               final String orderDays = orderDateAndTimeArray![0];
-               final List<String> ordererDayArray = orderDays.split(',');
-               days = ordererDayArray[0];
-              
+              orderDateAndTime.split(' ');
+              final String orderDays = orderDateAndTimeArray![0];
+              final List<String> ordererDayArray = orderDays.split(',');
+              days = ordererDayArray[0];
+
 
               // ignore: unnecessary_null_comparison
               if (orderDateAndTimeArray != null &&
@@ -1124,7 +1154,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                   orderDateAndTimeArray[4] != '' &&
                   orderDateAndTimeArray[4].contains(':')) {
                 final List<String>? orderTimeArray =
-                    orderDateAndTimeArray[4].split(':');
+                orderDateAndTimeArray[4].split(':');
 
                 if (orderTimeArray != null &&
                     orderTimeArray.isNotEmpty &&
@@ -1134,7 +1164,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                     orderTimeArray[1] != '') {
                   hour = int.parse(orderTimeArray[0]);
                   minute = int.parse(orderTimeArray[1]);
-                  
+
                   // if (orderDateAndTimeArray[4] == 'PM'){
                   //   hour += 12;
                   // }
@@ -1145,10 +1175,10 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             }
             if (days == 'Mon') {
               if (shopInfoProvider!
-                      .shopInfo.data!.shopSchedules!.isMondayOpen ==
+                  .shopInfo.data!.shopSchedules!.isMondayOpen ==
                   PsConst.ONE) {
                 if (((hour! > monOpenHour!) ||
-                        (hour == monOpenHour && minute! >= monOpenMin!)) &&
+                    (hour == monOpenHour && minute! >= monOpenMin!)) &&
                     ((hour! < monCloseHour!) ||
                         (hour == monCloseHour && minute! <= monCloseMin!))) {
                   if (!await checkout1ViewState
@@ -1184,12 +1214,11 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                     });
               }
             } else if (days == 'Tue') {
-
               if (shopInfoProvider!
-                      .shopInfo.data!.shopSchedules!.isTuesdayOpen ==
+                  .shopInfo.data!.shopSchedules!.isTuesdayOpen ==
                   PsConst.ONE) {
                 if (((hour! > tuesOpenHour!) ||
-                        (hour == tuesOpenHour && minute! >= tuesOpenMin!)) &&
+                    (hour == tuesOpenHour && minute! >= tuesOpenMin!)) &&
                     ((hour! < tuesCloseHour!) ||
                         (hour == tuesCloseHour && minute! <= tuesCloseMin!))) {
                   if (!await checkout1ViewState
@@ -1226,10 +1255,10 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               }
             } else if (days == 'Wed') {
               if (shopInfoProvider!
-                      .shopInfo.data!.shopSchedules!.isWednesdayOpen ==
+                  .shopInfo.data!.shopSchedules!.isWednesdayOpen ==
                   PsConst.ONE) {
                 if (((hour! > wedOpenHour!) ||
-                        (hour == wedOpenHour && minute! >= wedOpenMin!)) &&
+                    (hour == wedOpenHour && minute! >= wedOpenMin!)) &&
                     ((hour! < wedCloseHour!) ||
                         (hour == wedCloseHour && minute! <= wedCloseMin!))) {
                   if (!await checkout1ViewState
@@ -1265,12 +1294,11 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                     });
               }
             } else if (days == 'Thu') {
-
               if (shopInfoProvider!
-                      .shopInfo.data!.shopSchedules!.isThursdayOpen ==
+                  .shopInfo.data!.shopSchedules!.isThursdayOpen ==
                   PsConst.ONE) {
                 if (((hour! > thursOpenHour!) ||
-                        (hour == thursOpenHour && minute! >= thursOpenMin!)) &&
+                    (hour == thursOpenHour && minute! >= thursOpenMin!)) &&
                     ((hour! < thursCloseHour!) ||
                         (hour == thursCloseHour &&
                             minute! <= thursCloseMin!))) {
@@ -1308,10 +1336,10 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               }
             } else if (days == 'Fri') {
               if (shopInfoProvider!
-                      .shopInfo.data!.shopSchedules!.isFridayOpen ==
+                  .shopInfo.data!.shopSchedules!.isFridayOpen ==
                   PsConst.ONE) {
                 if (((hour! > friOpenHour!) ||
-                        (hour == friOpenHour && minute! >= friOpenMin!)) &&
+                    (hour == friOpenHour && minute! >= friOpenMin!)) &&
                     ((hour! < friCloseHour!) ||
                         (hour == friCloseHour && minute! <= friCloseMin!))) {
                   if (!await checkout1ViewState
@@ -1348,10 +1376,10 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               }
             } else if (days == 'Sat') {
               if (shopInfoProvider!
-                      .shopInfo.data!.shopSchedules!.isSaturdayOpen ==
+                  .shopInfo.data!.shopSchedules!.isSaturdayOpen ==
                   PsConst.ONE) {
                 if (((hour! > satOpenHour!) ||
-                        (hour == satOpenHour && minute! >= satOpenMin!)) &&
+                    (hour == satOpenHour && minute! >= satOpenMin!)) &&
                     ((hour! < satCloseHour!) ||
                         (hour == satCloseHour && minute! <= satCloseMin!))) {
                   if (!await checkout1ViewState
@@ -1388,10 +1416,10 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               }
             } else if (days == 'Sun') {
               if (shopInfoProvider!
-                      .shopInfo.data!.shopSchedules!.isSaturdayOpen ==
+                  .shopInfo.data!.shopSchedules!.isSaturdayOpen ==
                   PsConst.ONE) {
                 if (((hour! > satOpenHour!) ||
-                        (hour == satOpenHour && minute! >= satOpenMin!)) &&
+                    (hour == satOpenHour && minute! >= satOpenMin!)) &&
                     ((hour! < satCloseHour!) ||
                         (hour == satCloseHour && minute! <= satCloseMin!))) {
                   if (!await checkout1ViewState
@@ -1428,7 +1456,8 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
               }
             }
           }
-        } else {
+        }
+      }else {
 
           if (!await checkout1ViewState.checkIsDataChange(userProvider)) {
             isApiSuccess =
@@ -1442,7 +1471,9 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             //viewNo++;
           }
         }
-      } else {
+      }
+    //else if
+    else {
         viewNo++;
       }
       setState(() {});
@@ -1463,19 +1494,27 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             child: Stack(
               alignment: const Alignment(0.0, 0.0),
               children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(left: PsDimens.space36),
-                  child: GestureDetector(
+                GestureDetector(
+                  child:
+                  Container(
+                    //color: Colors.red,
+                    padding: const EdgeInsets.only(
+                      right: PsDimens.space36,
+                      left:  PsDimens.space32,
+                      top: PsDimens.space14,
+                      bottom: PsDimens.space14,
+                    ),
                     child: Text(
                         Utils.getString(context, 'checkout_container__back'),
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium!
                             .copyWith(color: PsColors.white)),
-                    onTap: () {
-                      goToBackViewCheck();
-                    },
+
                   ),
+                  onTap: () {
+                    goToBackViewCheck();
+                  },
                 ),
                 Positioned(
                   left: 1,
