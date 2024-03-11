@@ -256,59 +256,55 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               checkHideOrShowBackArrow(),
-              Container(
-                  height: 50,
-                  color: PsColors.mainColor,
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Stack(
-                      alignment: const Alignment(0.0, 0.0),
-                      children: <Widget>[
-                        if (viewNo != 3)
-                          GestureDetector(
-                            child:
-                            Container(
-                              //color: Colors.red,
-                              padding: const EdgeInsets.only(
-                                right: PsDimens.space36,
-                                left:  PsDimens.space32,
-                                top: PsDimens.space14,
-                                bottom: PsDimens.space14,
-                              ),
-                              child: Text(
-                                  viewNo == 3
-                                      ? ''/*Utils.getString(context,
+              if(viewNo != 3)
+              GestureDetector(
+                child:
+                Container(
+                    height: 50,
+                    margin: const EdgeInsets.only(right: 5, top: 5, bottom: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25), // Set border radius for rounded corners
+                      border: Border.all(
+                        color: PsColors.white, // Set border color
+                        width: 2, // Set border width
+                      ),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child:Padding(
+                        padding: const EdgeInsets.only(
+                          right: PsDimens.space10,
+                          left: PsDimens.space10,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              viewNo == 3
+                                  ? '' /*Utils.getString(context,
                                         'basket_list__checkout_button_name')*/
-                                      : Utils.getString(
-                                      context, 'checkout_container__next'),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(color: PsColors.white)),
+                                  : Utils.getString(context, 'checkout_container__next'),
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: PsColors.white),
+                            ),/*
+                            const SizedBox(
+                              width: 3,
                             ),
-                            onTap: () {
-                              clickToNextCheck(userProvider!.user.data!,
-                                  _closeCheckoutContainer, tokenProvider!);
-                            },
-                          ),
-                        if (viewNo != 3)
-                        Positioned(
-                          right: 1,
-                          child: IconButton(
-                            icon: Icon(
+                            Icon(
                               Icons.arrow_forward_ios,
                               color: PsColors.white,
                               size: PsDimens.space16,
-                            ),
-                            onPressed: () {
-                              clickToNextCheck(userProvider!.user.data!,
-                                  _closeCheckoutContainer, tokenProvider!);
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ))
+                            ),*/
+                          ],
+                        ),
+                      ),
+                    )
+
+
+                ),
+                onTap: () {
+                  clickToNextCheck(userProvider!.user.data!,
+                      _closeCheckoutContainer, tokenProvider!);
+                },
+              )
             ],
           ));
     }
@@ -1486,24 +1482,35 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
     if (viewNo == 1) {
       return const Text('');
     } else {
-      return Container(
-          height: 50,
-          color: PsColors.mainColor,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Stack(
-              alignment: const Alignment(0.0, 0.0),
-              children: <Widget>[
-                GestureDetector(
-                  child:
-                  Container(
-                    //color: Colors.red,
-                    padding: const EdgeInsets.only(
-                      right: PsDimens.space36,
-                      left:  PsDimens.space32,
-                      top: PsDimens.space14,
-                      bottom: PsDimens.space14,
+      return GestureDetector(
+        child:
+        Container(
+            height: 50,
+            margin: const EdgeInsets.only(left: 5, top: 5, bottom: 5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25), // Set border radius for rounded corners
+              border: Border.all(
+                color: PsColors.white, // Set border color
+                width: 2, // Set border width
+              ),
+            ),
+            child: Padding(
+                padding: const EdgeInsets.only(
+                  right: PsDimens.space10,
+                  left: PsDimens.space10,
+                ),
+                child:
+                Row(
+                children: <Widget>[
+                  /*Icon(
+                      Icons.arrow_back_ios,
+                      color: PsColors.white,
+                      size: PsDimens.space16,
                     ),
+                  const SizedBox(
+                    width: 3,
+                  ),*/
+                  Container(
                     child: Text(
                         Utils.getString(context, 'checkout_container__back'),
                         style: Theme.of(context)
@@ -1512,26 +1519,16 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                             .copyWith(color: PsColors.white)),
 
                   ),
-                  onTap: () {
-                    goToBackViewCheck();
-                  },
-                ),
-                Positioned(
-                  left: 1,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: PsColors.white,
-                      size: PsDimens.space16,
-                    ),
-                    onPressed: () {
-                      goToBackViewCheck();
-                    },
-                  ),
-                )
-              ],
+                ],
+              )
             ),
-          ));
+
+
+        ),
+        onTap: () {
+          goToBackViewCheck();
+        },
+      );
     }
   }
 
@@ -1623,7 +1620,7 @@ class _TopImageForCheckout extends StatelessWidget {
                                   ? Theme.of(context).textTheme.bodyMedium!.copyWith(
                                 color: PsColors.white,)
                                   : Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: PsColors.textPrimaryDarkColor,
+                                color: PsColors.mainColor,
                               ),
                             ),
                           ),
@@ -1654,7 +1651,7 @@ class _TopImageForCheckout extends StatelessWidget {
                                   ? Theme.of(context).textTheme.bodyMedium!.copyWith(
                                 color: PsColors.white,)
                                   : Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: PsColors.textPrimaryDarkColor,
+                                color: PsColors.mainColor,
                               ),
                             ),
                           ),
@@ -1683,7 +1680,7 @@ class _TopImageForCheckout extends StatelessWidget {
                                     ? Theme.of(context).textTheme.bodyMedium!.copyWith(
                                   color: PsColors.white,)
                                     : Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                  color: PsColors.textPrimaryDarkColor,
+                                  color: PsColors.mainColor,
                                 ),
                               ),
                             ),
@@ -1693,8 +1690,15 @@ class _TopImageForCheckout extends StatelessWidget {
               ],
             ),
             Container(
-              margin: const EdgeInsets.only(
-                  top: PsDimens.space28, left: PsDimens.space2),
+              margin: const EdgeInsets.only(top: PsDimens.space28, left: PsDimens.space2),
+             /* padding: const EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.white, // Border color
+                  width: 2.0, // Border width
+                ),
+                borderRadius: BorderRadius.circular(8.0), // Border radius
+              ),*/
               child: IconButton(
                 icon: const Icon(
                   Icons.clear,
@@ -1703,7 +1707,8 @@ class _TopImageForCheckout extends StatelessWidget {
                 ),
                 onPressed: onTap as void Function()?,
               ),
-            ),
+            )
+            ,
           ],
         ),
       );

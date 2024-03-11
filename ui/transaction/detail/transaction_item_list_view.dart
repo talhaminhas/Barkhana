@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fluttericon/octicons_icons.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
@@ -833,7 +834,7 @@ class _TransactionStatusListWidget extends StatelessWidget {
                       transaction: transaction,
                       statusLength: provider.transactionStatusList.data!.length,
                     ),
-                const Divider(height: 1,),
+                //const Divider(height: 1,),
               ],
             )
             /*CustomScrollView(
@@ -905,25 +906,26 @@ class _ColorCircleWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          const SizedBox(
-            width: PsDimens.space10,
-          ),
           Container(
             child: Row(
               children: <Widget>[
+                if (transaction.transStatus!.ordering == statusOrdering)
+                  Container(
+                    //margin: const EdgeInsets.only(left: PsDimens.space4),
+                    child:
+                    SpinKitSpinningLines(
+                      color:  PsColors.discountColor,
+                      size: PsDimens.space24,
+                    ),
+                  )
+                else
                 Container(
                   alignment: Alignment.center,
                   width: PsDimens.space24,
                   height: PsDimens.space24,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: transaction.transStatus!.ordering == statusOrdering
-                        ? PsColors.mainColor
-                        : transaction.transStatus!.ordering != '' &&
-                                int.parse(transaction.transStatus!.ordering!) >
-                                    int.parse(statusOrdering)
-                            ? PsColors.mainColor
-                            : Colors.grey[400],
+                    color: PsColors.mainColor,
                     // border: Border.all(width: 1, color: Colors.grey),
                   ),
                   child: Text(
@@ -937,19 +939,45 @@ class _ColorCircleWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  width: PsDimens.space8,
+                  width: PsDimens.space4,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    statusTitle,
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          fontWeight:
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                    Row (
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          statusTitle,
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              fontWeight:
                               transaction.transStatus!.ordering == statusOrdering
                                   ? FontWeight.bold
                                   : FontWeight.normal,
+                              color: transaction.transStatus!.ordering == statusOrdering
+                                  ? PsColors.discountColor
+                                  : PsColors.mainColor
+                          ),
                         ),
-                  ),
+                        Visibility(
+                          visible: statusTitle == transaction.transStatus!.title,
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                                left: PsDimens.space16),
+                            child: Text(
+                              transaction.updatedDate == ''
+                                  ? ''
+                                  : Utils.getDateFormat(transaction.updatedDate!,psValueHolder),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(fontWeight: FontWeight.normal, color: PsColors.discountColor),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                 ),
               ],
             ),
@@ -960,28 +988,10 @@ class _ColorCircleWidget extends StatelessWidget {
                 const SizedBox(
                   width: PsDimens.space10,
                 ),
-                Visibility(
+                /*Visibility(
                     visible: statusLength.toString() != statusOrdering,
-                    child: _verticalLineWidget),
-                const SizedBox(
-                  width: PsDimens.space16,
-                ),
-                Visibility(
-                  visible: statusTitle == transaction.transStatus!.title,
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                        left: PsDimens.space16, bottom: PsDimens.space16),
-                    child: Text(
-                      transaction.updatedDate == ''
-                          ? ''
-                          : Utils.getDateFormat(transaction.updatedDate!,psValueHolder),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                ),
+                    child: _verticalLineWidget),*/
+
               ],
             ),
           ),

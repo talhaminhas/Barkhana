@@ -257,7 +257,6 @@ class _TransactionTextWidget extends StatelessWidget {
                       ),
                       onPressed: () async {
                         showDialog<dynamic>(
-                          barrierColor: Colors.transparent,
                             context: context,
                             builder: (BuildContext context) {
                               return ConfirmDialogView(
@@ -288,7 +287,7 @@ class _TransactionTextWidget extends StatelessWidget {
             child:
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: PsColors.mainColor, // Replace PsColors.yourDesiredColor with your desired color
+                    primary: Colors.green,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
