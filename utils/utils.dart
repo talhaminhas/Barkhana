@@ -706,7 +706,7 @@ class Utils {
     final dynamic data = message['notification'] ?? message;
     String notiMessage = '';
     if (Platform.isAndroid) {
-      print('yes1$data');
+      print('$data');
       notiMessage = data['message'];
 
       //notiMessage ??= '';

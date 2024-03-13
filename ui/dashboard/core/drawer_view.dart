@@ -545,7 +545,7 @@ class _HomeViewState extends State<DashboardView>
                         updateSelectedIndexWithAnimation(title, index);
                       }),*/
                   _DrawerMenuWidget(
-                      icon: Icons.category,
+                      icon: Icons.restaurant_outlined,
                       title: Utils.getString(
                           context, 'home__drawer_menu_menu'),
                       index: PsConst.REQUEST_CODE__MENU_HOME_FRAGMENT,
@@ -563,7 +563,7 @@ class _HomeViewState extends State<DashboardView>
                         updateSelectedIndexWithAnimation(title, index);
                       }),*/
                   _DrawerMenuWidget(
-                      icon: FontAwesome5.percent,
+                      icon: Icons.discount_outlined,
                       title: Utils.getString(
                           context, 'home__drawer_menu_discount_product'),
                       index:
@@ -573,7 +573,7 @@ class _HomeViewState extends State<DashboardView>
                         dashboardViewKey.currentState?.updateSelectedIndexWithAnimation(title, index);
                       }),
                   _DrawerMenuWidget(
-                      icon: FontAwesome5.gem,
+                      icon: FontAwesome.diamond,
                       title: Utils.getString(
                           context, 'home__menu_drawer_featured_product'),
                       index:
@@ -679,7 +679,7 @@ class _HomeViewState extends State<DashboardView>
                       ),
                       */
                   // ignore: unnecessary_null_comparison
-                  if (provider != null)
+                  /*if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
                         provider.psValueHolder.loginUserId != '')
                       Visibility(
@@ -694,7 +694,7 @@ class _HomeViewState extends State<DashboardView>
                               Navigator.pop(context);
                               updateSelectedIndexWithAnimation(title, index);
                             }),
-                      ),
+                      ),*/
                   // ignore: unnecessary_null_comparison
                   /*if (provider != null)
                     if (provider.psValueHolder.loginUserId != null &&
@@ -747,7 +747,7 @@ class _HomeViewState extends State<DashboardView>
                         updateSelectedIndexWithAnimation('', index);
                       }),*/
                   _DrawerMenuWidget(
-                      icon: Icons.contacts,
+                      icon: Icons.message_outlined,
                       title: Utils.getString(
                           context, 'home__menu_drawer_contact_us'),
                       index: PsConst.REQUEST_CODE__MENU_CONTACT_US_FRAGMENT,
@@ -756,7 +756,7 @@ class _HomeViewState extends State<DashboardView>
                         updateSelectedIndexWithAnimation(title, index);
                       }),
                   _DrawerMenuWidget(
-                      icon: Icons.settings,
+                      icon: Icons.settings_outlined,
                       title:
                       Utils.getString(context, 'home__menu_drawer_setting'),
                       index: PsConst.REQUEST_CODE__MENU_SETTING_FRAGMENT,
@@ -781,7 +781,7 @@ class _HomeViewState extends State<DashboardView>
                       visible: true,
                       child: ListTile(
                         leading: Icon(
-                          Icons.power_settings_new,
+                          Icons.logout_outlined,
                           color: PsColors.mainColorWithWhite,
                         ),
                         title: Text(
@@ -1207,7 +1207,6 @@ class _HomeViewState extends State<DashboardView>
                 BottomNavigationBarItem(
                   icon: const Icon(
                     Icons.restaurant_outlined,
-                    size: 20,
                   ),
                   label: Utils.getString(context, 'home__drawer_menu_menu'),
                 ),

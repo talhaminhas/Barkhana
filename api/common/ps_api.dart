@@ -51,6 +51,50 @@ abstract class PsApi {
     }
   }
 
+  Future<PsResource<R>> getSpecificServerCall<T extends PsObject<dynamic>, R>(
+      T obj, String url) async {
+    print('getSpecificServerCall');
+    if (PSApp.apiTokenRefresher.isExpired) {
+
+      await PSApp.apiTokenRefresher.updateToken();
+    }
+    final Client client = http.Client();
+    try {
+      final Map<String, String> headers = <String, String>{
+        'content-type': 'application/json',
+        'authorization': PsSharedPreferences.instance.getApiToken() ?? '',
+      };
+      final Response response = await client.get(Uri.parse('$url'),
+          headers: headers);
+      print('${PsConfig.ps_app_url}$url');
+      final PsApiResponse psApiResponse = PsApiResponse(response);
+
+      // return psApiResponse;
+      if (psApiResponse.isSuccessful()) {
+        final dynamic hashMap = json.decode(response.body);
+        print(response.body);
+        if (!(hashMap is Map)) {
+          final List<T> tList = <T>[];
+          hashMap.forEach((dynamic data) {
+            tList.add(obj.fromMap(data as dynamic));
+          });
+          return PsResource<R>(PsStatus.SUCCESS, '', tList as R? ?? R as R?);
+        } else {
+          return PsResource<R>(PsStatus.SUCCESS, '', obj.fromMap(hashMap));
+        }
+      } else {
+        if(psApiResponse.isUnauthorized())
+          PSApp.apiTokenRefresher.isExpired = true;
+        return PsResource<R>(PsStatus.ERROR, psApiResponse.errorMessage, null);
+      }
+    }  catch (e) {
+      print(e.toString());
+      return PsResource<R>(PsStatus.ERROR, e.toString(), null); //e.message ??
+    } finally {
+      client.close();
+    }
+  }
+
   Future<PsResource<R>> getServerCall<T extends PsObject<dynamic>, R>(
       T obj, String url) async {
     print('getServerCall');

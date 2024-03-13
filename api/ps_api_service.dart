@@ -34,6 +34,7 @@ import 'package:http/http.dart' as http;
 
 import '../db/common/ps_shared_preferences.dart';
 import '../viewobject/holder/globalTokenPost.dart';
+import '../viewobject/main_point.dart';
 import '../viewobject/schedule_detail.dart';
 import '../viewobject/schedule_header.dart';
 import '../viewobject/search_result.dart';
@@ -56,6 +57,20 @@ class PsApiService extends PsApi {
   Future<PsResource<User>> postAppleLogin(Map<dynamic, dynamic> jsonMap) async {
     const String url = '${PsUrl.ps_post_ps_apple_login_url}';
     return await postData<User, User>(User(), url, jsonMap);
+  }
+
+  Future<PsResource<MainPoint>> getAllPoints(
+      String deliveryBoyLat,
+      String deliveryBoyLng,
+      String orderLat,
+      String orderLng,
+      ) async {
+    final String url =
+        'https://api.mapbox.com/directions/v5/mapbox/driving/$deliveryBoyLng%2C$deliveryBoyLat%3B$orderLng%2C$orderLat?alternatives=false&geometries=polyline&language=en&overview=full&steps=true&access_token=pk.eyJ1IjoidGFsaGFtaW5oYXMiLCJhIjoiY2x0bzlrenBjMGM5NTJpbzY2aHNlaGhudCJ9.AyfJIRGElx_Iv7LagZwTKg';
+
+    //'http://router.project-osrm.org/trip/v1/driving/$deliveryBoyLng,$deliveryBoyLat;$orderLng,$orderLat?overview=simplified&steps=true';
+
+    return await getSpecificServerCall<MainPoint, MainPoint>(MainPoint(), url);
   }
 
   ///

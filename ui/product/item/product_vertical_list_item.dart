@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:flutterrestaurant/config/ps_colors.dart';
 import 'package:flutterrestaurant/constant/ps_constants.dart';
 import 'package:flutterrestaurant/constant/ps_dimens.dart';
@@ -74,7 +75,7 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                       ),
                       color: PsColors.backgroundColor,
                       borderRadius:
-                      const BorderRadius.all(Radius.circular(PsDimens.space10)),
+                      const BorderRadius.all(Radius.circular(5)),
                     ),
                     child: Stack(
                       /*mainAxisSize: MainAxisSize.max,
@@ -83,7 +84,7 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                         /*Expanded(
                           child:*/ Container(
                             decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(PsDimens.space10)),
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
                             ),
                             child: ClipPath(
                               child: PsNetworkImage(
@@ -99,7 +100,7 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                               ),
                               clipper: const ShapeBorderClipper(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(PsDimens.space10)),
+                                  borderRadius: BorderRadius.all(Radius.circular(5)),
                                 ),
                               ),
                             ),
@@ -124,7 +125,7 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                                           color: PsColors.white, // Adjust the border color
                                           width: 2.0, // Adjust the border width
                                         ),
-                                        borderRadius: BorderRadius.circular(10.0), // Adjust the border radius
+                                        borderRadius: BorderRadius.circular(5), // Adjust the border radius
                                       ),
                                       padding: const EdgeInsets.all(16.0),
                                       child: Text(
@@ -140,8 +141,9 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                                     ),
                                   ],
                                 ClipRRect(
-                                    borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(PsDimens.space10),
-                                        bottomRight: Radius.circular(PsDimens.space10)),
+                                    borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(5),
+                                        bottomRight: Radius.circular(5)),
                                     child: BackdropFilter(
                                       filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
                                       child:
@@ -277,6 +279,16 @@ class _ProductVerticalListItemState extends State<ProductVerticalListItem> {
                                 ),
                               ),
                             ),
+                          ),
+                        if(widget.product.isFeatured == '1' && widget.product.isAvailable == '1')
+                          Positioned(
+                            top: 10,
+                            right: 10,
+                            child: Icon(
+                              FontAwesome.diamond,
+                              size: PsDimens.space20,
+                              color: PsColors.discountColor,
+                            )
                           ),
                       ],
                     )

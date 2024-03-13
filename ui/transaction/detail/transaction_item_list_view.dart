@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fluttericon/octicons_icons.dart';
@@ -23,19 +24,24 @@ import 'package:flutterrestaurant/utils/ps_progress_dialog.dart';
 import 'package:flutterrestaurant/utils/utils.dart';
 import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:flutterrestaurant/viewobject/transaction_header.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../provider/basket/basket_provider.dart';
+import '../../../provider/point/point_provider.dart';
 import '../../../provider/product/product_provider.dart';
 import '../../../repository/basket_repository.dart';
+import '../../../repository/point_repository.dart';
 import '../../../repository/product_repository.dart';
 import '../../../viewobject/basket.dart';
 import '../../../viewobject/basket_selected_add_on.dart';
 import '../../../viewobject/holder/intent_holder/product_detail_intent_holder.dart';
 import '../../common/dialog/confirm_dialog_view.dart';
 import '../../dashboard/core/drawer_view.dart';
+import 'map/polyline_view.dart';
 GlobalKey<RefreshIndicatorState> orderDetailRefreshKey =
 GlobalKey<RefreshIndicatorState>();
 
@@ -547,99 +553,6 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
   }
 }
 
-class _SelfPickUpWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: PsColors.backgroundColor,
-      margin: const EdgeInsets.only(top: PsDimens.space8),
-      padding: const EdgeInsets.only(
-        left: PsDimens.space12,
-        right: PsDimens.space12,
-      ),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(
-                left: PsDimens.space8,
-                right: PsDimens.space12,
-                top: PsDimens.space12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      const SizedBox(
-                        width: PsDimens.space8,
-                      ),
-                      Icon(
-                        FontAwesome5.notes_medical,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      const SizedBox(
-                        width: PsDimens.space8,
-                      ),
-                      Expanded(
-                        child: Text(
-                            Utils.getString(
-                                context, 'transaction_detail__order_type'),
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.titleMedium),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _TransactionNoTextWidget(
-            transationInfoText:
-                Utils.getString(context, 'transaction_detail__self_pick_up'),
-            title: Utils.getString(context, 'transaction_detail__type') + ' :',
-          ),
-          const SizedBox(height: PsDimens.space12),
-        ],
-      ),
-    );
-  }
-}
-
-class _ReviewButtonWidget extends StatelessWidget {
-  const _ReviewButtonWidget({
-    Key? key,
-    required this.transaction,
-  }) : super(key: key);
-
-  final TransactionHeader transaction;
-
-  @override
-  Widget build(BuildContext context) {
-    final TransactionDetailProvider provider =
-        Provider.of<TransactionDetailProvider>(context, listen: false);
-    return Container(
-      padding: const EdgeInsets.only(
-          left: PsDimens.space18,
-          right: PsDimens.space12,
-          bottom: PsDimens.space24),
-      child: PSButtonWidget(
-        hasShadow: true,
-        width: double.infinity,
-        titleText: Utils.getString(context, 'transaction_detail__give_review'),
-        onPressed: () async {
-          await showDialog<dynamic>(
-              context: context,
-              builder: (BuildContext context) {
-                return DeliveryBoyRatingInputDialog(
-                  transactionHeader: transaction,
-                  transactionDetailProvider: provider,
-                );
-              });
-        },
-      ),
-    );
-  }
-}
 
 class _OrderStatusWidget extends StatelessWidget {
   const _OrderStatusWidget({
@@ -656,29 +569,6 @@ class _OrderStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     const Widget _dividerWidget = Divider(
       height: PsDimens.space2,
-    );
-    final Widget _contentCopyIconWidget = IconButton(
-      iconSize: PsDimens.space20,
-      icon: Icon(
-        Icons.content_copy,
-        color: Theme.of(context).iconTheme.color,
-      ),
-      onPressed: () {
-        Clipboard.setData(ClipboardData(text: transaction.transCode!));
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Tooltip(
-            message: Utils.getString(context, 'transaction_detail__copy'),
-            child: Text(
-              Utils.getString(context, 'transaction_detail__copied_data'),
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(color: PsColors.mainColor),
-            ),
-            showDuration: const Duration(seconds: 5),
-          ),
-        ));
-      },
     );
 
     return Container(
@@ -770,11 +660,18 @@ class _OrderStatusWidget extends StatelessWidget {
               ])
         else Column(
             children: <Widget>[
-              const SizedBox(
-                height: PsDimens.space12,
-              ),
+
               if (transaction.refundStatus != '2')
-                _TransactionStatusListWidget(transaction: transaction)
+                if(transaction.transStatus!.ordering == '4')
+                    MapScreen(
+                        valueHolder:valueHolder,
+                      latlngCustomer: LatLng(
+                          double.parse(transaction.transLat!),
+                          double.parse(transaction.transLng!)
+                      )
+                    )
+                  else
+                  _TransactionStatusListWidget(transaction: transaction)
               else
                 _RefundedStatusWidget(
                   transaction: transaction,
@@ -788,7 +685,69 @@ class _OrderStatusWidget extends StatelessWidget {
     ));
   }
 }
+class MapScreen extends StatefulWidget {
 
+  const MapScreen({
+    Key? key,
+    required this.valueHolder,
+    required this.latlngCustomer
+  }) : super(key: key);
+
+  final PsValueHolder? valueHolder;
+  final LatLng? latlngCustomer;
+  @override
+  _MapScreenState createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+
+  final LatLng? _latlngDeliveryBoy = LatLng(53.626312,-1.782274) ;
+  final MapController mapController = MapController();
+
+  PointProvider? pointProvider;
+  PointRepository? pointRepository;
+  LatLngBounds? bounds;
+
+
+  @override
+  Widget build(BuildContext context) {
+
+
+    bounds = LatLngBounds(widget.latlngCustomer!,_latlngDeliveryBoy!);
+    pointRepository = Provider.of<PointRepository?>(context);
+
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<PointProvider>(
+          lazy: false,
+          create: (BuildContext context) {
+            pointProvider = PointProvider(repo: pointRepository!, psValueHolder: widget.valueHolder);
+            pointProvider!.loadAllPoint(
+                widget.latlngCustomer!.latitude.toString(),
+                widget.latlngCustomer!.longitude.toString(),
+                _latlngDeliveryBoy!.latitude.toString(),
+                _latlngDeliveryBoy!.longitude.toString()
+            );
+            return pointProvider!;
+          },
+        ),
+      ],
+      child: Consumer<PointProvider>(
+        builder: (BuildContext context, PointProvider provider, Widget? child) {
+          return Container(
+            height: 350,
+            child: PolylinePage(
+              pointProvider: pointProvider!,
+              customerLatLng: widget.latlngCustomer!,
+              deliveryBoyLatLng: _latlngDeliveryBoy!,
+            ),
+          );
+        },
+      ),
+    );
+
+  }
+}
 class _TransactionStatusListWidget extends StatelessWidget {
   const _TransactionStatusListWidget({
     Key? key,
@@ -891,11 +850,6 @@ class _ColorCircleWidget extends StatelessWidget {
   final PsValueHolder psValueHolder;
   @override
   Widget build(BuildContext context) {
-    final Widget _verticalLineWidget = Container(
-      color: PsColors.mainColor,
-      width: PsDimens.space4,
-      height: PsDimens.space24,
-    );
 
 
     return Container(

@@ -42,6 +42,8 @@ class TransactionHeader extends PsObject<TransactionHeader> {
       this.deliveryPickupTime,
       this.ratingStatus,
       this.refundStatus,
+        this.transLat,
+        this.transLng,
       this.transStatus,
       });
 
@@ -83,6 +85,8 @@ class TransactionHeader extends PsObject<TransactionHeader> {
   String? deliveryPickupTime;
   String? ratingStatus;
   String? refundStatus;
+  String? transLat;
+  String? transLng;
   TransactionStatus? transStatus;
   
 
@@ -132,6 +136,8 @@ class TransactionHeader extends PsObject<TransactionHeader> {
         deliveryPickupDate: dynamicData['delivery_pickup_date'],
         deliveryPickupTime: dynamicData['delivery_pickup_time'],
         ratingStatus: dynamicData['rating_status'],
+          transLat: dynamicData['trans_lat'],
+          transLng: dynamicData['trans_lng'],
         refundStatus: dynamicData['refund_status'], 
         transStatus:
             TransactionStatus().fromMap(dynamicData['transaction_status']),
@@ -183,6 +189,8 @@ class TransactionHeader extends PsObject<TransactionHeader> {
       data['delivery_pickup_time'] = object.deliveryPickupTime;
       data['rating_status'] = object.ratingStatus;
       data['refund_status'] = object.refundStatus;
+      data['trans_lat'] = object.transLat;
+      data['trans_lng'] = object.transLng;
       data['transaction_status'] =
           TransactionStatus().toMap(object.transStatus);
       return data;

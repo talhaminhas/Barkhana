@@ -1087,7 +1087,6 @@ class _Checkout3ViewState extends State<Checkout3View> {
                             );
                             token = await widget.tokenRepository.postGlobalToken(tokenPostRequest,context);
                             if (token != null) {
-                              print('yes1');
                               print(token!);
                               webController!.runJavascript('''
                                     \$(document).ready(function() {

@@ -65,8 +65,10 @@ import 'package:flutterrestaurant/viewobject/common/ps_value_holder.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../db/point_dao.dart';
 import '../db/schedule_header_dao.dart';
 import '../db/search_result_dao.dart';
+import '../repository/point_repository.dart';
 import '../repository/schedule_header_repository.dart';
 import '../repository/search_result_repository.dart';
 
@@ -106,6 +108,7 @@ List<SingleChildWidget> independentProviders = <SingleChildWidget>[
   Provider<ShippingAreaDao>.value(value: ShippingAreaDao.instance),
   Provider<PostalAddressDao>.value(value: PostalAddressDao.instance),
   Provider<BasketDao>.value(value: BasketDao.instance),
+  Provider<PointDao>.value(value: PointDao.instance),
   Provider<AboutAppDao>.value(value: AboutAppDao.instance),
   Provider<ReservationDao>.value(value: ReservationDao.instance),
   Provider<FavouriteProductDao>.value(value: FavouriteProductDao.instance),
@@ -179,6 +182,11 @@ List<SingleChildWidget> _dependentProviders = <SingleChildWidget>[
     update: (_, PsApiService psApiService, NotiDao notiDao,
             NotiRepository? notiRepository) =>
         NotiRepository(psApiService: psApiService, notiDao: notiDao),
+  ),
+  ProxyProvider2<PsApiService, PointDao, PointRepository>(
+    update: (_, PsApiService psApiService, PointDao pointDao,
+        PointRepository? shopInfoRepository) =>
+        PointRepository(psApiService: psApiService, pointDao: pointDao),
   ),
   ProxyProvider2<PsApiService, ShopInfoDao, ShopInfoRepository>(
     update: (_, PsApiService psApiService, ShopInfoDao shopInfoDao,

@@ -46,7 +46,11 @@ class PsConfig {
   /// Admob Setting
   ///
   // static bool showAdMob = true;
-  
+
+  static String mapBoxToken =
+      'pk.eyJ1IjoidGFsaGFtaW5oYXMiLCJhIjoiY2x0bzlwazBwMGYwczJrcDM0MGE5dTdjNCJ9.JkWkbW8Ecl4qfl6wgt-5BA';
+  static String mapBoxTokenPublic =
+      'pk.eyJ1IjoidGFsaGFtaW5oYXMiLCJhIjoiY2x0bzlrenBjMGM5NTJpbzY2aHNlaGhudCJ9.AyfJIRGElx_Iv7LagZwTKg';
   static String androidAdMobAdsIdKey = 'ca-app-pub-0000000000000000~0000000000';
   static String androidAdMobUnitIdApiKey =
       'ca-app-pub-0000000000000000/0000000000';
