@@ -183,6 +183,7 @@ class _TransactionItemListViewState extends State<TransactionItemListView>
                           child: _OrderStatusWidget(
                               transaction: widget.transaction,
                               valueHolder: valueHolder!,
+                              transactionProvider: provider,
                               scaffoldKey: scaffoldKey),
                         ),
                         if (widget.transaction.pickAtShop != PsConst.ONE &&
@@ -559,11 +560,14 @@ class _OrderStatusWidget extends StatelessWidget {
     Key? key,
     required this.transaction,
     required this.valueHolder,
+    required this.transactionProvider,
     this.scaffoldKey,
   }) : super(key: key);
 
   final TransactionHeader transaction;
   final PsValueHolder valueHolder;
+  final TransactionDetailProvider transactionProvider;
+
   final GlobalKey<ScaffoldState>? scaffoldKey;
   @override
   Widget build(BuildContext context) {
@@ -662,9 +666,18 @@ class _OrderStatusWidget extends StatelessWidget {
             children: <Widget>[
 
               if (transaction.refundStatus != '2')
-                if(transaction.transStatus!.ordering == '4')
+                if(transaction.transStatus!.ordering == '4'
+                    && transactionProvider.transactionDetailList.data!.isNotEmpty
+                    && transactionProvider.transactionDetailList.data![0].deliveryBoy!.userLng != ''
+                    && transactionProvider.transactionDetailList.data![0].deliveryBoy!.userLat != ''
+                )
                     MapScreen(
                         valueHolder:valueHolder,
+                      latlngDeliveryBoy: LatLng(
+                        double.parse(transactionProvider.transactionDetailList.data![0].deliveryBoy!.userLat!),
+                        double.parse(transactionProvider.transactionDetailList.data![0].deliveryBoy!.userLng!)
+                      ),
+                      deliveryBoyId: transactionProvider.transactionDetailList.data![0].deliveryBoy!.userId,
                       latlngCustomer: LatLng(
                           double.parse(transaction.transLat!),
                           double.parse(transaction.transLng!)
@@ -690,61 +703,67 @@ class MapScreen extends StatefulWidget {
   const MapScreen({
     Key? key,
     required this.valueHolder,
-    required this.latlngCustomer
+    required this.latlngCustomer,
+    required this.latlngDeliveryBoy,
+    required this.deliveryBoyId
+
   }) : super(key: key);
 
   final PsValueHolder? valueHolder;
   final LatLng? latlngCustomer;
+  final LatLng? latlngDeliveryBoy;
+  final String? deliveryBoyId;
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-
-  final LatLng? _latlngDeliveryBoy = LatLng(53.626312,-1.782274) ;
+  late Timer _timer;
   final MapController mapController = MapController();
-
-  PointProvider? pointProvider;
-  PointRepository? pointRepository;
   LatLngBounds? bounds;
+  @override
+  void initState() {
+    super.initState();
+    print('timer started');
+    _startTimer();
+  }
+  @override
+  void dispose() {
+    _cancelTimer();
+    print('timer disposed');
+    super.dispose();
+  }
+  void _startTimer() {
+    // Start a periodic timer that runs every 10 seconds
+    _timer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
+      setState(() {
+        print('set state called');
+      });
+    });
+  }
+
+  void _cancelTimer() {
+    // Cancel the timer when it's no longer needed (e.g., when the widget is disposed)
+    _timer.cancel();
+  }
 
 
   @override
   Widget build(BuildContext context) {
 
 
-    bounds = LatLngBounds(widget.latlngCustomer!,_latlngDeliveryBoy!);
-    pointRepository = Provider.of<PointRepository?>(context);
+    bounds = LatLngBounds(widget.latlngCustomer!,widget.latlngDeliveryBoy!);
 
-    return MultiProvider(
-      providers: <SingleChildWidget>[
-        ChangeNotifierProvider<PointProvider>(
-          lazy: false,
-          create: (BuildContext context) {
-            pointProvider = PointProvider(repo: pointRepository!, psValueHolder: widget.valueHolder);
-            pointProvider!.loadAllPoint(
-                widget.latlngCustomer!.latitude.toString(),
-                widget.latlngCustomer!.longitude.toString(),
-                _latlngDeliveryBoy!.latitude.toString(),
-                _latlngDeliveryBoy!.longitude.toString()
-            );
-            return pointProvider!;
-          },
-        ),
-      ],
-      child: Consumer<PointProvider>(
-        builder: (BuildContext context, PointProvider provider, Widget? child) {
-          return Container(
+
+    return Container(
             height: 350,
             child: PolylinePage(
-              pointProvider: pointProvider!,
+              valueHolder: widget.valueHolder!,
+              deliveryBoyId: widget.deliveryBoyId!,
               customerLatLng: widget.latlngCustomer!,
-              deliveryBoyLatLng: _latlngDeliveryBoy!,
+              deliveryBoyLatLng: widget.latlngDeliveryBoy!,
             ),
           );
-        },
-      ),
-    );
 
   }
 }

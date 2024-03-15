@@ -87,6 +87,8 @@ class PsUrl {
 
   static const String ps_subCategory_url = 'rest/subcategories/get';
 
+  static const String ps_userLocation_url = 'rest/users/user_location_by_id';
+
   static const String ps_subCategory_search_url = 'rest/subcategories/search';
 
   static const String ps_user_url = 'rest/users/get';

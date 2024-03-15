@@ -30,6 +30,7 @@ import 'package:flutterrestaurant/viewobject/transaction_detail.dart';
 import 'package:flutterrestaurant/viewobject/transaction_header.dart';
 import 'package:flutterrestaurant/viewobject/transaction_status.dart';
 import 'package:flutterrestaurant/viewobject/user.dart';
+import 'package:flutterrestaurant/viewobject/user_location.dart';
 import 'package:http/http.dart' as http;
 
 import '../db/common/ps_shared_preferences.dart';
@@ -529,6 +530,17 @@ class PsApiService extends PsApi {
     const String url = '${PsUrl.ps_api_request_token_post_url}';
     return await postData<ApiToken, ApiToken>(
         ApiToken(), url, jsonMap);
+  }
+  ///
+  /// get user location
+  ///
+  Future<PsResource<UserLocation>> getUserLocation(
+      String userId) async {
+    final String url =
+        '${PsUrl.ps_userLocation_url}/api_key/${PsConfig.ps_api_key}?user_id=$userId';
+
+    return await getServerCall<UserLocation, UserLocation>(
+        UserLocation(), url);
   }
   ///
   /// update token
