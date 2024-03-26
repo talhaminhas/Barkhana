@@ -45,6 +45,7 @@ class TransactionHeader extends PsObject<TransactionHeader> {
         this.transLat,
         this.transLng,
       this.transStatus,
+        this.customerMessage
       });
 
   String? id;
@@ -87,6 +88,7 @@ class TransactionHeader extends PsObject<TransactionHeader> {
   String? refundStatus;
   String? transLat;
   String? transLng;
+  String? customerMessage;
   TransactionStatus? transStatus;
   
 
@@ -138,7 +140,8 @@ class TransactionHeader extends PsObject<TransactionHeader> {
         ratingStatus: dynamicData['rating_status'],
           transLat: dynamicData['trans_lat'],
           transLng: dynamicData['trans_lng'],
-        refundStatus: dynamicData['refund_status'], 
+        refundStatus: dynamicData['refund_status'],
+        customerMessage: dynamicData['customer_message'],
         transStatus:
             TransactionStatus().fromMap(dynamicData['transaction_status']),
       );    
@@ -191,6 +194,7 @@ class TransactionHeader extends PsObject<TransactionHeader> {
       data['refund_status'] = object.refundStatus;
       data['trans_lat'] = object.transLat;
       data['trans_lng'] = object.transLng;
+      data['customer_message'] = object.customerMessage;
       data['transaction_status'] =
           TransactionStatus().toMap(object.transStatus);
       return data;

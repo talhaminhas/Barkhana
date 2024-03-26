@@ -79,7 +79,7 @@ class _PolylinePageState extends State<PolylinePage> {
     ];
     polylines = <List<MapLatLng>>[points];
     _controller = MapTileLayerController();
-    _zoomPanBehavior.zoomLevel = 8;
+    _zoomPanBehavior.zoomLevel = 15;
     _zoomPanBehavior.focalLatLng =   MapLatLng(widget.deliveryBoyLatLng.latitude, widget.deliveryBoyLatLng.longitude);
 
   }
@@ -92,12 +92,7 @@ class _PolylinePageState extends State<PolylinePage> {
 
   Future<dynamic> _updateDeliveryBoyLocation() async {
 
-    /*pointProvider!.loadAllPoint(
-        widget.customerLatLng!.latitude.toString(),
-        widget.customerLatLng!.longitude.toString(),
-        widget.deliveryBoyLatLng!.latitude.toString(),
-        widget.deliveryBoyLatLng!.longitude.toString()
-    );*/
+
     if (await Utils.checkInternetConnectivity()) {
 
       final PsResource<UserLocation> userLocation = await PsApiService()
@@ -169,39 +164,6 @@ class _PolylinePageState extends State<PolylinePage> {
       centerPointStringFormat = widget.customerLatLng;
     }
   }
-
-  /*void _initSocketConnection() async {
-    try {
-      socket = await Socket.connect('192.168.1.176', 8085);
-      socket.listen(
-            (List<int> event) {
-          final receivedMessage = utf8.decode(event);
-          print('Received message: $receivedMessage');
-          // Handle received message here
-        },
-        onError: (error) {
-          print('Socket error: $error');
-        },
-        onDone: () {
-          print('Socket closed');
-          socket.destroy();
-        },
-      );
-    } catch (e) {
-      print('Socket connection error: $e');
-    }
-  }
-  void _sendMessageToServer() {
-    final message = widget.deliveryBoyId;
-    print('Sending message: $message');
-    socket.write(message);
-  }
-
-  void _startSendingMessages() {
-    timer = Timer.periodic(Duration(seconds: 10), (timer) {
-      _sendMessageToServer();
-    });
-  }*/
 
 
   @override

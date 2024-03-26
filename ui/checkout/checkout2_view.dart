@@ -43,6 +43,7 @@ class Checkout2View extends StatefulWidget {
     required this.publishKey,
     required this.deliveryPickUpDate,
     required this.deliveryPickUpTime,
+    required this.customerMessageController
   }) : super(key: key);
 
   final String deliveryPickUpDate;
@@ -51,6 +52,7 @@ class Checkout2View extends StatefulWidget {
   final List<Basket> basketList;
   final ShopInfoProvider shopInfoProvider;
   final String publishKey;
+  final TextEditingController customerMessageController;
   @override
   _Checkout2ViewState createState() {
     final _Checkout2ViewState _state = _Checkout2ViewState();
@@ -61,6 +63,7 @@ class Checkout2View extends StatefulWidget {
 
 class _Checkout2ViewState extends State<Checkout2View> {
   final TextEditingController couponController = TextEditingController();
+
   CouponDiscountRepository? couponDiscountRepo;
   TransactionHeaderRepository? transactionHeaderRepo;
   BasketRepository ?basketRepository;
@@ -215,6 +218,7 @@ class _Checkout2ViewState extends State<Checkout2View> {
           Provider.of<BasketProvider>(context);
       return SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
               color: PsColors.backgroundColor,
@@ -226,18 +230,6 @@ class _Checkout2ViewState extends State<Checkout2View> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const SizedBox(
-                    height: PsDimens.space10,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                        left: PsDimens.space16, right: PsDimens.space16),
-                    child: Text(
-                      Utils.getString(
-                          context, 'transaction_detail__coupon_discount'),
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(),
-                    ),
-                  ),
                   const SizedBox(
                     height: PsDimens.space10,
                   ),
@@ -401,9 +393,11 @@ class _Checkout2ViewState extends State<Checkout2View> {
                   const SizedBox(
                     height: PsDimens.space10,
                   ),
+
                 ],
               ),
             ),
+
             _OrderSummaryWidget(
               psValueHolder: valueHolder!,
               basketList: widget.basketList,
@@ -411,6 +405,22 @@ class _Checkout2ViewState extends State<Checkout2View> {
               basketProvider: basketProvider,
               userProvider: userProvider,
               shopInfoProvider: widget.shopInfoProvider,
+            ),
+            Container(
+              color: PsColors.backgroundColor,
+              margin: const EdgeInsets.only(top: PsDimens.space8),
+              padding: const EdgeInsets.only(
+                left: PsDimens.space12,
+                right: PsDimens.space12,
+              ),
+              child: PsTextFieldWidget(
+                titleText: 'Kitchen Instructions',
+                textAboutMe: false,
+                height: PsDimens.space140,
+                hintText: 'For Example: Remove Salad, Extra Sauce, etc.',
+                //onChanged: checkFields,
+                textEditingController: widget.customerMessageController
+              ),
             ),
         Container(
           color: PsColors.backgroundColor,

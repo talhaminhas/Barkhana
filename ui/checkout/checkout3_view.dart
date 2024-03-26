@@ -49,6 +49,7 @@ class Checkout3View extends StatefulWidget {
       this.deliveryPickUpDate,
       this.deliveryPickUpTime,
       this.isWeeklyScheduleOrder,
+      this.customerMessage
   );
 
   final BasketProvider? basketProvider;
@@ -56,7 +57,7 @@ class Checkout3View extends StatefulWidget {
   final UserProvider? userProvider;
   final Function updateCheckout3ViewState;
   final TokenRepository tokenRepository;
-
+  final String customerMessage;
   final List<Basket> basketList;
   final bool isClickDeliveryButton;
   final bool isClickPickUpButton;
@@ -90,7 +91,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
   late PsValueHolder valueHolder;
   CouponDiscountProvider? couponDiscountProvider;
   BasketProvider? basketProvider;
-  final TextEditingController memoController = TextEditingController();
+
 
   late final  WebViewController? webController;
   HttpServer? _httpServer;
@@ -254,7 +255,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 basketProvider.checkoutCalculationHelper.shippingCost
                     .toString(),
                 userLoginProvider.user.data!.area!.areaName!,
-                memoController.text,
+                widget.customerMessage,
                 valueHolder);
 
         if (_apiStatus.data != null) {
@@ -331,7 +332,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
           widget.deliveryPickUpTime,
           basketProvider.checkoutCalculationHelper.shippingCost.toString(),
           userLoginProvider.user.data!.area!.areaName!,
-          memoController.text,
+              widget.customerMessage,
           valueHolder,
           weekDays,
           selectedTimes,
@@ -415,7 +416,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 basketProvider.checkoutCalculationHelper.shippingCost
                     .toString(),
                 userLoginProvider.user.data!.area!.areaName!,
-                memoController.text,
+                widget.customerMessage,
                 valueHolder);
 
         if (_apiStatus.data != null) {
@@ -495,7 +496,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
                 basketProvider.checkoutCalculationHelper.shippingCost
                     .toString(),
                 userLoginProvider.user.data!.area!.areaName!,
-                memoController.text,
+                widget.customerMessage,
                 valueHolder);
 
         if (_apiStatus.data != null) {
@@ -854,7 +855,7 @@ class _Checkout3ViewState extends State<Checkout3View> {
               widget.deliveryPickUpTime,
               basketProvider.checkoutCalculationHelper.shippingCost.toString(),
               userProvider.user.data!.area!.areaName!,
-              memoController.text,
+              widget.customerMessage,
               valueHolder);
 
       if (_apiStatus.data != null) {

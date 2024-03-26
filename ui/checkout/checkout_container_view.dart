@@ -76,6 +76,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
   String? days;
   String weekDays = '';
   String selectedTimes = '';
+  final TextEditingController customerMessageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -218,6 +219,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
           publishKey: valueHolder!.publishKey!,
           deliveryPickUpDate: checkout1ViewState.deliveryPickUpDate,
           deliveryPickUpTime: checkout1ViewState.deliveryPickUpTime,
+          customerMessageController: customerMessageController,
         ),
       );
 
@@ -229,13 +231,14 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
           userProvider,
           transactionSubmitProvider,
           tokenRepository!,
-            updateCheckout3ViewState,
-            widget.basketList,
-            checkout1ViewState.userProvider.isClickDeliveryButton,
-            checkout1ViewState.userProvider.isClickPickUpButton,
-            checkout1ViewState.deliveryPickUpDate,
-            checkout1ViewState.deliveryPickUpTime,
-            false,
+          updateCheckout3ViewState,
+          widget.basketList,
+          checkout1ViewState.userProvider.isClickDeliveryButton,
+          checkout1ViewState.userProvider.isClickPickUpButton,
+          checkout1ViewState.deliveryPickUpDate,
+          checkout1ViewState.deliveryPickUpTime,
+          false,
+          customerMessageController.text
         ),
       );
     }
@@ -263,7 +266,7 @@ class _CheckoutContainerViewState extends State<CheckoutContainerView> {
                     height: 50,
                     margin: const EdgeInsets.only(right: 5, top: 5, bottom: 5),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25), // Set border radius for rounded corners
+                      borderRadius: BorderRadius.circular(25),
                       border: Border.all(
                         color: PsColors.white, // Set border color
                         width: 2, // Set border width
